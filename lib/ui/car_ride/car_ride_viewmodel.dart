@@ -3,6 +3,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,6 +14,7 @@ import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/user_service.dart';
+import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:intl/intl.dart';
@@ -29,8 +31,9 @@ class CarRideViewModel extends BaseViewModel {
   bool isbusy2 = false;
   PickResult get selectedPlace => _selectedPlace;
   PickResult get dropoffplace => _dropoffplace;
-  final _navigationService = locator<NavigationService>();
+  final navigationService = locator<NavigationService>();
   final _bottomSheetService = locator<BottomSheetService>();
+  final _calculate = locator<Calculate>();
   String placeDistances = '';
   String duration = '';
   String placeRates = '';
@@ -99,7 +102,17 @@ class CarRideViewModel extends BaseViewModel {
     _selectedPlace = result;
     isbusy = false;
     notifyListeners();
-    return _navigationService.back();
+    return navigationService.back();
+  }
+
+  setPlacePicked(PickResult result) {
+    _selectedPlace = result;
+    isbusy = false;
+    notifyListeners();
+  }
+
+  setDropPicked(PickResult result) async {
+    _dropoffplace = result;
   }
 
   onDropPicked(PickResult result) async {
@@ -117,8 +130,52 @@ class CarRideViewModel extends BaseViewModel {
       duration = value['duration'];
       rate = value['rate'];
     });
-    _navigationService.back();
+    navigationService.back();
     isbusy1 = false;
+    notifyListeners();
+  }
+
+  Future<void> setPickUpAddress() async {
+    setBusy(true);
+    var googleGeocoding = GoogleGeocoding(
+      env['GOOGLE_MAPS_API_KEY']!,
+    );
+    await getCurrentLocation();
+    var risult = await googleGeocoding.geocoding.getReverse(
+        LatLon(currentPosition!.latitude, currentPosition!.longitude));
+    GeocodingResult re = risult!.results![0];
+    print(re.formattedAddress);
+    await setPlacePicked(PickResult(formattedAddress: re.formattedAddress));
+    setBusy(false);
+  }
+
+  Future<void> setDropOffAddress(LatLng data) async {
+    setBusy(true);
+    var googleGeocoding = GoogleGeocoding(
+      env['GOOGLE_MAPS_API_KEY']!,
+    );
+    var risult = await googleGeocoding.geocoding
+        .getReverse(LatLon(data.latitude, data.longitude));
+    GeocodingResult re = risult!.results![0];
+    print(re.formattedAddress);
+    _dropoffplace = PickResult(formattedAddress: re.formattedAddress);
+    await Calculate()
+        .calculateDistan(
+      dropoffplac1: data.latitude,
+      dropoffplac2: data.longitude,
+      selectedPlac1: currentPosition!.latitude,
+      selectedPlac2: currentPosition!.longitude,
+      formtype: formtype_get,
+    )
+        .then((value) {
+      placeDistances = value['distance'];
+      placeRates = value['placeRate'];
+      initialRate = value['placeRate'];
+      duration = value['duration'];
+      rate = value['rate'];
+    });
+    isbusy1 = false;
+    setBusy(false);
     notifyListeners();
   }
 
@@ -128,7 +185,7 @@ class CarRideViewModel extends BaseViewModel {
     final status = await checkPermission();
     if (status) {
       await getCurrentLocation();
-      _navigationService.navigateToView(PlacePicker(
+      navigationService.navigateToView(PlacePicker(
         apiKey: env['GOOGLE_MAPS_API_KEY']!,
         initialPosition:
             LatLng(currentPosition!.latitude, currentPosition!.longitude),
@@ -367,7 +424,7 @@ class CarRideViewModel extends BaseViewModel {
                     carride: store.carride, user: _userService.currentUser)
                 .then((value) {
               if (value) {
-                _navigationService.back();
+                navigationService.back();
                 return showBottomFlash(context: context);
               }
             });
@@ -409,7 +466,7 @@ class CarRideViewModel extends BaseViewModel {
                     carride: store.carride, user: _userService.currentUser)
                 .then((value) {
               if (value) {
-                _navigationService.back();
+                navigationService.back();
                 return showBottomFlash(context: context);
               }
             });
@@ -440,7 +497,7 @@ class CarRideViewModel extends BaseViewModel {
                   carride: store.carride, user: _userService.currentUser)
               .then((value) {
             if (value) {
-              _navigationService.back();
+              navigationService.back();
               return showBottomFlash(context: context);
             }
           });
@@ -485,7 +542,7 @@ class CarRideViewModel extends BaseViewModel {
                       carride: store.carride, user: _userService.currentUser)
                   .then((value) {
                 if (value) {
-                  _navigationService.back();
+                  navigationService.back();
                   return showBottomFlash(context: context);
                 }
               });

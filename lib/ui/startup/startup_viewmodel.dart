@@ -23,7 +23,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class StartUpViewModel extends BaseViewModel {
   final log = getLogger('StartUpViewModel');
   final userService = locator<UserService>();
-  final _navigationService = locator<NavigationService>();
+  final navigationService = locator<NavigationService>();
   final _placesService = locator<PlacesService>();
   final _calculate = locator<Calculate>();
   final firestoreApi = locator<FirestoreApi>();
@@ -46,7 +46,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToBoatRide() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       BoatRideView(
         isBoat: true,
       ),
@@ -55,14 +55,14 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToProfile() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       ProfileView(),
       transition: 'rightToLeft',
     );
   }
 
   navigateToCardRide() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       CarRideView(
         formType: Cartype,
       ),
@@ -71,7 +71,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToTaxiRide() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       CarRideView(
         formType: Taxi,
       ),
@@ -81,7 +81,7 @@ class StartUpViewModel extends BaseViewModel {
 
   navigateToAmbulanceRide() {
     _placesService.initialize(apiKey: env['GOOGLE_MAPS_API_KEY']!);
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       CarRideView(
         formType: Ambulance,
       ),
@@ -90,21 +90,21 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToNotification() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       NotificationView(),
       transition: 'downToUp',
     );
   }
 
   navigateToHome() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       StartUpView(),
       transition: 'rightToLeft',
     );
   }
 
   navigateToBooking() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       BookingView(
         enableAppBar: true,
       ),
@@ -113,7 +113,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToDelivery() async {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       BoatRideView(
         isBoat: false,
       ),
@@ -122,7 +122,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToDeliveryServices() {
-    _navigationService.navigateWithTransition(
+    navigationService.navigateWithTransition(
       CarRideView(
         formType: DeliveryService,
       ),
@@ -162,7 +162,7 @@ class StartUpViewModel extends BaseViewModel {
     } else {
       log.v('No user on disk, navigate to the LoginView');
       setBusy(false);
-      _navigationService.replaceWith(Routes.loginView);
+      navigationService.replaceWith(Routes.loginView);
     }
   }
 }

@@ -5,6 +5,10 @@ import 'package:avenride/models/application_models.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
+import 'package:avenride/ui/car_ride/car_ride_viewmodel.dart';
+import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
+import 'package:avenride/ui/mainScreen/food_card.dart';
+import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -30,7 +34,6 @@ class StartUpView extends StatefulWidget {
 
 class _StartUpViewState extends State<StartUpView> {
   final String logo = Assets.bgimg;
-
   final String logo1 = Assets.btnbgimg;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -106,6 +109,7 @@ class _StartUpViewState extends State<StartUpView> {
       },
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: BottomBar(
+          backgroundColor: Colors.amber.shade200,
           selectedIndex: _currentPage,
           onTap: (int index) {
             _pageController.jumpToPage(index);
@@ -260,25 +264,25 @@ class _StartUpViewState extends State<StartUpView> {
     return SnappingSheet(
       snappingPositions: [
         SnappingPosition.factor(
-          positionFactor: 0.2,
-          snappingCurve: Curves.elasticOut,
-          snappingDuration: Duration(seconds: 1),
-          grabbingContentOffset: GrabbingContentOffset.top,
-        ),
-        SnappingPosition.pixels(
-          positionPixels: 400,
-          snappingCurve: Curves.elasticOut,
-          snappingDuration: Duration(milliseconds: 1750),
-        ),
-        SnappingPosition.factor(
-          positionFactor: 0.7,
+          positionFactor: 0.8,
           snappingCurve: Curves.bounceOut,
           snappingDuration: Duration(seconds: 1),
           grabbingContentOffset: GrabbingContentOffset.bottom,
         ),
+        SnappingPosition.factor(
+          positionFactor: 0.4,
+          snappingCurve: Curves.bounceOut,
+          snappingDuration: Duration(seconds: 1),
+          grabbingContentOffset: GrabbingContentOffset.bottom,
+        ),
+        SnappingPosition.factor(
+          positionFactor: 0.1,
+          snappingCurve: Curves.elasticOut,
+          snappingDuration: Duration(seconds: 1),
+        ),
       ],
       initialSnappingPosition: SnappingPosition.pixels(
-        positionPixels: 340,
+        positionPixels: 240,
         snappingCurve: Curves.elasticOut,
         snappingDuration: Duration(milliseconds: 1750),
       ),
@@ -304,152 +308,159 @@ class _StartUpViewState extends State<StartUpView> {
         child: Container(
           color: model.status ? Colors.amber : Colors.green,
           child: ListView(
-            physics: NeverScrollableScrollPhysics(),
             children: [
-              !model.status
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                      child: GestureDetector(
-                        onTap: () => model.navigateToBoatRide(),
-                        child: Card(
-                          elevation: 10,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Center(
-                              child: Text(
-                                'Boat Ride',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              model.status
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                      child: GestureDetector(
-                        onTap: () => model.navigateToCardRide(),
-                        child: Card(
-                          elevation: 10,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Center(
-                              child: Text(
-                                'Car Ride',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              model.status
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                      child: GestureDetector(
-                        onTap: () => model.navigateToTaxiRide(),
-                        child: Card(
-                          elevation: 10,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Center(
-                              child: Text(
-                                'Bus/Taxi Ride',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              model.status
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                      child: GestureDetector(
-                        onTap: () => model.navigateToAmbulanceRide(),
-                        child: Card(
-                          elevation: 10,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Center(
-                              child: Text(
-                                'Ambulance',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              !model.status
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                      child: GestureDetector(
-                        onTap: () => model.navigateToDelivery(),
-                        child: Card(
-                          elevation: 10,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Center(
-                              child: Text(
-                                'Water Cargo',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              model.status
-                  ? Padding(
-                      padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                      child: GestureDetector(
-                        onTap: () => model.navigateToDeliveryServices(),
-                        child: Card(
-                          elevation: 10,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Center(
-                              child: Text(
-                                'Delivery Services',
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  backgroundColor: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
+              !model.status ? BoatRideCard(model: model) : SizedBox(),
+              model.status ? CarRideCard(model: model) : SizedBox(),
+              FlightRideCard(
+                model: model,
+              ),
+              FoodCard(
+                model: model,
+              ),
+              // !model.status
+              //     ? Padding(
+              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+              //         child: GestureDetector(
+              //           onTap: () => model.navigateToBoatRide(),
+              //           child: Card(
+              //             elevation: 10,
+              //             child: Container(
+              //               width: MediaQuery.of(context).size.width,
+              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              //               child: Center(
+              //                 child: Text(
+              //                   'Boat Ride',
+              //                   style: TextStyle(
+              //                     fontSize: 30,
+              //                     backgroundColor: Colors.white,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(),
+              // model.status
+              //     ? Padding(
+              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+              //         child: GestureDetector(
+              //           onTap: () => model.navigateToCardRide(),
+              //           child: Card(
+              //             elevation: 10,
+              //             child: Container(
+              //               width: MediaQuery.of(context).size.width,
+              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              //               child: Center(
+              //                 child: Text(
+              //                   'Car Ride',
+              //                   style: TextStyle(
+              //                     fontSize: 30,
+              //                     backgroundColor: Colors.white,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(),
+              // model.status
+              //     ? Padding(
+              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+              //         child: GestureDetector(
+              //           onTap: () => model.navigateToTaxiRide(),
+              //           child: Card(
+              //             elevation: 10,
+              //             child: Container(
+              //               width: MediaQuery.of(context).size.width,
+              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              //               child: Center(
+              //                 child: Text(
+              //                   'Bus/Taxi Ride',
+              //                   style: TextStyle(
+              //                     fontSize: 30,
+              //                     backgroundColor: Colors.white,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(),
+              // model.status
+              //     ? Padding(
+              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+              //         child: GestureDetector(
+              //           onTap: () => model.navigateToAmbulanceRide(),
+              //           child: Card(
+              //             elevation: 10,
+              //             child: Container(
+              //               width: MediaQuery.of(context).size.width,
+              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              //               child: Center(
+              //                 child: Text(
+              //                   'Ambulance',
+              //                   style: TextStyle(
+              //                     fontSize: 30,
+              //                     backgroundColor: Colors.white,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(),
+              // !model.status
+              //     ? Padding(
+              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+              //         child: GestureDetector(
+              //           onTap: () => model.navigateToDelivery(),
+              //           child: Card(
+              //             elevation: 10,
+              //             child: Container(
+              //               width: MediaQuery.of(context).size.width,
+              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              //               child: Center(
+              //                 child: Text(
+              //                   'Water Cargo',
+              //                   style: TextStyle(
+              //                     fontSize: 30,
+              //                     backgroundColor: Colors.white,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(),
+              // model.status
+              //     ? Padding(
+              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
+              //         child: GestureDetector(
+              //           onTap: () => model.navigateToDeliveryServices(),
+              //           child: Card(
+              //             elevation: 10,
+              //             child: Container(
+              //               width: MediaQuery.of(context).size.width,
+              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              //               child: Center(
+              //                 child: Text(
+              //                   'Delivery Services',
+              //                   style: TextStyle(
+              //                     fontSize: 30,
+              //                     backgroundColor: Colors.white,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox(),
             ],
           ),
         ),

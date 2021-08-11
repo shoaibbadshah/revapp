@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:places_service/places_service.dart';
 
 class Calculate {
   Position _currentPosition = Position(
@@ -60,6 +64,50 @@ class Calculate {
     };
   }
 
+  Future calculateDistan(
+      {required double selectedPlac1,
+      required double selectedPlac2,
+      required double dropoffplac1,
+      required double dropoffplac2,
+      required String formtype}) async {
+    LatLng selectedPlac = LatLng(selectedPlac1, selectedPlac2);
+    LatLng dropoffplac = LatLng(dropoffplac1, dropoffplac2);
+    Geodesy geodesy = Geodesy();
+    num distance = geodesy.distanceBetweenTwoGeoPoints(
+            LatLng(selectedPlac.latitude, selectedPlac.longitude),
+            LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
+        1000;
+    num rate = 0;
+    final placeRate = formtype == Cartype
+        ? (distance * 1000.05).toStringAsFixed(2)
+        : formtype == Taxi
+            ? (distance * 800.50).toStringAsFixed(2)
+            : formtype == Ambulance
+                ? (distance * 1500.50).toStringAsFixed(2)
+                : formtype == DeliveryService
+                    ? (distance * 1200.50).toStringAsFixed(2)
+                    : 0;
+    if (formtype == Ambulance) {
+      rate = distance * 1500;
+    }
+
+    final response = await http.get(
+      Uri.parse(
+          'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${selectedPlac.latitude},${selectedPlac.longitude}&destinations=${dropoffplac.latitude}%2C${dropoffplac.longitude}&key=AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw'),
+    );
+    print('############ $response');
+    print(jsonDecode(response.body));
+    final data = jsonDecode(response.body);
+    print(data['rows'][0]['elements'][0]['distance']['text']);
+    print(data['rows'][0]['elements'][0]['duration']['text']);
+    return {
+      'distance': distance.toStringAsFixed(2),
+      'duration': data['rows'][0]['elements'][0]['duration']['text'],
+      'placeRate': placeRate,
+      'rate': rate,
+    };
+  }
+
   Future getCurrentLocation() async {
     if (await Permission.location.request().isGranted) {
       await Geolocator.getCurrentPosition(
@@ -70,5 +118,31 @@ class Calculate {
         print(e);
       });
     }
+  }
+
+  getUserLocation() async {
+    //call this async method from whereever you need
+
+    Position myLocation = _currentPosition;
+    String error;
+    try {
+      await getCurrentLocation();
+      myLocation = _currentPosition;
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        error = 'please grant permission';
+        print(error);
+      }
+      if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+        error = 'permission denied- please enable it from app settings';
+        print(error);
+      }
+    }
+    print('yeah we reached');
+    var addresses = await placemarkFromCoordinates(
+        myLocation.latitude, myLocation.longitude);
+    var first = addresses.first;
+    print(first);
+    return first;
   }
 }

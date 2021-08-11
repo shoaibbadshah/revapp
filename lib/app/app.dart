@@ -1,6 +1,7 @@
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/push_notification_service.dart';
+import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/permissionpage/permissionpgeview.dart';
 import 'package:places_service/places_service.dart';
 import 'package:avenride/api/firestore_api.dart';
@@ -20,6 +21,7 @@ import 'package:stacked_services/stacked_services.dart';
 @StackedApp(
   routes: [
     CupertinoRoute(page: StartUpView, initial: true),
+    CupertinoRoute(page: MainScreenView),
     CupertinoRoute(page: SecondView),
     CupertinoRoute(page: CreateAccountView),
     CupertinoRoute(page: LoginView),

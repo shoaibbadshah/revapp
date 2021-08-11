@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.2+12
+version: 1.0.3+13
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -49,11 +49,6 @@ dependencies:
   search_page: ^2.0.0+1
   auth_buttons: ^1.0.0
   animations: ^2.0.0
-  places_service: ^0.1.0
-  geolocator:
-  geocoding: ^2.0.0
-  geodesy: 0.4.0-nullsafety.0
-  date_format: ^2.0.2
   flutter_switch: ^0.3.1
   super_tooltip: ^1.0.1
   group_radio_button: ^1.1.0
@@ -61,19 +56,31 @@ dependencies:
   flash: ^2.0.1
   bottom_bar: ^1.2.2+1
   rflutter_alert: ^2.0.2
+  permission_handler: ^6.0.1+1
+  #Location
+  places_service: ^0.1.0
+  geolocator:
+  geocoding: ^2.0.0
+  geodesy: 0.4.0-nullsafety.0
+  date_format: ^2.0.2
+  flutter_polyline_points: ^1.0.0
+  google_geocoding: ^0.2.0
+  location: ^4.3.0
+
   #web
   url_strategy: ^0.2.0
-  permission_handler: ^6.0.1+1
+  webview_flutter: ^2.0.8
   universal_io: ^2.0.4
-  flutter_polyline_points: ^1.0.0
+
   # data models
   freezed_annotation: ^0.14.1
   json_annotation: ^4.0.1
   flutter_dotenv: ^4.0.0-nullsafety.1
   provider: ^5.0.0
-  webview_flutter: ^2.0.8
+
   random_string:  ^2.2.0-nullsafety
   image_picker: ^0.8.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

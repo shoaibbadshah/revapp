@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Assets {
   static String _imagesRoot = "assets/images/";
@@ -8,6 +9,7 @@ class Assets {
   static String loadinimg = _imagesRoot + "loading.jpg";
   static String doneimg = _imagesRoot + "close.png";
   static String bananaBoat = _imagesRoot + "banana.png";
+  static String ambulance = _imagesRoot + "ambulance.png";
 
   static String cargo6 = _imagesRoot + "cargo6.PNG";
   static String cargo5 = _imagesRoot + "cargo5.PNG";
@@ -27,6 +29,8 @@ class Assets {
   static String car5 = _imagesRoot + "car2.PNG";
   static String car6 = _imagesRoot + "car3.PNG";
   static String carlogo = _imagesRoot + "carlogo.PNG";
+  static String taxilogo = _imagesRoot + "taxi.jpg";
+  static String deliverylogo = _imagesRoot + "delivery.jpg";
 
   static String boat1 = _imagesRoot + "ogaride.PNG";
   static String boat2 = _imagesRoot + "familyride.PNG";
@@ -53,6 +57,10 @@ class Assets {
   static const double sixteenBy3 = 48.0;
   static const double sixteenBy4 = 64.0;
 }
+
+LatLng MMIA = LatLng(6.58250061471477, 3.320877305255524);
+LatLng Abj = LatLng(9.009739944779172, 7.269213318952354);
+LatLng PH = LatLng(5.015331700522605, 6.95408079731267);
 
 List<NameIMG> carTypes = [
   NameIMG('AVR', Assets.carlogo, '100.0'),

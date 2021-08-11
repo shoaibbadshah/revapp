@@ -205,6 +205,26 @@ class NotAvailable extends StatelessWidget {
   }
 }
 
+class LoadingScrren extends StatelessWidget {
+  const LoadingScrren({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: CircularProgressIndicator(
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class PendingButton extends StatelessWidget {
   final bool busy;
   final void Function() onButtonTapped;

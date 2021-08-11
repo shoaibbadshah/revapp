@@ -16,11 +16,13 @@ import '../ui/booking/booking_view.dart';
 import '../ui/car_ride/car_ride_view.dart';
 import '../ui/create_account/create_account_view.dart';
 import '../ui/login/login_view.dart';
+import '../ui/mainScreen/mainScreenView.dart';
 import '../ui/second/second_view.dart';
 import '../ui/startup/startup_view.dart';
 
 class Routes {
   static const String startUpView = '/';
+  static const String mainScreenView = '/main-screen-view';
   static const String secondView = '/second-view';
   static const String createAccountView = '/create-account-view';
   static const String loginView = '/login-view';
@@ -30,6 +32,7 @@ class Routes {
   static const String bookingView = '/booking-view';
   static const all = <String>{
     startUpView,
+    mainScreenView,
     secondView,
     createAccountView,
     loginView,
@@ -45,6 +48,7 @@ class StackedRouter extends RouterBase {
   List<RouteDef> get routes => _routes;
   final _routes = <RouteDef>[
     RouteDef(Routes.startUpView, page: StartUpView),
+    RouteDef(Routes.mainScreenView, page: MainScreenView),
     RouteDef(Routes.secondView, page: SecondView),
     RouteDef(Routes.createAccountView, page: CreateAccountView),
     RouteDef(Routes.loginView, page: LoginView),
@@ -62,6 +66,12 @@ class StackedRouter extends RouterBase {
       );
       return CupertinoPageRoute<dynamic>(
         builder: (context) => StartUpView(key: args.key),
+        settings: data,
+      );
+    },
+    MainScreenView: (data) {
+      return CupertinoPageRoute<dynamic>(
+        builder: (context) => const MainScreenView(),
         settings: data,
       );
     },
