@@ -1,3 +1,4 @@
+import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -46,15 +47,113 @@ class FoodCard extends StatelessWidget {
                 ],
               ),
               verticalSpaceSmall,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  horizontalSpaceSmall,
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Shop Now'),
-                  ),
-                ],
+              Container(
+                height: 105,
+                width: screenWidth(context) / 1.2,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: model.navigateToAvenFood,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(2),
+                            width: 70,
+                            height: 70,
+                            child: Image.asset(Assets.hamburger),
+                          ),
+                        ),
+                        verticalSpaceTiny,
+                        Text(
+                          'Burger',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    horizontalSpaceSmall,
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: model.navigateToAvenFood,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(2),
+                            width: 70,
+                            height: 70,
+                            child: Image.asset(Assets.pizza),
+                          ),
+                        ),
+                        verticalSpaceTiny,
+                        Text(
+                          'Pizza',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    horizontalSpaceSmall,
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: model.navigateToAvenFood,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(2),
+                            width: 70,
+                            height: 70,
+                            child: Image.asset(Assets.cola),
+                          ),
+                        ),
+                        verticalSpaceTiny,
+                        Text(
+                          'Drinks',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    horizontalSpaceSmall,
+                    Column(
+                      children: [
+                        InkWell(
+                          onTap: model.navigateToAvenFood,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(2),
+                            width: 70,
+                            height: 70,
+                            child: Image.asset(Assets.noodles),
+                          ),
+                        ),
+                        verticalSpaceTiny,
+                        Text(
+                          'Noodles',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               verticalSpaceSmall,
             ],

@@ -31,6 +31,7 @@ class _$UserTearOff {
       String? vehicle,
       String? vehicledocs,
       String? pushToken,
+      String? mobileNo,
       List<dynamic>? notification}) {
     return _User(
       id: id,
@@ -43,6 +44,7 @@ class _$UserTearOff {
       vehicle: vehicle,
       vehicledocs: vehicledocs,
       pushToken: pushToken,
+      mobileNo: mobileNo,
       notification: notification,
     );
   }
@@ -67,6 +69,7 @@ mixin _$User {
   String? get vehicle => throw _privateConstructorUsedError;
   String? get vehicledocs => throw _privateConstructorUsedError;
   String? get pushToken => throw _privateConstructorUsedError;
+  String? get mobileNo => throw _privateConstructorUsedError;
   List<dynamic>? get notification => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -89,6 +92,7 @@ abstract class $UserCopyWith<$Res> {
       String? vehicle,
       String? vehicledocs,
       String? pushToken,
+      String? mobileNo,
       List<dynamic>? notification});
 }
 
@@ -112,6 +116,7 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? vehicle = freezed,
     Object? vehicledocs = freezed,
     Object? pushToken = freezed,
+    Object? mobileNo = freezed,
     Object? notification = freezed,
   }) {
     return _then(_value.copyWith(
@@ -155,6 +160,10 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.pushToken
           : pushToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      mobileNo: mobileNo == freezed
+          ? _value.mobileNo
+          : mobileNo // ignore: cast_nullable_to_non_nullable
+              as String?,
       notification: notification == freezed
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
@@ -179,6 +188,7 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String? vehicle,
       String? vehicledocs,
       String? pushToken,
+      String? mobileNo,
       List<dynamic>? notification});
 }
 
@@ -203,6 +213,7 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? vehicle = freezed,
     Object? vehicledocs = freezed,
     Object? pushToken = freezed,
+    Object? mobileNo = freezed,
     Object? notification = freezed,
   }) {
     return _then(_User(
@@ -246,6 +257,10 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.pushToken
           : pushToken // ignore: cast_nullable_to_non_nullable
               as String?,
+      mobileNo: mobileNo == freezed
+          ? _value.mobileNo
+          : mobileNo // ignore: cast_nullable_to_non_nullable
+              as String?,
       notification: notification == freezed
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
@@ -268,6 +283,7 @@ class _$_User extends _User {
       this.vehicle,
       this.vehicledocs,
       this.pushToken,
+      this.mobileNo,
       this.notification})
       : super._();
 
@@ -295,11 +311,13 @@ class _$_User extends _User {
   @override
   final String? pushToken;
   @override
+  final String? mobileNo;
+  @override
   final List<dynamic>? notification;
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, defaultAddress: $defaultAddress, name: $name, photourl: $photourl, personaldocs: $personaldocs, bankdocs: $bankdocs, vehicle: $vehicle, vehicledocs: $vehicledocs, pushToken: $pushToken, notification: $notification)';
+    return 'User(id: $id, email: $email, defaultAddress: $defaultAddress, name: $name, photourl: $photourl, personaldocs: $personaldocs, bankdocs: $bankdocs, vehicle: $vehicle, vehicledocs: $vehicledocs, pushToken: $pushToken, mobileNo: $mobileNo, notification: $notification)';
   }
 
   @override
@@ -333,6 +351,9 @@ class _$_User extends _User {
             (identical(other.pushToken, pushToken) ||
                 const DeepCollectionEquality()
                     .equals(other.pushToken, pushToken)) &&
+            (identical(other.mobileNo, mobileNo) ||
+                const DeepCollectionEquality()
+                    .equals(other.mobileNo, mobileNo)) &&
             (identical(other.notification, notification) ||
                 const DeepCollectionEquality()
                     .equals(other.notification, notification)));
@@ -351,6 +372,7 @@ class _$_User extends _User {
       const DeepCollectionEquality().hash(vehicle) ^
       const DeepCollectionEquality().hash(vehicledocs) ^
       const DeepCollectionEquality().hash(pushToken) ^
+      const DeepCollectionEquality().hash(mobileNo) ^
       const DeepCollectionEquality().hash(notification);
 
   @JsonKey(ignore: true)
@@ -376,6 +398,7 @@ abstract class _User extends User {
       String? vehicle,
       String? vehicledocs,
       String? pushToken,
+      String? mobileNo,
       List<dynamic>? notification}) = _$_User;
   _User._() : super._();
 
@@ -401,6 +424,8 @@ abstract class _User extends User {
   String? get vehicledocs => throw _privateConstructorUsedError;
   @override
   String? get pushToken => throw _privateConstructorUsedError;
+  @override
+  String? get mobileNo => throw _privateConstructorUsedError;
   @override
   List<dynamic>? get notification => throw _privateConstructorUsedError;
   @override

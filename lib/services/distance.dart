@@ -4,12 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
-import 'package:places_service/places_service.dart';
 
 class Calculate {
   Position _currentPosition = Position(

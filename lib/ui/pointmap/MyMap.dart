@@ -184,12 +184,6 @@ class _MyMapState extends State<MyMap> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    // SizedBox(
-                    //   height: 3,
-                    // ),
-                    // CircularProgressIndicator(
-                    //   valueColor: AlwaysStoppedAnimation(Colors.black),
-                    // ),
                   ],
                 ),
               ),

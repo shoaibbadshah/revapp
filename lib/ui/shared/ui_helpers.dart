@@ -205,6 +205,49 @@ class NotAvailable extends StatelessWidget {
   }
 }
 
+class FoodIcon extends StatelessWidget {
+  final Function() onTap;
+  final String image;
+  final String iconText;
+  FoodIcon({
+    Key? key,
+    required this.onTap,
+    required this.image,
+    required this.iconText,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              border: Border.all(
+                width: 2,
+                color: Colors.black,
+              ),
+            ),
+            padding: EdgeInsets.all(2),
+            width: 70,
+            height: 70,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(50.0),
+                child: Image.asset(image)),
+          ),
+        ),
+        verticalSpaceTiny,
+        Text(
+          iconText,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+}
+
 class LoadingScrren extends StatelessWidget {
   const LoadingScrren({
     Key? key,
@@ -462,25 +505,17 @@ class PaymentStatusLabel extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        horizontalSpaceMedium,
-        Text(
-          'Payment status:',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-        horizontalSpaceSmall,
-        paymentStatus == Pending
-            ? PendingButton(
-                price: price,
-                busy: busy,
-                onButtonTapped: onButtonTapped,
-              )
-            : SuccessButton(onButtonTapped: () {}),
-        horizontalSpaceSmall
-      ],
-    );
+    return paymentStatus == Pending
+        ? Center(
+            child: PendingButton(
+              price: price,
+              busy: busy,
+              onButtonTapped: onButtonTapped,
+            ),
+          )
+        : SuccessButton(
+            onButtonTapped: () {},
+          );
   }
 }
 

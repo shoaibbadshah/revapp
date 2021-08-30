@@ -222,7 +222,7 @@ class _FloatingBoxBottomSheetState extends State<FloatingBoxBottomSheet> {
                       });
                       print(store.carride);
                       widget.completer!(
-                          SheetResponse(confirmed: true, responseData: price));
+                          SheetResponse(confirmed: true, data: price));
                     }
                   },
                   child: isbusy
@@ -388,8 +388,8 @@ class _PayState extends State<Pay> {
                         'PaymentType': _chosenValue,
                       });
 
-                      widget.completer!(SheetResponse(
-                          confirmed: true, responseData: 'ho gya'));
+                      widget.completer!(
+                          SheetResponse(confirmed: true, data: 'ho gya'));
                     }
                   },
                   child: isbusy

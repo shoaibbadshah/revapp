@@ -1,7 +1,5 @@
-import 'package:avenride/app/app.router.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
-import 'package:avenride/ui/car_ride/car_ride_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
@@ -62,7 +60,8 @@ class FlightRideCard extends StatelessWidget {
                         model.navigationService.navigateToView(
                           CarRideView(
                             formType: Cartype,
-                            dropLatLng: MMIA,
+                            dropLat: MMIA.latitude,
+                            dropLng: MMIA.longitude,
                             isDropLatLng: true,
                           ),
                         );
@@ -87,7 +86,8 @@ class FlightRideCard extends StatelessWidget {
                       onTap: () {
                         model.navigationService.navigateToView(CarRideView(
                           formType: Cartype,
-                          dropLatLng: Abj,
+                          dropLat: Abj.latitude,
+                          dropLng: Abj.longitude,
                           isDropLatLng: true,
                         ));
                       },
@@ -111,7 +111,8 @@ class FlightRideCard extends StatelessWidget {
                       onTap: () {
                         model.navigationService.navigateToView(CarRideView(
                           formType: Cartype,
-                          dropLatLng: PH,
+                          dropLat: PH.latitude,
+                          dropLng: PH.longitude,
                           isDropLatLng: true,
                         ));
                       },

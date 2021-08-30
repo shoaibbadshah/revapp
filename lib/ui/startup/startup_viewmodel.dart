@@ -2,11 +2,14 @@ import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
+import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
 import 'package:avenride/ui/pointmap/MyMap.dart';
+import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/app.logger.dart';
@@ -15,6 +18,7 @@ import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/startup/startup_view.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:places_service/places_service.dart';
@@ -79,6 +83,13 @@ class StartUpViewModel extends BaseViewModel {
     );
   }
 
+  navigateToAvenFood() {
+    navigationService.navigateWithTransition(
+      AvenFoodView(),
+      transition: 'rightToLeft',
+    );
+  }
+
   navigateToAmbulanceRide() {
     _placesService.initialize(apiKey: env['GOOGLE_MAPS_API_KEY']!);
     navigationService.navigateWithTransition(
@@ -135,6 +146,40 @@ class StartUpViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void checkData(BuildContext context) {
+    if (userService.currentUser.email!.isEmpty ||
+        userService.currentUser.name!.isEmpty ||
+        userService.currentUser.mobileNo!.isEmpty) {
+      Future<bool> _onBackPressed() {
+        return Future.delayed(Duration(milliseconds: 200), () {
+          return false;
+        });
+      }
+
+      Alert(
+        context: context,
+        title: "Please Update your Info",
+        desc: "click below to update your info",
+        closeFunction: _onBackPressed,
+        onWillPopActive: true,
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Click Here",
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
+            onPressed: () async {
+              navigationService.navigateToView(ProfileInfo(
+                isMainScreen: true,
+              ));
+            },
+            width: 120,
+          ),
+        ],
+      ).show();
+    }
+  }
+
   Future<void> runStartupLogic() async {
     setBusy(true);
 
@@ -153,7 +198,8 @@ class StartUpViewModel extends BaseViewModel {
         zoom: CAMERA_ZOOM,
         bearing: CAMERA_BEARING,
         tilt: CAMERA_TILT,
-        target: LatLng(52.482125, -1.895545),
+        target: LatLng(_calculate.currentPosition.latitude,
+            _calculate.currentPosition.longitude),
       );
       final currentUser = userService.currentUser;
       userId = currentUser.id;

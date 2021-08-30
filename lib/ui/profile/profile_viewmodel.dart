@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,6 +22,13 @@ class ProfileViewModel extends BaseViewModel {
   navigateToAddVehicle() {
     _navigationService.navigateWithTransition(
       AddVehicle(),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToAddPersonalInfo() {
+    _navigationService.navigateWithTransition(
+      ProfileInfo(isMainScreen: false),
       transition: 'rightToLeft',
     );
   }

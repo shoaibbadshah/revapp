@@ -74,108 +74,119 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: ExpansionPanelList(
               expansionCallback: (int index, bool isExpanded) {
                 setState(() {
                   _items[index].isExpanded = !isExpanded;
                 });
               },
-              children: _items.map<ExpansionPanel>((Item item) {
-                return ExpansionPanel(
-                  canTapOnHeader: true,
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: Text(
-                        item.headerValue,
-                        style: ktsMediumGreyBodyText,
-                      ),
-                    );
-                  },
-                  body: item.headerValue == 'Car Ride'
-                      ? StreamProvider<List<CarModel>>.value(
-                          value: firestoreApi
-                              .streamcar(_userService.currentUser.id),
-                          initialData: [],
-                          child: Container(
-                            height: 500,
-                            child: CarList(),
-                          ),
-                        )
-                      : item.headerValue == 'Bus/Taxi Ride'
-                          ? StreamProvider<List<TaxiModel>>.value(
-                              value: firestoreApi
-                                  .streamtaxi(_userService.currentUser.id),
-                              initialData: [],
-                              child: Container(height: 440, child: TaxiList()),
-                            )
-                          : item.headerValue == 'Ambulance'
-                              ? StreamProvider<List<AmbulanceModel>>.value(
-                                  value: firestoreApi.streamambulance(
-                                      _userService.currentUser.id),
-                                  initialData: [],
-                                  child: Container(
-                                    height: 380,
-                                    child: AmbulanceList(),
-                                  ),
-                                )
-                              : item.headerValue == 'Delivery Services'
-                                  ? StreamProvider<
-                                      List<DeliveryServicesModel>>.value(
-                                      value:
-                                          firestoreApi.streamdeliveryservices(
-                                              _userService.currentUser.id),
-                                      initialData: [],
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 480,
-                                            child: DeliveryServicesList(),
-                                          ),
-                                          verticalSpaceMedium
-                                        ],
-                                      ),
-                                    )
-                                  : item.headerValue == 'Boat Ride'
-                                      ? StreamProvider<List<BoatModel>>.value(
-                                          value: firestoreApi.streamboat(
-                                              _userService.currentUser.id),
-                                          initialData: [],
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                height: 420,
-                                                child: BoatList(),
-                                              ),
-                                              verticalSpaceMedium
-                                            ],
-                                          ),
-                                        )
-                                      : item.headerValue == 'Water Cargo'
-                                          ? StreamProvider<
-                                              List<DeliveryModel>>.value(
-                                              value: firestoreApi
-                                                  .streamdelivery(_userService
-                                                      .currentUser.id),
-                                              initialData: [],
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    height: 440,
-                                                    child: DeliveryList(),
-                                                  ),
-                                                  verticalSpaceMedium
-                                                ],
-                                              ),
-                                            )
-                                          : Card(
-                                              child: ListTile(
-                                                title: Text(item.expandedValue),
-                                              ),
+              children: _items.map<ExpansionPanel>(
+                (Item item) {
+                  return ExpansionPanel(
+                    canTapOnHeader: true,
+                    headerBuilder: (BuildContext context, bool isExpanded) {
+                      return ListTile(
+                        title: Text(
+                          item.headerValue,
+                          style: ktsMediumGreyBodyText,
+                        ),
+                      );
+                    },
+                    body: item.headerValue == 'Car Ride'
+                        ? StreamProvider<List<CarModel>>.value(
+                            value: firestoreApi
+                                .streamcar(_userService.currentUser.id),
+                            initialData: [],
+                            child: Container(
+                              height: 360,
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: CarList(),
+                            ),
+                          )
+                        : item.headerValue == 'Bus/Taxi Ride'
+                            ? StreamProvider<List<TaxiModel>>.value(
+                                value: firestoreApi
+                                    .streamtaxi(_userService.currentUser.id),
+                                initialData: [],
+                                child: Container(
+                                  height: 350,
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  child: TaxiList(),
+                                ),
+                              )
+                            : item.headerValue == 'Ambulance'
+                                ? StreamProvider<List<AmbulanceModel>>.value(
+                                    value: firestoreApi.streamambulance(
+                                      _userService.currentUser.id,
+                                    ),
+                                    initialData: [],
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      height: 360,
+                                      child: AmbulanceList(),
+                                    ),
+                                  )
+                                : item.headerValue == 'Delivery Services'
+                                    ? StreamProvider<
+                                        List<DeliveryServicesModel>>.value(
+                                        value:
+                                            firestoreApi.streamdeliveryservices(
+                                                _userService.currentUser.id),
+                                        initialData: [],
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: 340,
+                                              child: DeliveryServicesList(),
                                             ),
-                  isExpanded: item.isExpanded,
-                );
-              }).toList(),
+                                            verticalSpaceMedium
+                                          ],
+                                        ),
+                                      )
+                                    : item.headerValue == 'Boat Ride'
+                                        ? StreamProvider<List<BoatModel>>.value(
+                                            value: firestoreApi.streamboat(
+                                                _userService.currentUser.id),
+                                            initialData: [],
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  height: 300,
+                                                  child: BoatList(),
+                                                ),
+                                                verticalSpaceMedium
+                                              ],
+                                            ),
+                                          )
+                                        : item.headerValue == 'Water Cargo'
+                                            ? StreamProvider<
+                                                List<DeliveryModel>>.value(
+                                                value: firestoreApi
+                                                    .streamdelivery(_userService
+                                                        .currentUser.id),
+                                                initialData: [],
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 300,
+                                                      child: DeliveryList(),
+                                                    ),
+                                                    verticalSpaceMedium
+                                                  ],
+                                                ),
+                                              )
+                                            : Card(
+                                                child: ListTile(
+                                                  title:
+                                                      Text(item.expandedValue),
+                                                ),
+                                              ),
+                    isExpanded: item.isExpanded,
+                  );
+                },
+              ).toList(),
             ),
           ),
         ],

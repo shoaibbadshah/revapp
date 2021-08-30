@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:avenride/app/router_names.dart';
 import 'package:avenride/ui/pointmap/MyMap.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -141,108 +142,203 @@ class _BoatListState extends State<BoatList> {
             itemCount: boats.length,
             itemBuilder: (context, index) {
               BoatModel boat = boats[index];
-              return Padding(
-                padding: EdgeInsets.all(10),
-                child: InkWell(
-                  onTap: () {
-                    _navigationService.navigateToView(
-                      MyMap(
-                        DEST_LOCATION: LatLng(boat.pickupLat, boat.pickupLong),
-                        SOURCE_LOCATION:
-                            LatLng(boat.dropoffLat, boat.dropoffLong),
-                        isBoat: true,
-                      ),
-                    );
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 10,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.amber, width: 2)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              return Card(
+                elevation: 5,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          verticalSpaceSmall,
-                          StartLocationLabel(
-                            startLocation: boat.pickLocation,
-                            paymentStatus: boat.paymentStatus,
-                            onMainButtonTapped: () {
-                              _firestoreApi
-                                  .deleteBooking(
-                                      collectionName: 'boat',
-                                      user: _userService.currentUser,
-                                      docId: boat.id)
-                                  .then((value) {
-                                _navigationService.back();
-                              });
-                            },
-                          ),
-                          verticalSpaceSmall,
-                          EndLocationLabel(
-                            destination: boat.dropLocation,
-                          ),
-                          verticalSpaceSmall,
-                          DateLabel(scheduledDate: boat.scheduledDate),
-                          verticalSpaceSmall,
-                          TimeLabel(scheduleTime: boat.scheduleTime),
-                          verticalSpaceSmall,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              horizontalSpaceMedium,
-                              Text(
-                                'Boat Type:',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
-                              ),
-                              horizontalSpaceMedium,
+                          Column(
+                            children: <Widget>[
                               Container(
-                                width: 150,
+                                height: 18,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      width: 1.5, color: Colors.greenAccent),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  margin: EdgeInsets.all(2),
+                                ),
+                              ),
+                              verticalSpaceTiny,
+                              VxDash(
+                                direction: Axis.vertical,
+                                length: 20,
+                                dashLength: 8,
+                                dashGap: 4,
+                                dashColor: Colors.grey,
+                              ),
+                              verticalSpaceTiny,
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                width: screenWidth(context) / 1.6,
                                 child: Text(
-                                  boat.boatType,
+                                  boat.pickLocation,
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                height: 2.0,
+                                padding: EdgeInsets.all(0),
+                                width: screenWidth(context) / 1.6,
+                                color: Colors.grey.shade300,
+                                margin: EdgeInsets.only(right: 20),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                width: screenWidth(context) / 1.6,
+                                child: Text(
+                                  boat.dropLocation,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          verticalSpaceSmall,
-                          Row(
-                            children: [
-                              horizontalSpaceMedium,
-                              Text(
-                                'Price:',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
-                              ),
-                              horizontalSpaceMedium,
-                              Text(
-                                '${boat.price} Nan',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w400),
-                              ),
-                              horizontalSpaceSmall
-                            ],
-                          ),
-                          PaymentStatusLabel(
-                            price: boat.price.toString(),
-                            busy: isBusy,
-                            onButtonTapped: () {
-                              setState(() {
-                                isBusy = true;
-                              });
-                              startPayment(price: '1000', id: boat.id);
-                            },
-                            paymentStatus: boat.paymentStatus,
-                          ),
-                          verticalSpaceMedium,
                         ],
                       ),
-                    ),
+                      verticalSpaceTiny,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
+                        ),
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              verticalSpaceMedium,
+                              Icon(
+                                Icons.directions_boat,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Boat',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Text(
+                                boat.boatType,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              verticalSpaceRegular,
+                              Text(
+                                'Time',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Column(
+                                children: [
+                                  Text(
+                                    boat.scheduleTime.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Text(
+                                    boat.scheduledDate.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Price',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                color: Colors.white,
+                                child: Text(
+                                  boat.price,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      verticalSpaceSmall,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
+                        ),
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      verticalSpaceTiny,
+                      PaymentStatusLabel(
+                        price: boat.price,
+                        busy: isBusy,
+                        onButtonTapped: () {
+                          setState(() {
+                            isBusy = true;
+                          });
+                          startPayment(price: boat.price, id: boat.id);
+                        },
+                        paymentStatus: boat.paymentStatus,
+                      ),
+                      verticalSpaceTiny,
+                    ],
                   ),
                 ),
               );

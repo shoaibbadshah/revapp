@@ -297,33 +297,51 @@ class BoatRideCard extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: model.navigateToBoatRide,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.black,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.black,
+                            ),
+                          ),
+                          padding: EdgeInsets.all(2),
+                          width: 70,
+                          height: 70,
+                          child: Image.asset(Assets.boat1),
                         ),
-                      ),
-                      padding: EdgeInsets.all(2),
-                      width: 70,
-                      height: 70,
-                      child: Image.asset(Assets.bananaBoat),
+                        verticalSpaceTiny,
+                        Text(
+                          'Boat Ride',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                   horizontalSpaceSmall,
                   InkWell(
                     onTap: model.navigateToDelivery,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.black,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.black,
+                            ),
+                          ),
+                          padding: EdgeInsets.all(2),
+                          width: 70,
+                          height: 70,
+                          child: Image.asset(Assets.cargo5),
                         ),
-                      ),
-                      padding: EdgeInsets.all(2),
-                      width: 70,
-                      height: 70,
-                      child: Image.asset(Assets.cargo5),
+                        verticalSpaceTiny,
+                        Text(
+                          'Cargo',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ),
                   horizontalSpaceSmall,
@@ -362,7 +380,7 @@ class CarRideCard extends StatelessWidget {
                   ),
                 ],
               ),
-              verticalSpaceSmall,
+              verticalSpaceTiny,
               Row(
                 children: [
                   Text(
@@ -410,7 +428,7 @@ class CarRideCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    horizontalSpaceSmall,
+                    horizontalSpaceTiny,
                     Column(
                       children: [
                         InkWell(
@@ -435,7 +453,7 @@ class CarRideCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    horizontalSpaceSmall,
+                    horizontalSpaceTiny,
                     Column(
                       children: [
                         InkWell(
@@ -455,12 +473,12 @@ class CarRideCard extends StatelessWidget {
                         ),
                         verticalSpaceTiny,
                         Text(
-                          'Ambulance',
+                          'Send/Pickups',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                    horizontalSpaceSmall,
+                    horizontalSpaceTiny,
                     Column(
                       children: [
                         InkWell(
@@ -480,7 +498,7 @@ class CarRideCard extends StatelessWidget {
                         ),
                         verticalSpaceTiny,
                         Text(
-                          'Send/Pickups',
+                          'Ambulance',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],

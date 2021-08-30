@@ -131,98 +131,212 @@ class _TaxiListState extends State<TaxiList> {
     return taxis.length == 0
         ? NotAvailable()
         : ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 20),
             physics: AlwaysScrollableScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemCount: taxis.length,
             itemBuilder: (context, index) {
               TaxiModel taxi = taxis[index];
-              return Padding(
-                padding: EdgeInsets.all(10),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.amber, width: 2)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        verticalSpaceSmall,
-                        StartLocationLabel(
-                          startLocation: taxi.startLocation,
-                          paymentStatus: taxi.paymentStatus,
-                          onMainButtonTapped: () {
-                            _firestoreApi
-                                .deleteBooking(
-                                    collectionName: 'taxi',
-                                    user: _userService.currentUser,
-                                    docId: taxi.id)
-                                .then((value) {
-                              _navigationService.back();
-                            });
-                          },
+              return Card(
+                elevation: 5,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                height: 18,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      width: 1.5, color: Colors.greenAccent),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  margin: EdgeInsets.all(2),
+                                ),
+                              ),
+                              verticalSpaceTiny,
+                              VxDash(
+                                direction: Axis.vertical,
+                                length: 40,
+                                dashLength: 8,
+                                dashGap: 4,
+                                dashColor: Colors.grey,
+                              ),
+                              verticalSpaceTiny,
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                width: screenWidth(context) / 1.6,
+                                height: 40,
+                                child: Text(
+                                  taxi.startLocation,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                height: 2.0,
+                                padding: EdgeInsets.all(0),
+                                width: screenWidth(context) / 1.6,
+                                color: Colors.grey.shade300,
+                                margin: EdgeInsets.only(right: 20),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                height: 40,
+                                width: screenWidth(context) / 1.6,
+                                child: Text(
+                                  taxi.destination,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      verticalSpaceSmall,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
                         ),
-                        verticalSpaceSmall,
-                        EndLocationLabel(
-                          destination: taxi.destination,
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      verticalSpaceSmall,
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              verticalSpaceMedium,
+                              Icon(
+                                Icons.local_taxi,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Distance',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Text(
+                                taxi.distace,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              verticalSpaceRegular,
+                              Text(
+                                'Time',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Column(
+                                children: [
+                                  Text(
+                                    taxi.scheduleTime.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Text(
+                                    taxi.scheduledDate.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Price',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                color: Colors.white,
+                                child: Text(
+                                  taxi.price,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      verticalSpaceSmall,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
                         ),
-                        verticalSpaceSmall,
-                        DateLabel(scheduledDate: taxi.scheduledDate),
-                        verticalSpaceSmall,
-                        TimeLabel(scheduleTime: taxi.scheduleTime),
-                        verticalSpaceSmall,
-                        Row(
-                          children: [
-                            horizontalSpaceMedium,
-                            Text(
-                              'Distance:',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                            horizontalSpaceMedium,
-                            Text(
-                              '${taxi.distace} min',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
-                            ),
-                            horizontalSpaceSmall
-                          ],
-                        ),
-                        verticalSpaceSmall,
-                        Row(
-                          children: [
-                            horizontalSpaceMedium,
-                            Text(
-                              'Price:',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                            horizontalSpaceMedium,
-                            Text(
-                              '${taxi.price} Nan',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
-                            ),
-                            horizontalSpaceSmall
-                          ],
-                        ),
-                        verticalSpaceSmall,
-                        PaymentStatusLabel(
-                          price: taxi.price,
-                          busy: isBusy,
-                          onButtonTapped: () {
-                            setState(() {
-                              isBusy = true;
-                            });
-                            startPayment(price: taxi.price, id: taxi.id);
-                          },
-                          paymentStatus: taxi.paymentStatus,
-                        ),
-                        verticalSpaceMedium,
-                      ],
-                    ),
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      verticalSpaceTiny,
+                      PaymentStatusLabel(
+                        price: taxi.price,
+                        busy: isBusy,
+                        onButtonTapped: () {
+                          setState(() {
+                            isBusy = true;
+                          });
+                          startPayment(price: taxi.price, id: taxi.id);
+                        },
+                        paymentStatus: taxi.paymentStatus,
+                      ),
+                      verticalSpaceTiny,
+                    ],
                   ),
                 ),
               );

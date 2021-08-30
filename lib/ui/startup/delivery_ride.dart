@@ -140,124 +140,223 @@ class _DeliveryListState extends State<DeliveryList> {
             itemCount: deliveries.length,
             itemBuilder: (context, index) {
               DeliveryModel delivery = deliveries[index];
-              return Padding(
-                padding: EdgeInsets.all(10),
-                child: InkWell(
-                  onTap: () {
-                    _navigationService.navigateToView(
-                      MyMap(
-                        DEST_LOCATION:
-                            LatLng(delivery.pickupLat, delivery.pickupLong),
-                        SOURCE_LOCATION:
-                            LatLng(delivery.dropoffLat, delivery.dropoffLong),
-                        isBoat: true,
-                      ),
-                    );
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    elevation: 10,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.amber, width: 2)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              return Card(
+                elevation: 5,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          verticalSpaceSmall,
-                          StartLocationLabel(
-                            startLocation: delivery.pickLocation,
-                            paymentStatus: delivery.paymentStatus,
-                            onMainButtonTapped: () {
-                              _firestoreApi
-                                  .deleteBooking(
-                                      collectionName: 'delivery',
-                                      user: _userService.currentUser,
-                                      docId: delivery.id)
-                                  .then((value) {
-                                _navigationService.back();
-                              });
-                            },
-                          ),
-                          verticalSpaceSmall,
-                          EndLocationLabel(
-                            destination: delivery.dropLocation,
-                          ),
-                          verticalSpaceSmall,
-                          DateLabel(scheduledDate: delivery.scheduledDate),
-                          verticalSpaceSmall,
-                          TimeLabel(scheduleTime: delivery.scheduleTime),
-                          verticalSpaceSmall,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              horizontalSpaceMedium,
-                              Text(
-                                'Laguage Type:',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                height: 18,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      width: 1.5, color: Colors.greenAccent),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  margin: EdgeInsets.all(2),
+                                ),
                               ),
-                              horizontalSpaceMedium,
+                              verticalSpaceTiny,
+                              VxDash(
+                                direction: Axis.vertical,
+                                length: 20,
+                                dashLength: 8,
+                                dashGap: 4,
+                                dashColor: Colors.grey,
+                              ),
+                              verticalSpaceTiny,
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                width: screenWidth(context) / 1.6,
+                                child: Text(
+                                  delivery.pickLocation,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                height: 2.0,
+                                padding: EdgeInsets.all(0),
+                                width: screenWidth(context) / 1.6,
+                                color: Colors.grey.shade300,
+                                margin: EdgeInsets.only(right: 20),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                width: screenWidth(context) / 1.6,
+                                child: Text(
+                                  delivery.dropLocation,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      verticalSpaceTiny,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
+                        ),
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              verticalSpaceMedium,
+                              Icon(
+                                Icons.directions_boat,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Laguage',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
                               Text(
                                 delivery.laguageType,
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
                             ],
                           ),
-                          verticalSpaceSmall,
-                          verticalSpaceSmall,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          horizontalSpaceSmall,
+                          Column(
                             children: [
-                              horizontalSpaceMedium,
                               Text(
-                                'Laguage Size:',
+                                'Weight',
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
                               ),
-                              horizontalSpaceMedium,
+                              verticalSpaceSmall,
                               Text(
-                                delivery.laguageSize,
+                                '${delivery.laguageSize} kg',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
                             ],
                           ),
-                          verticalSpaceSmall,
-                          Row(
+                          horizontalSpaceSmall,
+                          Column(
                             children: [
-                              horizontalSpaceMedium,
+                              verticalSpaceRegular,
                               Text(
-                                'Price:',
+                                'Time',
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
                               ),
-                              horizontalSpaceMedium,
-                              Text(
-                                '${delivery.price} Nan',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w400),
+                              verticalSpaceSmall,
+                              Column(
+                                children: [
+                                  Text(
+                                    delivery.scheduleTime.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Text(
+                                    delivery.scheduledDate.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              horizontalSpaceSmall
                             ],
                           ),
-                          PaymentStatusLabel(
-                            price: delivery.price,
-                            busy: isBusy,
-                            onButtonTapped: () {
-                              setState(() {
-                                isBusy = true;
-                              });
-                              startPayment(price: '1000', id: delivery.id);
-                            },
-                            paymentStatus: delivery.paymentStatus,
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Price',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                color: Colors.white,
+                                child: Text(
+                                  delivery.price,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          verticalSpaceMedium,
                         ],
                       ),
-                    ),
+                      verticalSpaceSmall,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
+                        ),
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      verticalSpaceTiny,
+                      PaymentStatusLabel(
+                        price: delivery.price,
+                        busy: isBusy,
+                        onButtonTapped: () {
+                          setState(() {
+                            isBusy = true;
+                          });
+                          startPayment(price: '1000', id: delivery.id);
+                        },
+                        paymentStatus: delivery.paymentStatus,
+                      ),
+                      verticalSpaceTiny,
+                    ],
                   ),
                 ),
               );

@@ -3,7 +3,6 @@ import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/ui/startup/startup_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stacked_services/stacked_services.dart';

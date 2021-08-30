@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/ui/BottomSheetUi/setup_bottom_sheet_ui.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -20,6 +19,8 @@ void main() async {
   setupBottomSheetUi();
   final _pushservice = locator<PushNotificationService>();
   _pushservice.initializePushNotificationService();
+  final _calculate = locator<Calculate>();
+  await _calculate.getCurrentLocation();
   runApp(VxState(
     store: MyStore(),
     child: MyApp(),

@@ -18,6 +18,7 @@ _$_User _$_$_UserFromJson(Map<String, dynamic> json) {
     vehicle: json['vehicle'] as String?,
     vehicledocs: json['vehicledocs'] as String?,
     pushToken: json['pushToken'] as String?,
+    mobileNo: json['mobileNo'] as String?,
     notification: json['notification'] as List<dynamic>?,
   );
 }
@@ -33,5 +34,6 @@ Map<String, dynamic> _$_$_UserToJson(_$_User instance) => <String, dynamic>{
       'vehicle': instance.vehicle,
       'vehicledocs': instance.vehicledocs,
       'pushToken': instance.pushToken,
+      'mobileNo': instance.mobileNo,
       'notification': instance.notification,
     };

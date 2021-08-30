@@ -43,6 +43,7 @@ class NotificationView extends StatelessWidget {
               isVehicle: false,
               vehicledocs: 'vehicledocs',
               notification: [],
+              mobileNo: '',
             )
           ],
           builder: (context, child) {
@@ -60,7 +61,13 @@ class NotificationView extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 1),
                         child: Card(
                           child: ListTile(
-                            title: Text(user.notification[index]['title']),
+                            title: Column(
+                              children: [
+                                Text(user.notification[index]['title']),
+                                verticalSpaceTiny,
+                                Text(user.notification[index]['body']),
+                              ],
+                            ),
                           ),
                         ),
                       );

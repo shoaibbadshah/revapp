@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../ui/address_selection/address_selection_view.dart';
+import '../ui/avenfood/avenfood_view.dart';
 import '../ui/boat_ride/boat_ride_view.dart';
 import '../ui/booking/booking_view.dart';
 import '../ui/car_ride/car_ride_view.dart';
@@ -24,6 +25,7 @@ class Routes {
   static const String startUpView = '/';
   static const String mainScreenView = '/main-screen-view';
   static const String secondView = '/second-view';
+  static const String avenFoodView = '/aven-food-view';
   static const String createAccountView = '/create-account-view';
   static const String loginView = '/login-view';
   static const String addressSelectionView = '/address-selection-view';
@@ -34,6 +36,7 @@ class Routes {
     startUpView,
     mainScreenView,
     secondView,
+    avenFoodView,
     createAccountView,
     loginView,
     addressSelectionView,
@@ -50,6 +53,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.startUpView, page: StartUpView),
     RouteDef(Routes.mainScreenView, page: MainScreenView),
     RouteDef(Routes.secondView, page: SecondView),
+    RouteDef(Routes.avenFoodView, page: AvenFoodView),
     RouteDef(Routes.createAccountView, page: CreateAccountView),
     RouteDef(Routes.loginView, page: LoginView),
     RouteDef(Routes.addressSelectionView, page: AddressSelectionView),
@@ -78,6 +82,12 @@ class StackedRouter extends RouterBase {
     SecondView: (data) {
       return CupertinoPageRoute<dynamic>(
         builder: (context) => const SecondView(),
+        settings: data,
+      );
+    },
+    AvenFoodView: (data) {
+      return CupertinoPageRoute<dynamic>(
+        builder: (context) => const AvenFoodView(),
         settings: data,
       );
     },
@@ -114,6 +124,9 @@ class StackedRouter extends RouterBase {
         builder: (context) => CarRideView(
           key: args.key,
           formType: args.formType,
+          isDropLatLng: args.isDropLatLng,
+          dropLat: args.dropLat,
+          dropLng: args.dropLng,
         ),
         settings: data,
       );
@@ -173,7 +186,15 @@ class AddressSelectionViewArguments {
 class CarRideViewArguments {
   final Key? key;
   final String formType;
-  CarRideViewArguments({this.key, required this.formType});
+  final bool isDropLatLng;
+  final double? dropLat;
+  final double? dropLng;
+  CarRideViewArguments(
+      {this.key,
+      required this.formType,
+      required this.isDropLatLng,
+      this.dropLat,
+      this.dropLng});
 }
 
 /// BoatRideView arguments holder class

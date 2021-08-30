@@ -14,7 +14,6 @@ import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/user_service.dart';
-import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:intl/intl.dart';
@@ -24,17 +23,16 @@ class CarRideViewModel extends BaseViewModel {
   final log = getLogger('CarRideViewModel');
   final _firestoreApi = locator<FirestoreApi>();
   Position? currentPosition;
-  PickResult _selectedPlace = PickResult();
-  late PickResult _dropoffplace = PickResult();
+  LatLng _selectedPlace = LatLng(51.457838, -0.596342);
+  LatLng _dropoffplace = LatLng(51.457838, -0.596342);
   bool isbusy = false;
   bool isbusy1 = false;
   bool isbusy2 = false;
-  PickResult get selectedPlace => _selectedPlace;
-  PickResult get dropoffplace => _dropoffplace;
   final navigationService = locator<NavigationService>();
   final _bottomSheetService = locator<BottomSheetService>();
-  final _calculate = locator<Calculate>();
   String placeDistances = '';
+  String dropOffAddress = '';
+  String pickUpAddress = '';
   String duration = '';
   String placeRates = '';
   String initialRate = '';
@@ -98,29 +96,53 @@ class CarRideViewModel extends BaseViewModel {
     }
   }
 
-  onPlacePicked(PickResult result) {
-    _selectedPlace = result;
+  onPlacePicked(PickResult result) async {
+    _selectedPlace =
+        LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
+    pickUpAddress = result.formattedAddress!;
     isbusy = false;
+    if (_dropoffplace != null) {
+      await Calculate()
+          .calculateDistan(
+        dropoffplac1: _dropoffplace.latitude,
+        dropoffplac2: _dropoffplace.longitude,
+        selectedPlac1: _selectedPlace.latitude,
+        selectedPlac2: _selectedPlace.longitude,
+        formtype: formtype_get,
+      )
+          .then((value) {
+        placeDistances = value['distance'];
+        placeRates = value['placeRate'];
+        initialRate = value['placeRate'];
+        duration = value['duration'];
+        rate = value['rate'];
+      });
+    }
     notifyListeners();
     return navigationService.back();
   }
 
-  setPlacePicked(PickResult result) {
+  setPlacePicked(LatLng result) {
     _selectedPlace = result;
     isbusy = false;
     notifyListeners();
   }
 
-  setDropPicked(PickResult result) async {
+  setDropPicked(LatLng result) async {
     _dropoffplace = result;
+    notifyListeners();
   }
 
   onDropPicked(PickResult result) async {
-    _dropoffplace = result;
+    dropOffAddress = result.formattedAddress!;
+    _dropoffplace =
+        LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
     await Calculate()
-        .calculateDis(
-      dropoffplac: _dropoffplace,
-      selectedPlac: _selectedPlace,
+        .calculateDistan(
+      dropoffplac1: _dropoffplace.latitude,
+      dropoffplac2: _dropoffplace.longitude,
+      selectedPlac1: _selectedPlace.latitude,
+      selectedPlac2: _selectedPlace.longitude,
       formtype: formtype_get,
     )
         .then((value) {
@@ -143,9 +165,12 @@ class CarRideViewModel extends BaseViewModel {
     await getCurrentLocation();
     var risult = await googleGeocoding.geocoding.getReverse(
         LatLon(currentPosition!.latitude, currentPosition!.longitude));
-    GeocodingResult re = risult!.results![0];
-    print(re.formattedAddress);
-    await setPlacePicked(PickResult(formattedAddress: re.formattedAddress));
+    if (risult != null) {
+      GeocodingResult re = risult.results![0];
+      pickUpAddress = re.formattedAddress!;
+      await setPlacePicked(
+          LatLng(re.geometry!.location!.lat!, re.geometry!.location!.lng!));
+    }
     setBusy(false);
   }
 
@@ -158,7 +183,9 @@ class CarRideViewModel extends BaseViewModel {
         .getReverse(LatLon(data.latitude, data.longitude));
     GeocodingResult re = risult!.results![0];
     print(re.formattedAddress);
-    _dropoffplace = PickResult(formattedAddress: re.formattedAddress);
+    _dropoffplace =
+        LatLng(re.geometry!.location!.lat!, re.geometry!.location!.lng!);
+    dropOffAddress = re.formattedAddress!;
     await Calculate()
         .calculateDistan(
       dropoffplac1: data.latitude,
@@ -187,9 +214,10 @@ class CarRideViewModel extends BaseViewModel {
       await getCurrentLocation();
       navigationService.navigateToView(PlacePicker(
         apiKey: env['GOOGLE_MAPS_API_KEY']!,
-        initialPosition:
-            LatLng(currentPosition!.latitude, currentPosition!.longitude),
-        useCurrentLocation: true,
+        initialPosition: pickup
+            ? LatLng(currentPosition!.latitude, currentPosition!.longitude)
+            : LatLng(_dropoffplace.latitude, _dropoffplace.longitude),
+        useCurrentLocation: pickup ? true : false,
         selectInitialPosition: true,
         onPlacePicked: (result) =>
             pickup ? onPlacePicked(result) : onDropPicked(result),
@@ -247,21 +275,19 @@ class CarRideViewModel extends BaseViewModel {
                 DateTime.now().minute),
             [hh, ':', nn, " ", am]).toString()
         : _time!;
-    if (selectedPlace.formattedAddress == null ||
-        dropoffplace.formattedAddress == null) {
+    if (pickUpAddress == null || dropOffAddress == null) {
       return validaterror('Please fill the above details!');
     }
     if (formtype == DeliveryService) {
-      if (selectedPlace.formattedAddress == null ||
-          dropoffplace.formattedAddress == null ||
+      if (pickUpAddress == null ||
+          dropOffAddress == null ||
           setLaguageSize == null ||
           setLaguageType == null) {
         return validaterror('Please fill the above details!');
       }
     }
     if (formtype == Ambulance) {
-      if (selectedPlace.formattedAddress == null ||
-          dropoffplace.formattedAddress == null) {
+      if (pickUpAddress == null || dropOffAddress == null) {
         return validaterror('Please fill the above details!');
       }
       if (verticalGroupValue == 'no' && setpatients == 0) {
@@ -276,8 +302,8 @@ class CarRideViewModel extends BaseViewModel {
       Map<String, dynamic> result;
       if (formtype == DeliveryService) {
         result = {
-          'startLocation': selectedPlace.formattedAddress,
-          'destination': dropoffplace.formattedAddress,
+          'startLocation': pickUpAddress,
+          'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
           'userId': currentUser.id,
@@ -288,19 +314,19 @@ class CarRideViewModel extends BaseViewModel {
           'paymentStatus': 'Pending',
           'drivers': null,
           'selectedPlace': [
-            _selectedPlace.geometry!.location.lat.toDouble(),
-            _selectedPlace.geometry!.location.lng.toDouble()
+            _selectedPlace.latitude.toDouble(),
+            _selectedPlace.longitude.toDouble()
           ],
           'dropoffplace': [
-            _dropoffplace.geometry!.location.lat.toDouble(),
-            _dropoffplace.geometry!.location.lng.toDouble()
+            _dropoffplace.latitude.toDouble(),
+            _dropoffplace.longitude.toDouble()
           ],
           'pushToken': currentUser.pushToken,
         };
       } else if (formtype == Ambulance) {
         result = {
-          'startLocation': selectedPlace.formattedAddress,
-          'destination': dropoffplace.formattedAddress,
+          'startLocation': pickUpAddress,
+          'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
           'userId': currentUser.id,
@@ -309,12 +335,12 @@ class CarRideViewModel extends BaseViewModel {
           'paymentStatus': 'Pending',
           'drivers': null,
           'selectedPlace': [
-            _selectedPlace.geometry!.location.lat.toDouble(),
-            _selectedPlace.geometry!.location.lng.toDouble()
+            _selectedPlace.latitude.toDouble(),
+            _selectedPlace.longitude.toDouble()
           ],
           'dropoffplace': [
-            _dropoffplace.geometry!.location.lat.toDouble(),
-            _dropoffplace.geometry!.location.lng.toDouble()
+            _dropoffplace.latitude.toDouble(),
+            _dropoffplace.latitude.toDouble()
           ],
           'pushToken': currentUser.pushToken,
           'personal': verticalGroupValue,
@@ -322,8 +348,8 @@ class CarRideViewModel extends BaseViewModel {
         };
       } else if (formtype == Cartype) {
         result = {
-          'startLocation': selectedPlace.formattedAddress,
-          'destination': dropoffplace.formattedAddress,
+          'startLocation': pickUpAddress,
+          'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
           'userId': currentUser.id,
@@ -332,20 +358,20 @@ class CarRideViewModel extends BaseViewModel {
           'paymentStatus': 'Pending',
           'drivers': null,
           'selectedPlace': [
-            _selectedPlace.geometry!.location.lat.toDouble(),
-            _selectedPlace.geometry!.location.lng.toDouble()
+            _selectedPlace.latitude.toDouble(),
+            _selectedPlace.longitude.toDouble()
           ],
           'dropoffplace': [
-            _dropoffplace.geometry!.location.lat.toDouble(),
-            _dropoffplace.geometry!.location.lng.toDouble()
+            _dropoffplace.latitude.toDouble(),
+            _dropoffplace.longitude.toDouble()
           ],
           'rideType': ridetype,
           'pushToken': currentUser.pushToken,
         };
       } else {
         result = {
-          'startLocation': selectedPlace.formattedAddress,
-          'destination': dropoffplace.formattedAddress,
+          'startLocation': pickUpAddress,
+          'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
           'userId': currentUser.id,
@@ -354,12 +380,12 @@ class CarRideViewModel extends BaseViewModel {
           'paymentStatus': 'Pending',
           'drivers': null,
           'selectedPlace': [
-            _selectedPlace.geometry!.location.lat.toDouble(),
-            _selectedPlace.geometry!.location.lng.toDouble()
+            _selectedPlace.latitude.toDouble(),
+            _selectedPlace.longitude.toDouble()
           ],
           'dropoffplace': [
-            _dropoffplace.geometry!.location.lat.toDouble(),
-            _dropoffplace.geometry!.location.lng.toDouble()
+            _dropoffplace.latitude.toDouble(),
+            _dropoffplace.longitude.toDouble()
           ],
           'pushToken': currentUser.pushToken,
         };
@@ -418,7 +444,6 @@ class CarRideViewModel extends BaseViewModel {
           if (_userService.hasLoggedInUser) {
             MyStore store = VxState.store as MyStore;
             log.i(store.carride);
-            log.i('Positio ${_selectedPlace.geometry}');
             _firestoreApi
                 .createCarRide(
                     carride: store.carride, user: _userService.currentUser)
@@ -460,7 +485,6 @@ class CarRideViewModel extends BaseViewModel {
           if (_userService.hasLoggedInUser) {
             MyStore store = VxState.store as MyStore;
             log.i(store.carride);
-            log.i('Positio ${_selectedPlace.geometry}');
             _firestoreApi
                 .createDeliveryServices(
                     carride: store.carride, user: _userService.currentUser)

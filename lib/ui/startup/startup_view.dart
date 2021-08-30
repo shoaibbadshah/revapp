@@ -2,10 +2,8 @@ import 'dart:async';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/models/application_models.dart';
-import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
-import 'package:avenride/ui/car_ride/car_ride_viewmodel.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/food_card.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
@@ -19,7 +17,6 @@ import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:stacked/stacked.dart';
@@ -97,53 +94,48 @@ class _StartUpViewState extends State<StartUpView> {
     data = [];
   }
 
-  int _currentPage = 0;
-  final _pageController = PageController();
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StartUpViewModel>.reactive(
       onModelReady: (model) async {
-        SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
-          model.runStartupLogic();
+        SchedulerBinding.instance?.addPostFrameCallback((timeStamp) async {
+          await model.runStartupLogic();
+          model.checkData(context);
         });
       },
       builder: (context, model, child) => Scaffold(
-        bottomNavigationBar: BottomBar(
-          backgroundColor: Colors.amber.shade200,
-          selectedIndex: _currentPage,
-          onTap: (int index) {
-            _pageController.jumpToPage(index);
-            setState(() => _currentPage = index);
-          },
-          items: <BottomBarItem>[
-            BottomBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home'),
-              activeColor: Colors.blue,
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(index == 0 ? Icons.home : Icons.home_outlined),
+              label: 'Home',
             ),
-            BottomBarItem(
-              title: Text('My Bookings'),
-              icon: Icon(Icons.book),
-              activeColor: Colors.greenAccent.shade700,
+            BottomNavigationBarItem(
+              label: 'My Bookings',
+              icon: Icon(index == 1 ? Icons.book : Icons.book_outlined),
             ),
-            BottomBarItem(
-              icon: Icon(Icons.person),
-              title: Text('My Profile'),
-              activeColor: Colors.orange,
+            BottomNavigationBarItem(
+              icon: Icon(
+                  index == 2 ? Icons.person : Icons.person_add_alt_1_outlined),
+              label: 'My Profile',
             ),
           ],
-        ),
-        body: PageView(
-          controller: _pageController,
-          children: [
-            screenfirst(model),
-            BookingSubScreen(),
-            ProfileSub(),
-          ],
-          onPageChanged: (index) {
-            setState(() => _currentPage = index);
+          currentIndex: index,
+          selectedItemColor: Colors.black,
+          backgroundColor: Colors.amber[200],
+          onTap: (value) {
+            setState(() {
+              index = value;
+            });
           },
         ),
+        body: index == 2
+            ? ProfileSub()
+            : index == 1
+                ? BookingSubScreen()
+                : screenfirst(model),
         key: _scaffoldKey,
         drawer: SafeArea(
           child: Container(
@@ -171,7 +163,8 @@ class _StartUpViewState extends State<StartUpView> {
                               isVehicle: false,
                               vehicledocs: 'vehicledocs',
                               notification: [],
-                            )
+                              mobileNo: '',
+                            ),
                           ],
                           builder: (context, child) {
                             var users = Provider.of<List<Users>>(context);
@@ -282,7 +275,7 @@ class _StartUpViewState extends State<StartUpView> {
         ),
       ],
       initialSnappingPosition: SnappingPosition.pixels(
-        positionPixels: 240,
+        positionPixels: 260,
         snappingCurve: Curves.elasticOut,
         snappingDuration: Duration(milliseconds: 1750),
       ),

@@ -22,6 +22,7 @@ class User with _$User {
     String? vehicle,
     String? vehicledocs,
     String? pushToken,
+    String? mobileNo,
     List? notification,
   }) = _User;
 
@@ -39,6 +40,7 @@ class Users {
   final String personaldocs;
   final String bankdocs;
   final String vehicle;
+  final String mobileNo;
   final String vehicledocs;
   final bool isVehicle;
   final bool isBoat;
@@ -50,6 +52,7 @@ class Users {
     required this.isBoat,
     required this.email,
     required this.defaultAddress,
+    required this.mobileNo,
     required this.name,
     required this.notification,
     required this.photourl,
@@ -68,6 +71,7 @@ class Users {
       isVehicle: false,
       bankdocs: data['bankdocs'],
       notification: data['notification'],
+      mobileNo: data['mobileNo'],
       defaultAddress: '',
       email: data['email'],
       name: data['name'] ?? '',

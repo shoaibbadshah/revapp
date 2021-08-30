@@ -87,8 +87,6 @@ class AmbulanceList extends StatefulWidget {
 }
 
 class _AmbulanceListState extends State<AmbulanceList> {
-  final _firestoreApi = locator<FirestoreApi>();
-
   final _userService = locator<UserService>();
   MyStore store = VxState.store as MyStore;
   final _navigationService = locator<NavigationService>();
@@ -130,68 +128,215 @@ class _AmbulanceListState extends State<AmbulanceList> {
   @override
   Widget build(BuildContext context) {
     var ambulances = Provider.of<List<AmbulanceModel>>(context);
-
     return ambulances.length == 0
         ? NotAvailable()
         : ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),
             scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 20),
             itemCount: ambulances.length,
             itemBuilder: (context, index) {
               AmbulanceModel ambulance = ambulances[index];
-              return Padding(
-                padding: EdgeInsets.all(10),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  elevation: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.amber, width: 2)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        verticalSpaceSmall,
-                        StartLocationLabel(
-                          startLocation: ambulance.startLocation,
-                          paymentStatus: ambulance.paymentStatus,
-                          onMainButtonTapped: () {
-                            _firestoreApi
-                                .deleteBooking(
-                                    collectionName: 'ambulance',
-                                    user: _userService.currentUser,
-                                    docId: ambulance.id)
-                                .then((value) {
-                              _navigationService.back();
-                            });
-                          },
+              return Card(
+                elevation: 5,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                height: 18,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      width: 1.5, color: Colors.greenAccent),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green,
+                                  ),
+                                  margin: EdgeInsets.all(2),
+                                ),
+                              ),
+                              verticalSpaceTiny,
+                              VxDash(
+                                direction: Axis.vertical,
+                                length: 40,
+                                dashLength: 8,
+                                dashGap: 4,
+                                dashColor: Colors.grey,
+                              ),
+                              verticalSpaceTiny,
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: <Widget>[
+                              Container(
+                                width: screenWidth(context) / 1.6,
+                                height: 40,
+                                child: Text(
+                                  ambulance.startLocation,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                height: 2.0,
+                                padding: EdgeInsets.all(0),
+                                width: screenWidth(context) / 1.6,
+                                color: Colors.grey.shade300,
+                                margin: EdgeInsets.only(right: 20),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                height: 40,
+                                width: screenWidth(context) / 1.6,
+                                child: Text(
+                                  ambulance.destination,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      verticalSpaceSmall,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
                         ),
-                        verticalSpaceSmall,
-                        EndLocationLabel(
-                          destination: ambulance.destination,
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            children: [
+                              verticalSpaceMedium,
+                              Icon(
+                                Icons.local_taxi,
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Distance',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Text(
+                                ambulance.distace,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              verticalSpaceRegular,
+                              Text(
+                                'Time',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Column(
+                                children: [
+                                  Text(
+                                    ambulance.scheduleTime.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  Text(
+                                    ambulance.scheduledDate.toLowerCase(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          horizontalSpaceSmall,
+                          Column(
+                            children: [
+                              Text(
+                                'Price',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              verticalSpaceSmall,
+                              Container(
+                                color: Colors.white,
+                                child: Text(
+                                  ambulance.price,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      verticalSpaceSmall,
+                      Container(
+                        margin: EdgeInsetsDirectional.only(
+                          start: 1.0,
+                          end: 1.0,
                         ),
-                        verticalSpaceSmall,
-                        DateLabel(scheduledDate: ambulance.scheduledDate),
-                        verticalSpaceSmall,
-                        TimeLabel(scheduleTime: ambulance.scheduleTime),
-                        PaymentStatusLabel(
-                          price: ambulance.price.toString(),
-                          busy: isBusy,
-                          onButtonTapped: () {
-                            setState(() {
-                              isBusy = true;
-                            });
-                            startPayment(
-                              price: ambulance.price.toString(),
-                              id: ambulance.id,
-                            );
-                          },
-                          paymentStatus: ambulance.paymentStatus,
-                        ),
-                        verticalSpaceMedium,
-                      ],
-                    ),
+                        height: 2.0,
+                        width: screenWidth(context) / 1.6,
+                        color: Colors.grey.shade300,
+                      ),
+                      verticalSpaceTiny,
+                      PaymentStatusLabel(
+                        price: ambulance.price,
+                        busy: isBusy,
+                        onButtonTapped: () {
+                          setState(() {
+                            isBusy = true;
+                          });
+                          startPayment(
+                              price: ambulance.price, id: ambulance.id);
+                        },
+                        paymentStatus: ambulance.paymentStatus,
+                      ),
+                      verticalSpaceTiny,
+                    ],
                   ),
                 ),
               );

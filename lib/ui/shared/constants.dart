@@ -3,13 +3,23 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Assets {
   static String _imagesRoot = "assets/images/";
-  static String firebase = _imagesRoot + "firebase.png";
+  static String firebase = _imagesRoot + "aven.png";
   static String bgimg = _imagesRoot + "bgimg.png";
   static String btnbgimg = _imagesRoot + "btnbg.png";
   static String loadinimg = _imagesRoot + "loading.jpg";
   static String doneimg = _imagesRoot + "close.png";
   static String bananaBoat = _imagesRoot + "banana.png";
   static String ambulance = _imagesRoot + "ambulance.png";
+
+  static String cola = _imagesRoot + "foodicons/cola/cola.jpg";
+  static String hamburger = _imagesRoot + "foodicons/hamburger/hamburger.jpg";
+  static String noodles = _imagesRoot + "foodicons/noodles/noodles.jpg";
+  static String pizza = _imagesRoot + "foodicons/pizza/pizza.jpg";
+  static String mac = _imagesRoot + "foodicons/mac.jpg";
+  static String kfc = _imagesRoot + "foodicons/kfc.jpg";
+  static String burgerking = _imagesRoot + "foodicons/burgerking.png";
+  static String pizzahut = _imagesRoot + "foodicons/pizzahut.jpg";
+  static String coldstone = _imagesRoot + "foodicons/cold.png";
 
   static String cargo6 = _imagesRoot + "cargo6.PNG";
   static String cargo5 = _imagesRoot + "cargo5.PNG";

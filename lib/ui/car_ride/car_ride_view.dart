@@ -16,12 +16,14 @@ import 'package:velocity_x/velocity_x.dart';
 class CarRideView extends StatelessWidget {
   final String formType;
   bool isDropLatLng = false;
-  LatLng? dropLatLng = MMIA;
+  double? dropLat = MMIA.latitude;
+  double? dropLng = MMIA.longitude;
   CarRideView({
     Key? key,
     required this.formType,
     this.isDropLatLng = false,
-    this.dropLatLng,
+    this.dropLat,
+    this.dropLng,
   }) : super(key: key);
   TextEditingController _dateController =
       TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
@@ -40,7 +42,7 @@ class CarRideView extends StatelessWidget {
         store.carride = {};
         await model.setPickUpAddress().then((value) {
           if (isDropLatLng) {
-            model.setDropOffAddress(dropLatLng!);
+            model.setDropOffAddress(LatLng(dropLat!, dropLng!));
           }
         });
       },
@@ -82,16 +84,13 @@ class CarRideView extends StatelessWidget {
                             child: Column(
                               children: [
                                 Visibility(
-                                  visible:
-                                      model.selectedPlace.formattedAddress !=
-                                              null
-                                          ? true
-                                          : false,
+                                  visible: model.pickUpAddress.isEmpty
+                                      ? false
+                                      : true,
                                   child: Padding(
                                     padding: const EdgeInsets.all(20.0),
                                     child: Text(
-                                      model.selectedPlace.formattedAddress
-                                          .toString(),
+                                      model.pickUpAddress,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
@@ -114,9 +113,7 @@ class CarRideView extends StatelessWidget {
                                           ),
                                         )
                                       : Text(
-                                          model.selectedPlace
-                                                      .formattedAddress ==
-                                                  null
+                                          model.pickUpAddress.isEmpty
                                               ? 'Select PickUp Address'
                                               : 'Change PickUp Address',
                                           style: TextStyle(
@@ -138,16 +135,13 @@ class CarRideView extends StatelessWidget {
                             child: Column(
                               children: [
                                 Visibility(
-                                  visible:
-                                      model.dropoffplace.formattedAddress !=
-                                              null
-                                          ? true
-                                          : false,
+                                  visible: model.dropOffAddress.isEmpty
+                                      ? false
+                                      : true,
                                   child: Padding(
                                     padding: const EdgeInsets.all(20.0),
                                     child: Text(
-                                      model.dropoffplace.formattedAddress
-                                          .toString(),
+                                      model.dropOffAddress,
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
@@ -169,8 +163,7 @@ class CarRideView extends StatelessWidget {
                                           ),
                                         )
                                       : Text(
-                                          model.dropoffplace.formattedAddress ==
-                                                  null
+                                          model.dropOffAddress.isEmpty
                                               ? 'Select DropOff Address'
                                               : 'Change DropOff Address',
                                           style: TextStyle(

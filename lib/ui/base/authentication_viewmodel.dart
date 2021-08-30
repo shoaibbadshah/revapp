@@ -77,6 +77,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
             vehicledocs: Pending,
             pushToken: token,
             notification: [],
+            mobileNo: '',
           ),
         );
       }

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:avenride/ui/pointmap/RealTimeMap.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
@@ -136,119 +138,207 @@ class _CarListState extends State<CarList> {
         : ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),
             scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 20),
             itemCount: cars.length,
             itemBuilder: (context, index) {
               CarModel car = cars[index];
-              return Padding(
-                padding: EdgeInsets.all(10),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  elevation: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.amber, width: 2),
+              return InkWell(
+                onTap: () {
+                  _navigationService.navigateToView(
+                    RealTimeMap(
+                      DEST_LOCATION: LatLng(car.dropoffplace.latitude,
+                          car.dropoffplace.longitude),
+                      SOURCE_LOCATION: LatLng(car.selectedPlace.latitude,
+                          car.selectedPlace.longitude),
                     ),
+                  );
+                },
+                child: Card(
+                  elevation: 5,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        verticalSpaceSmall,
-                        StartLocationLabel(
-                          startLocation: car.startLocation,
-                          paymentStatus: car.paymentStatus,
-                          onMainButtonTapped: () {
-                            _firestoreApi
-                                .deleteBooking(
-                                    collectionName: 'car',
-                                    user: _userService.currentUser,
-                                    docId: car.id)
-                                .then((value) {
-                              _navigationService.back();
-                            });
-                          },
-                        ),
-                        verticalSpaceSmall,
-                        EndLocationLabel(
-                          destination: car.destination,
-                        ),
-                        verticalSpaceSmall,
-                        DateLabel(scheduledDate: car.scheduledDate),
-                        verticalSpaceSmall,
-                        TimeLabel(scheduleTime: car.scheduleTime),
-                        verticalSpaceSmall,
                         Row(
                           children: [
-                            horizontalSpaceMedium,
-                            Text(
-                              'Car Type:',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
+                            Column(
+                              children: <Widget>[
+                                Container(
+                                  height: 18,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                        width: 1.5, color: Colors.greenAccent),
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.green,
+                                    ),
+                                    margin: EdgeInsets.all(2),
+                                  ),
+                                ),
+                                verticalSpaceTiny,
+                                VxDash(
+                                  direction: Axis.vertical,
+                                  length: 40,
+                                  dashLength: 8,
+                                  dashGap: 4,
+                                  dashColor: Colors.grey,
+                                ),
+                                verticalSpaceTiny,
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  color: Colors.blue,
+                                ),
+                              ],
                             ),
-                            horizontalSpaceMedium,
-                            Text(
-                              car.carType,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
+                            horizontalSpaceSmall,
+                            Column(
+                              children: <Widget>[
+                                Container(
+                                  width: screenWidth(context) / 1.6,
+                                  height: 40,
+                                  child: Text(
+                                    car.startLocation,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                verticalSpaceSmall,
+                                Container(
+                                  height: 2.0,
+                                  padding: EdgeInsets.all(0),
+                                  width: screenWidth(context) / 1.6,
+                                  color: Colors.grey.shade300,
+                                  margin: EdgeInsets.only(right: 20),
+                                ),
+                                verticalSpaceSmall,
+                                Container(
+                                  height: 40,
+                                  width: screenWidth(context) / 1.6,
+                                  child: Text(
+                                    car.destination,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            horizontalSpaceSmall
                           ],
                         ),
                         verticalSpaceSmall,
+                        Container(
+                          margin: EdgeInsetsDirectional.only(
+                            start: 1.0,
+                            end: 1.0,
+                          ),
+                          height: 2.0,
+                          width: screenWidth(context) / 1.6,
+                          color: Colors.grey.shade300,
+                        ),
                         Row(
                           children: [
-                            horizontalSpaceMedium,
-                            Text(
-                              'Distance:',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
+                            Column(
+                              children: [
+                                verticalSpaceMedium,
+                                Icon(
+                                  Icons.local_taxi,
+                                ),
+                              ],
                             ),
-                            horizontalSpaceMedium,
-                            Text(
-                              '${car.distace} min',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
+                            horizontalSpaceSmall,
+                            Column(
+                              children: [
+                                Text(
+                                  'Distance',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                verticalSpaceSmall,
+                                Text(
+                                  car.distace,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
                             ),
-                            horizontalSpaceSmall
+                            horizontalSpaceSmall,
+                            Column(
+                              children: [
+                                verticalSpaceRegular,
+                                Text(
+                                  'Time',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                verticalSpaceSmall,
+                                Column(
+                                  children: [
+                                    Text(
+                                      car.scheduleTime.toLowerCase(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      car.scheduledDate.toLowerCase(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            horizontalSpaceSmall,
+                            Column(
+                              children: [
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                verticalSpaceSmall,
+                                Container(
+                                  color: Colors.white,
+                                  child: Text(
+                                    car.price,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                         verticalSpaceSmall,
-                        Row(
-                          children: [
-                            horizontalSpaceMedium,
-                            Text(
-                              'Ride Type:',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                            horizontalSpaceMedium,
-                            Text(
-                              car.rideType,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
-                            ),
-                            horizontalSpaceSmall
-                          ],
+                        Container(
+                          margin: EdgeInsetsDirectional.only(
+                            start: 1.0,
+                            end: 1.0,
+                          ),
+                          height: 2.0,
+                          width: screenWidth(context) / 1.6,
+                          color: Colors.grey.shade300,
                         ),
-                        verticalSpaceSmall,
-                        Row(
-                          children: [
-                            horizontalSpaceMedium,
-                            Text(
-                              'Price:',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                            horizontalSpaceMedium,
-                            Text(
-                              '${car.price} Nan',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
-                            ),
-                            horizontalSpaceSmall
-                          ],
-                        ),
+                        verticalSpaceTiny,
                         PaymentStatusLabel(
                           price: car.price,
                           busy: isBusy,
@@ -260,7 +350,7 @@ class _CarListState extends State<CarList> {
                           },
                           paymentStatus: car.paymentStatus,
                         ),
-                        verticalSpaceMedium,
+                        verticalSpaceTiny,
                       ],
                     ),
                   ),

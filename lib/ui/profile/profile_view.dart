@@ -4,6 +4,7 @@ import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/profile/add_vehicle.dart';
 import 'package:avenride/ui/profile/bank_details.dart';
 import 'package:avenride/ui/profile/personal_document.dart';
+import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/vehicle_document.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -124,19 +125,21 @@ class _ProfileSubState extends State<ProfileSub> {
       value: firestoreApi.streamuser(userService.currentUser.id),
       initialData: [
         Users(
-            id: 'id',
-            email: 'email',
-            defaultAddress: 'defaultAddress',
-            name: 'name',
-            notification: [],
-            photourl:
-                'https://img.icons8.com/color/48/000000/gender-neutral-user.png',
-            personaldocs: 'personaldocs',
-            bankdocs: 'bankdocs',
-            vehicle: 'vehicle',
-            isBoat: false,
-            isVehicle: false,
-            vehicledocs: 'vehicledocs')
+          id: 'id',
+          email: 'email',
+          defaultAddress: 'defaultAddress',
+          name: 'name',
+          notification: [],
+          photourl:
+              'https://img.icons8.com/color/48/000000/gender-neutral-user.png',
+          personaldocs: 'personaldocs',
+          bankdocs: 'bankdocs',
+          vehicle: 'vehicle',
+          isBoat: false,
+          isVehicle: false,
+          vehicledocs: 'vehicledocs',
+          mobileNo: '',
+        )
       ],
       builder: (context, child) {
         var users = Provider.of<List<Users>>(context);
@@ -167,6 +170,17 @@ class _ProfileSubState extends State<ProfileSub> {
                     ),
                   ),
                   verticalSpaceMedium,
+                  ProfileButton(
+                    isPending: false,
+                    text: 'Add Personal Info',
+                    onTapped: () {
+                      return _navigationService.navigateWithTransition(
+                        ProfileInfo(isMainScreen: false),
+                        transition: 'rightToLeft',
+                      );
+                    },
+                  ),
+                  verticalSpaceSmall,
                   user.personaldocs != Confirmed
                       ? ProfileButton(
                           isPending: true,
