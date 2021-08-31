@@ -8,8 +8,20 @@ import 'login_view.form.dart';
 class LoginViewModel extends AuthenticationViewModel {
   final FirebaseAuthenticationService? _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
-
+  String pass = "admin";
+  String animationType = "idle";
   LoginViewModel() : super(successRoute: Routes.startUpView);
+
+  updatePass(String val) {
+    pass = val;
+    notifyListeners();
+  }
+
+  updateAnimationType(String val) {
+    print(val);
+    animationType = val;
+    notifyListeners();
+  }
 
   @override
   Future<FirebaseAuthenticationResult> runAuthentication() =>

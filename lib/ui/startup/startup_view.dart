@@ -1,100 +1,33 @@
 import 'dart:async';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
-import 'package:avenride/models/application_models.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/food_card.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
+import 'package:avenride/ui/startup/back_map.dart';
+import 'package:avenride/ui/startup/current_rides.dart';
+import 'package:avenride/ui/startup/side_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
-import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:stacked/stacked.dart';
-import 'package:bottom_bar/bottom_bar.dart';
 
-class StartUpView extends StatefulWidget {
+class StartUpView extends StatelessWidget {
   StartUpView({Key? key}) : super(key: key);
-
-  @override
-  _StartUpViewState createState() => _StartUpViewState();
-}
-
-class _StartUpViewState extends State<StartUpView> {
   final String logo = Assets.bgimg;
   final String logo1 = Assets.btnbgimg;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Completer<GoogleMapController> _controller = Completer();
-
-  // ignore: non_constant_identifier_names
-  late LatLng SOURCE_LOCATION;
-
   void _openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
   }
-
-  void onMapCreated(GoogleMapController controller) {
-    if (!_controller.isCompleted) {
-      _controller.complete(controller);
-    }
-  }
-
-  late FirebaseMessaging messaging;
-
-  runstartup() async {}
-
-  @override
-  void initState() {
-    super.initState();
-
-    runstartup();
-    messaging = FirebaseMessaging.instance;
-    messaging.getToken().then((value) {
-      print('######################## $value');
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {});
-    FirebaseMessaging.onMessageOpenedApp.listen((message) async {});
-  }
-
-  Future<void> messageHandler(RemoteMessage message) async {
-    final userService = locator<UserService>();
-    final firestoreApi = locator<FirestoreApi>();
-    List data = [];
-    if (userService.currentUser.notification != null) {
-      print('add available data to data');
-      data = userService.currentUser.notification!;
-      print('added the data $data');
-    }
-    print('background message ${message.notification!.body}');
-    data.add({
-      'data': message.data,
-      'title': message.notification!.title == null
-          ? ''
-          : message.notification!.title,
-      'body':
-          message.notification!.body == null ? '' : message.notification!.body,
-    });
-    print('Updating user to update database $data');
-    firestoreApi.updateRider(data: {
-      'notification': data,
-    }, user: userService.currentUser.id);
-    print('Message clicked!');
-    print(message);
-    data = [];
-  }
-
-  int index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -104,126 +37,44 @@ class _StartUpViewState extends State<StartUpView> {
           await model.runStartupLogic();
           model.checkData(context);
         });
+        FirebaseMessaging.onMessage
+            .listen((RemoteMessage message) => model.messageHandler(message));
       },
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(index == 0 ? Icons.home : Icons.home_outlined),
+              icon: Icon(model.index == 0 ? Icons.home : Icons.home_outlined),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              label: 'My Bookings',
-              icon: Icon(index == 1 ? Icons.book : Icons.book_outlined),
+              label: 'Rides',
+              icon: Icon(model.index == 1
+                  ? Icons.local_taxi_sharp
+                  : Icons.local_taxi_outlined),
             ),
             BottomNavigationBarItem(
-              icon: Icon(
-                  index == 2 ? Icons.person : Icons.person_add_alt_1_outlined),
+              icon: Icon(model.index == 2
+                  ? Icons.person
+                  : Icons.person_add_alt_1_outlined),
               label: 'My Profile',
             ),
           ],
-          currentIndex: index,
+          currentIndex: model.index,
           selectedItemColor: Colors.black,
           backgroundColor: Colors.amber[200],
           onTap: (value) {
-            setState(() {
-              index = value;
-            });
+            model.updateBottomNav(value);
           },
         ),
-        body: index == 2
+        body: model.index == 2
             ? ProfileSub()
-            : index == 1
+            : model.index == 1
                 ? BookingSubScreen()
                 : screenfirst(model),
         key: _scaffoldKey,
-        drawer: SafeArea(
-          child: Container(
-            width: screenWidth(context) / 1.8,
-            child: Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  model.userService.hasLoggedInUser && model.userId != null
-                      ? StreamProvider<List<Users>>.value(
-                          value: model.firestoreApi
-                              .streamuser(model.userService.currentUser.id),
-                          initialData: [
-                            Users(
-                              id: 'id',
-                              email: 'email',
-                              defaultAddress: 'defaultAddress',
-                              name: 'name',
-                              photourl:
-                                  'https://img.icons8.com/color/48/000000/gender-neutral-user.png',
-                              personaldocs: 'personaldocs',
-                              bankdocs: 'bankdocs',
-                              vehicle: 'vehicle',
-                              isBoat: false,
-                              isVehicle: false,
-                              vehicledocs: 'vehicledocs',
-                              notification: [],
-                              mobileNo: '',
-                            ),
-                          ],
-                          builder: (context, child) {
-                            var users = Provider.of<List<Users>>(context);
-                            if (users.length == 0) {
-                              return NotAvailable();
-                            }
-                            Users user = users.first;
-                            return users.length == 0
-                                ? NotAvailable()
-                                : Container(
-                                    color: appbg,
-                                    child: Column(
-                                      children: [
-                                        verticalSpaceLarge,
-                                        CircleAvatar(
-                                          child: Icon(
-                                            Icons.person,
-                                            size: 50,
-                                          ),
-                                          radius: 50,
-                                        ),
-                                        verticalSpaceMedium,
-                                        Center(
-                                          child: Text(
-                                            user.name,
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                        ),
-                                        verticalSpaceMedium,
-                                      ],
-                                    ),
-                                  );
-                          },
-                        )
-                      : SizedBox(),
-                  DrawerItem(
-                    title: 'Home',
-                    icon: Icons.home,
-                    onTapped: () => model.navigateToHome(),
-                  ),
-                  DrawerItem(
-                    title: 'My Bookings',
-                    icon: Icons.list,
-                    onTapped: () => model.navigateToBooking(),
-                  ),
-                  DrawerItem(
-                    title: 'My Profile',
-                    icon: Icons.person,
-                    onTapped: () => model.navigateToProfile(),
-                  ),
-                  DrawerItem(
-                    title: 'Logout',
-                    icon: Icons.login,
-                    onTapped: model.logout,
-                  ),
-                ],
-              ),
-            ),
-          ),
+        drawer: StartUpSideDraer(
+          model: model,
         ),
         drawerEnableOpenDragGesture: true,
         appBar: AppBar(
@@ -310,150 +161,6 @@ class _StartUpViewState extends State<StartUpView> {
               FoodCard(
                 model: model,
               ),
-              // !model.status
-              //     ? Padding(
-              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-              //         child: GestureDetector(
-              //           onTap: () => model.navigateToBoatRide(),
-              //           child: Card(
-              //             elevation: 10,
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width,
-              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              //               child: Center(
-              //                 child: Text(
-              //                   'Boat Ride',
-              //                   style: TextStyle(
-              //                     fontSize: 30,
-              //                     backgroundColor: Colors.white,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(),
-              // model.status
-              //     ? Padding(
-              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-              //         child: GestureDetector(
-              //           onTap: () => model.navigateToCardRide(),
-              //           child: Card(
-              //             elevation: 10,
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width,
-              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              //               child: Center(
-              //                 child: Text(
-              //                   'Car Ride',
-              //                   style: TextStyle(
-              //                     fontSize: 30,
-              //                     backgroundColor: Colors.white,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(),
-              // model.status
-              //     ? Padding(
-              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-              //         child: GestureDetector(
-              //           onTap: () => model.navigateToTaxiRide(),
-              //           child: Card(
-              //             elevation: 10,
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width,
-              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              //               child: Center(
-              //                 child: Text(
-              //                   'Bus/Taxi Ride',
-              //                   style: TextStyle(
-              //                     fontSize: 30,
-              //                     backgroundColor: Colors.white,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(),
-              // model.status
-              //     ? Padding(
-              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-              //         child: GestureDetector(
-              //           onTap: () => model.navigateToAmbulanceRide(),
-              //           child: Card(
-              //             elevation: 10,
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width,
-              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              //               child: Center(
-              //                 child: Text(
-              //                   'Ambulance',
-              //                   style: TextStyle(
-              //                     fontSize: 30,
-              //                     backgroundColor: Colors.white,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(),
-              // !model.status
-              //     ? Padding(
-              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-              //         child: GestureDetector(
-              //           onTap: () => model.navigateToDelivery(),
-              //           child: Card(
-              //             elevation: 10,
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width,
-              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              //               child: Center(
-              //                 child: Text(
-              //                   'Water Cargo',
-              //                   style: TextStyle(
-              //                     fontSize: 30,
-              //                     backgroundColor: Colors.white,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(),
-              // model.status
-              //     ? Padding(
-              //         padding: EdgeInsets.fromLTRB(50, 0, 50, 10),
-              //         child: GestureDetector(
-              //           onTap: () => model.navigateToDeliveryServices(),
-              //           child: Card(
-              //             elevation: 10,
-              //             child: Container(
-              //               width: MediaQuery.of(context).size.width,
-              //               padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              //               child: Center(
-              //                 child: Text(
-              //                   'Delivery Services',
-              //                   style: TextStyle(
-              //                     fontSize: 30,
-              //                     backgroundColor: Colors.white,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       )
-              //     : SizedBox(),
             ],
           ),
         ),
@@ -472,14 +179,7 @@ class _StartUpViewState extends State<StartUpView> {
               : Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
-                    GoogleMap(
-                      myLocationEnabled: true,
-                      compassEnabled: true,
-                      tiltGesturesEnabled: false,
-                      mapType: MapType.normal,
-                      initialCameraPosition: model.initialLocation,
-                      onMapCreated: onMapCreated,
-                    ),
+                    BackMap(),
                     Positioned(
                       top: 40,
                       child: FlutterSwitch(
@@ -505,29 +205,6 @@ class _StartUpViewState extends State<StartUpView> {
                   ],
                 ),
         ),
-      ),
-    );
-  }
-}
-
-class DrawerItem extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final void Function() onTapped;
-  const DrawerItem(
-      {required this.title, required this.icon, required this.onTapped});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTapped,
-      leading: Icon(
-        icon,
-        color: Colors.amber,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 18),
       ),
     );
   }

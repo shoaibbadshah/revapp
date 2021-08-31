@@ -147,7 +147,6 @@ class _ProfileSubState extends State<ProfileSub> {
           return NotAvailable();
         }
         Users user = users.first;
-        print(user.photourl);
         return users.length == 0
             ? NotAvailable()
             : ListView(

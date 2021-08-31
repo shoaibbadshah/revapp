@@ -57,6 +57,7 @@ dependencies:
   bottom_bar: ^1.2.2+1
   rflutter_alert: ^2.0.2
   permission_handler: ^6.0.1+1
+  flare_flutter: ^3.0.2
   #Location
   places_service: ^0.1.0
   geolocator:
@@ -87,6 +88,7 @@ dev_dependencies:
   build_runner:
   stacked_generator: ^0.4.1
   flutter_launcher_icons: ^0.9.0
+  google_maps_flutter: ^2.0.6
   # data models
   freezed: ^0.14.1+2
   json_serializable: ^4.1.0
@@ -122,7 +124,7 @@ flutter:
     - assets/friend2.jpg
     - assets/applepay.json
     - assets/gpay.json
-
+    - assets/teddy_test.flr
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

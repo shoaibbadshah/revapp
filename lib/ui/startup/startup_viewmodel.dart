@@ -1,14 +1,15 @@
+import 'dart:async';
+
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/router_names.dart';
-import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
-import 'package:avenride/ui/pointmap/MyMap.dart';
 import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:avenride/app/app.locator.dart';
@@ -29,20 +30,12 @@ class StartUpViewModel extends BaseViewModel {
   final userService = locator<UserService>();
   final navigationService = locator<NavigationService>();
   final _placesService = locator<PlacesService>();
-  final _calculate = locator<Calculate>();
   final firestoreApi = locator<FirestoreApi>();
   final _notifyService = locator<PushNotificationService>();
   Position? currentPosition;
   bool status = true;
   String? userId;
-
-  CameraPosition initialLocation = CameraPosition(
-    zoom: CAMERA_ZOOM,
-    bearing: CAMERA_BEARING,
-    tilt: CAMERA_TILT,
-    target: LatLng(51.457838, -0.596342),
-  );
-
+  int index = 0;
   Future<void> logout() async {
     await userService.logout;
     log.v('Successfully Loggeg out');
@@ -182,7 +175,6 @@ class StartUpViewModel extends BaseViewModel {
 
   Future<void> runStartupLogic() async {
     setBusy(true);
-
     if (userService.hasLoggedInUser) {
       log.v('We have a user session on disk. Sync the user profile ...');
       await userService.syncUserAccount();
@@ -194,21 +186,47 @@ class StartUpViewModel extends BaseViewModel {
           user: userService.currentUser.id,
         );
       }
-      initialLocation = CameraPosition(
-        zoom: CAMERA_ZOOM,
-        bearing: CAMERA_BEARING,
-        tilt: CAMERA_TILT,
-        target: LatLng(_calculate.currentPosition.latitude,
-            _calculate.currentPosition.longitude),
-      );
       final currentUser = userService.currentUser;
       userId = currentUser.id;
-      log.v('User sync complete. User profile: $currentUser');
+      log.v('User sync complete. User profile');
       setBusy(false);
     } else {
       log.v('No user on disk, navigate to the LoginView');
       setBusy(false);
       navigationService.replaceWith(Routes.loginView);
     }
+  }
+
+  void onMapCreated(GoogleMapController controller,
+      Completer<GoogleMapController> _controller) {
+    if (!_controller.isCompleted) {
+      _controller.complete(controller);
+    }
+  }
+
+  Future<void> messageHandler(RemoteMessage message) async {
+    log.i('New notification Recieved');
+    List data = [];
+    if (userService.currentUser.notification != null) {
+      data = userService.currentUser.notification!;
+    }
+    data.add({
+      'data': message.data,
+      'title': message.notification!.title == null
+          ? ''
+          : message.notification!.title,
+      'body':
+          message.notification!.body == null ? '' : message.notification!.body,
+    });
+    firestoreApi.updateRider(data: {
+      'notification': data,
+    }, user: userService.currentUser.id);
+    log.i('New notification and it is updated');
+    data = [];
+  }
+
+  void updateBottomNav(int i) {
+    index = i;
+    notifyListeners();
   }
 }

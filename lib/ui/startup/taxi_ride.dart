@@ -102,7 +102,6 @@ class _TaxiListState extends State<TaxiList> {
       body: headers,
     );
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
       final data = jsonDecode(response.body);
       if (data['status']) {
         final payurl = data['data']['authorization_url'];

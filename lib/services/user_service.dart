@@ -6,13 +6,10 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 
 class UserService {
   final log = getLogger('UserService');
-
   final _firestoreApi = locator<FirestoreApi>();
   final _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
-
   User? _currentUser;
-
   User get currentUser => _currentUser!;
 
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;

@@ -79,9 +79,7 @@ class FirestoreApi {
     try {
       final userDocument =
           carRideCollection.where('userId', isEqualTo: user.id);
-      userDocument.get().then((value) {
-        print(value.docs);
-      });
+      userDocument.get().then((value) {});
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to update car ride',
@@ -382,8 +380,6 @@ class FirestoreApi {
   }
 
   Future<User?> getUser({required String userId}) async {
-    log.i('userId:$userId');
-
     if (userId.isNotEmpty) {
       final userDoc = await usersCollection.doc(userId).get();
       if (!userDoc.exists) {
@@ -391,7 +387,6 @@ class FirestoreApi {
         return null;
       }
       Object? data = userDoc.data();
-      log.v('User found. Data: $data');
       String s = json.encode(data!);
       Map<String, dynamic> user = jsonDecode(s);
       return User.fromJson(user);

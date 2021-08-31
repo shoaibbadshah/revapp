@@ -54,22 +54,26 @@ class AuthenticationLayout extends StatelessWidget {
               ),
               onPressed: onBackPressed,
             ),
-          Text(
-            title!,
-            style: TextStyle(fontSize: 34),
-          ),
-          verticalSpaceSmall,
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: screenWidthPercentage(context, percentage: 0.7),
-              child: Text(
-                subtitle!,
-                style: ktsMediumGreyBodyText,
-              ),
-            ),
-          ),
-          verticalSpaceRegular,
+          title != null
+              ? Text(
+                  title!,
+                  style: TextStyle(fontSize: 34),
+                )
+              : SizedBox(),
+          title != null ? verticalSpaceSmall : SizedBox(),
+          subtitle != null
+              ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: screenWidthPercentage(context, percentage: 0.7),
+                    child: Text(
+                      subtitle!,
+                      style: ktsMediumGreyBodyText,
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          subtitle != null ? verticalSpaceRegular : SizedBox(),
           form!,
           verticalSpaceRegular,
           if (onForgotPassword != null)
@@ -148,7 +152,6 @@ class AuthenticationLayout extends StatelessWidget {
                 'Or',
                 style: ktsMediumGreyBodyText,
               )),
-          verticalSpaceRegular,
           if ((defaultTargetPlatform == TargetPlatform.iOS))
             AppleAuthButton(
               onPressed: onSignInWithApple ?? () {},

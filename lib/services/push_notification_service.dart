@@ -9,7 +9,7 @@ class PushNotificationService {
     messaging.getToken().then((value) {
       if (value != null) {
         token = value;
-        print('################## $value');
+        print('Notifcation Token: $value');
       }
     });
   }
