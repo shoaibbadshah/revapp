@@ -14,7 +14,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../api/firestore_api.dart';
 import '../services/distance.dart';
-import '../services/location_service.dart';
+import '../services/distance_service.dart';
 import '../services/push_notification_service.dart';
 import '../services/user_service.dart';
 

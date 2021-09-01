@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/router_names.dart';
+import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
+import 'package:avenride/ui/pointmap/MyMap.dart';
 import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -19,6 +22,7 @@ import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/startup/startup_view.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -32,6 +36,8 @@ class StartUpViewModel extends BaseViewModel {
   final _placesService = locator<PlacesService>();
   final firestoreApi = locator<FirestoreApi>();
   final _notifyService = locator<PushNotificationService>();
+  late Location location;
+  late StreamSubscription<LocationData> locationData;
   Position? currentPosition;
   bool status = true;
   String? userId;
@@ -228,5 +234,29 @@ class StartUpViewModel extends BaseViewModel {
   void updateBottomNav(int i) {
     index = i;
     notifyListeners();
+  }
+
+  updatePinOnMap(
+      {required LatLng location,
+      required Completer<GoogleMapController> completer}) async {
+    CameraPosition cPosition = CameraPosition(
+      zoom: CAMERA_ZOOM,
+      tilt: CAMERA_TILT,
+      bearing: CAMERA_BEARING,
+      target: LatLng(location.latitude, location.longitude),
+    );
+    final GoogleMapController controller = await completer.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+    log.d('databse updaeted');
+  }
+
+  liveLocation(
+      {required Function setLocation, required LatLng currentLocation}) {
+    location = new Location();
+    locationData = location.onLocationChanged.listen((LocationData cLoc) {
+      if (currentLocation != LatLng(cLoc.latitude!, cLoc.longitude!)) {
+        setLocation(cLoc);
+      }
+    });
   }
 }

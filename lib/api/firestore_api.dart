@@ -23,7 +23,8 @@ class FirestoreApi {
       FirebaseFirestore.instance.collection('Delivery');
   final CollectionReference deliveryservicesRideCollection =
       FirebaseFirestore.instance.collection('DeliveryServices');
-
+  final CollectionReference updateLocationCollection =
+      FirebaseFirestore.instance.collection('locations');
   Future<void> createUser({required User user}) async {
     log.i('user:$user');
 
@@ -52,6 +53,21 @@ class FirestoreApi {
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create new user',
+        devDetails: '$error',
+      );
+    }
+  }
+
+  Future<void> updateCurrentLocation({required GeoPoint geoPoint}) async {
+    try {
+      final userDocument = updateLocationCollection.doc('rides');
+      userDocument.update({
+        'location': geoPoint,
+      });
+      log.v('Curretn Location Updated');
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to update Curretn Location',
         devDetails: '$error',
       );
     }

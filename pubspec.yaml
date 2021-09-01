@@ -87,8 +87,7 @@ dev_dependencies:
     sdk: flutter
   build_runner:
   stacked_generator: ^0.4.1
-  flutter_launcher_icons: ^0.9.0
-  google_maps_flutter: ^2.0.6
+  flutter_launcher_icons: ^0.9.0  
   # data models
   freezed: ^0.14.1+2
   json_serializable: ^4.1.0

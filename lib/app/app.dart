@@ -1,5 +1,5 @@
 import 'package:avenride/services/distance.dart';
-import 'package:avenride/services/location_service.dart';
+import 'package:avenride/services/distance_service.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
