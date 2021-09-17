@@ -6,7 +6,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:avenride/ui/login/login_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -21,17 +20,9 @@ mixin $LoginView on StatelessWidget {
 
   /// Registers a listener on every generated controller that calls [model.setData()]
   /// with the latest textController values
-  void listenToFormUpdated(FormViewModel model, LoginViewModel loginModel) {
+  void listenToFormUpdated(FormViewModel model) {
     emailController.addListener(() => _updateFormData(model));
-    passwordController.addListener(() {
-      if (passwordFocusNode.hasFocus) {
-        print('test');
-        loginModel.updateAnimationType("idle");
-      } else {
-        loginModel.updateAnimationType("test");
-      }
-      _updateFormData(model);
-    });
+    passwordController.addListener(() => _updateFormData(model));
   }
 
   /// Updates the formData on the FormViewModel

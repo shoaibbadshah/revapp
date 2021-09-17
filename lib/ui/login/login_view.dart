@@ -18,7 +18,7 @@ class LoginView extends StatelessWidget with $LoginView {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LoginViewModel>.reactive(
-      onModelReady: (model) => listenToFormUpdated(model, model),
+      onModelReady: (model) => listenToFormUpdated(model),
       builder: (context, model, child) {
         return Scaffold(
             body: AuthenticationLayout(

@@ -59,6 +59,9 @@ class _BackMapState extends State<BackMap> {
           }
         });
       },
+      onDispose: (model) {
+        locationData.cancel();
+      },
       builder: (context, model, child) => GoogleMap(
         myLocationEnabled: true,
         compassEnabled: true,

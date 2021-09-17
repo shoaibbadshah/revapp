@@ -6,6 +6,7 @@ import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
+import 'package:avenride/ui/car_booking/car_booking_view.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
 import 'package:avenride/ui/pointmap/MyMap.dart';
@@ -66,9 +67,7 @@ class StartUpViewModel extends BaseViewModel {
 
   navigateToCardRide() {
     navigationService.navigateWithTransition(
-      CarRideView(
-        formType: Cartype,
-      ),
+      CarBookingView(),
       transition: 'rightToLeft',
     );
   }

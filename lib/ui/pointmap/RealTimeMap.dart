@@ -30,22 +30,39 @@ class _RealTimeMapState extends State<RealTimeMap> {
   String googleAPIKey = 'AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw';
   late BitmapDescriptor sourceIcon;
   late BitmapDescriptor destinationIcon;
-  late LocationData currentLocation;
+  late CameraPosition initialLocation;
+  LocationData currentLocation = LocationData.fromMap({
+    "latitude": 42.7477863,
+    "longitude": -71.1699932,
+  });
   late LocationData destinationLocation;
   late Location location;
+  late StreamSubscription<LocationData> locationData;
   @override
   void initState() {
     super.initState();
-    location = new Location();
-    polylinePoints = PolylinePoints();
-    location.onLocationChanged.listen((LocationData cLoc) {
-      setState(() {
-        currentLocation = cLoc;
+    if (mounted) {
+      location = new Location();
+      polylinePoints = PolylinePoints();
+      locationData = location.onLocationChanged.listen((LocationData cLoc) {
+        if (LatLng(currentLocation.latitude!, currentLocation.longitude!) !=
+            LatLng(cLoc.latitude!, cLoc.longitude!)) {
+          print('LOCATION IS UPDATED');
+          setState(() {
+            currentLocation = cLoc;
+          });
+          updatePinOnMap();
+        }
       });
-      updatePinOnMap();
-    });
-    setSourceAndDestinationIcons();
-    setInitialLocation();
+      setSourceAndDestinationIcons();
+      setInitialLocation();
+    }
+  }
+
+  @override
+  void dispose() {
+    locationData.cancel();
+    super.dispose();
   }
 
   void updatePinOnMap() async {
@@ -57,15 +74,17 @@ class _RealTimeMapState extends State<RealTimeMap> {
     );
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
-    setState(() {
-      var pinPosition =
-          LatLng(currentLocation.latitude!, currentLocation.longitude!);
-      _markers.removeWhere((m) => m.markerId.value == 'sourcePin');
-      _markers.add(Marker(
-          markerId: MarkerId('sourcePin'),
-          position: pinPosition,
-          icon: sourceIcon));
-    });
+    if (mounted) {
+      setState(() {
+        var pinPosition =
+            LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        _markers.removeWhere((m) => m.markerId.value == 'sourcePin');
+        _markers.add(Marker(
+            markerId: MarkerId('sourcePin'),
+            position: pinPosition,
+            icon: sourceIcon));
+      });
+    }
     setPolylines();
   }
 
@@ -84,6 +103,7 @@ class _RealTimeMapState extends State<RealTimeMap> {
       "latitude": widget.DEST_LOCATION.latitude,
       "longitude": widget.DEST_LOCATION.longitude
     });
+    updatePinOnMap();
   }
 
   void showPinsOnMap() {
@@ -102,10 +122,12 @@ class _RealTimeMapState extends State<RealTimeMap> {
   }
 
   void setPolylines() async {
-    setState(() {
-      _polylines.clear();
-      polylineCoordinates.clear();
-    });
+    if (mounted) {
+      setState(() {
+        _polylines.clear();
+        polylineCoordinates.clear();
+      });
+    }
     PolylineResult result1 = await polylinePoints.getRouteBetweenCoordinates(
       googleAPIKey,
       PointLatLng(currentLocation.latitude!, currentLocation.longitude!),
@@ -117,51 +139,48 @@ class _RealTimeMapState extends State<RealTimeMap> {
       result.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
-      setState(() {
-        _polylines.add(
-          Polyline(
-            width: 5,
-            polylineId: PolylineId('ploy'),
-            color: Color.fromARGB(255, 40, 122, 198),
-            points: polylineCoordinates,
-          ),
-        );
-      });
+      if (mounted) {
+        setState(() {
+          _polylines.add(
+            Polyline(
+              width: 5,
+              polylineId: PolylineId('ploy'),
+              color: Color.fromARGB(255, 40, 122, 198),
+              points: polylineCoordinates,
+            ),
+          );
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    CameraPosition initialCameraPosition = CameraPosition(
+    initialLocation = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
         bearing: CAMERA_BEARING,
         target: widget.SOURCE_LOCATION);
-    if (currentLocation != null) {
-      initialCameraPosition = CameraPosition(
-        target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
-        zoom: CAMERA_ZOOM,
-        tilt: CAMERA_TILT,
-        bearing: CAMERA_BEARING,
-      );
-    }
+
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          GoogleMap(
-            myLocationEnabled: true,
-            compassEnabled: true,
-            tiltGesturesEnabled: false,
-            markers: _markers,
-            polylines: _polylines,
-            mapType: MapType.normal,
-            initialCameraPosition: initialCameraPosition,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              showPinsOnMap();
-            },
-          ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            GoogleMap(
+              myLocationEnabled: true,
+              compassEnabled: true,
+              tiltGesturesEnabled: false,
+              markers: _markers,
+              polylines: _polylines,
+              mapType: MapType.normal,
+              initialCameraPosition: initialLocation,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                showPinsOnMap();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
