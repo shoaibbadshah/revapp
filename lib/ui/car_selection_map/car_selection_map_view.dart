@@ -1,11 +1,8 @@
-import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/main.dart';
-import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/car_selection_map/car_selection_map_viewmodel.dart';
-import 'package:avenride/ui/pointmap/RealTimeMap.dart';
+import 'package:avenride/ui/pointmap/bookingMap.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
-import 'package:avenride/ui/startup/back_map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
@@ -64,35 +61,27 @@ class CarSelectionMapView extends StatelessWidget {
               grabbingContentOffset: GrabbingContentOffset.bottom,
             ),
             SnappingPosition.factor(
-              positionFactor: 0.4,
+              positionFactor: 0.47,
               snappingCurve: Curves.bounceOut,
               snappingDuration: Duration(seconds: 1),
               grabbingContentOffset: GrabbingContentOffset.bottom,
             ),
-            SnappingPosition.factor(
-              positionFactor: 0.1,
-              snappingCurve: Curves.elasticOut,
-              snappingDuration: Duration(seconds: 1),
-            ),
           ],
           initialSnappingPosition: SnappingPosition.factor(
-            positionFactor: 0.7,
+            positionFactor: 0.8,
             snappingCurve: Curves.elasticOut,
             snappingDuration: Duration(milliseconds: 1750),
           ),
-          grabbingHeight: 40,
+          grabbingHeight: 20,
           grabbing: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-              color: Colors.amber.shade300,
-            ),
+            color: Colors.amber.shade300,
             child: Center(
               child: Container(
-                height: 8,
-                width: 80,
+                height: 5,
+                width: 120,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
-                  color: Colors.black,
+                  color: Colors.black45,
                 ),
               ),
             ),
@@ -168,12 +157,14 @@ class CarSelectionMapView extends StatelessWidget {
                       ),
                     )
                   : Stack(
-                      alignment: Alignment.bottomCenter,
                       children: [
-                        RealTimeMap(
-                          DEST_LOCATION: end,
-                          SOURCE_LOCATION: start,
-                        )
+                        Container(
+                          height: screenHeight(context) / 2,
+                          child: BookingMap(
+                            DEST_LOCATION: end,
+                            SOURCE_LOCATION: start,
+                          ),
+                        ),
                       ],
                     ),
             ),
@@ -193,7 +184,6 @@ class CarTypesSelection extends StatefulWidget {
 }
 
 class _CarTypesSelectionState extends State<CarTypesSelection> {
-  final _userService = locator<UserService>();
   int selectedIndex = 0;
   bool isbusy = false;
   double price = 0.0;
@@ -258,14 +248,3 @@ class _CarTypesSelectionState extends State<CarTypesSelection> {
     );
   }
 }
- // Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          //   Container(
-          //     color: Colors.amberAccent,
-          //     padding: EdgeInsets.all(5),
-          //     child: Text(
-          //       'Total - $price',
-          //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          //     ),
-          //   ),
-          // ]),
-          // verticalSpaceRegular,

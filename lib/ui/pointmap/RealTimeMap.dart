@@ -111,14 +111,20 @@ class _RealTimeMapState extends State<RealTimeMap> {
         LatLng(currentLocation.latitude!, currentLocation.longitude!);
     var destPosition =
         LatLng(widget.DEST_LOCATION.latitude, widget.DEST_LOCATION.longitude);
-    _markers.add(Marker(
+    _markers.add(
+      Marker(
         markerId: MarkerId('sourcePin'),
         position: pinPosition,
-        icon: sourceIcon));
-    _markers.add(Marker(
+        icon: sourceIcon,
+      ),
+    );
+    _markers.add(
+      Marker(
         markerId: MarkerId('destPin'),
         position: destPosition,
-        icon: destinationIcon));
+        icon: destinationIcon,
+      ),
+    );
   }
 
   void setPolylines() async {
@@ -145,7 +151,7 @@ class _RealTimeMapState extends State<RealTimeMap> {
             Polyline(
               width: 5,
               polylineId: PolylineId('ploy'),
-              color: Color.fromARGB(255, 40, 122, 198),
+              color: Colors.black,
               points: polylineCoordinates,
             ),
           );
@@ -176,6 +182,7 @@ class _RealTimeMapState extends State<RealTimeMap> {
               initialCameraPosition: initialLocation,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
+
                 showPinsOnMap();
               },
             ),

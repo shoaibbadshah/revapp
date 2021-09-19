@@ -2,10 +2,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:avenride/app/app.locator.dart';
-import 'package:avenride/ui/shared/constants.dart';
-import 'package:avenride/ui/shared/ui_helpers.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'package:location/location.dart';
 
 const double CAMERA_ZOOM = 9;
 const double CAMERA_TILT = 13;
@@ -13,198 +10,180 @@ const double CAMERA_BEARING = 30;
 
 // ignore: must_be_immutable
 class BookingMap extends StatefulWidget {
-  // ignore: non_constant_identifier_names
   LatLng SOURCE_LOCATION = LatLng(42.7477863, -71.1699932);
-  // ignore: non_constant_identifier_names
   LatLng DEST_LOCATION = LatLng(42.6871386, -71.2143403);
-  // ignore: non_constant_identifier_names
-  bool isBoat = false;
-  BookingMap(
-      // ignore: non_constant_identifier_names
-      {required this.DEST_LOCATION,
-      // ignore: non_constant_identifier_names
-      required this.SOURCE_LOCATION,
-      required this.isBoat});
+  BookingMap({
+    required this.DEST_LOCATION,
+    required this.SOURCE_LOCATION,
+  });
   @override
   _BookingMapState createState() => _BookingMapState();
 }
 
 class _BookingMapState extends State<BookingMap> {
   Completer<GoogleMapController> _controller = Completer();
-  final _bottomSheetService = locator<BottomSheetService>();
-// this set will hold my markers
-  Set<Marker> _markers = {};
-// this will hold the generated polylines
-  Set<Polyline> _polylines = {};
-// this will hold each polyline coordinate as Lat and Lng pairs
+  Set<Marker> _markers = Set<Marker>();
+  Set<Polyline> _polylines = Set<Polyline>();
   List<LatLng> polylineCoordinates = [];
-// this is the key object - the PolylinePoints
-// which generates every polyline between start and finish
-  PolylinePoints polylinePoints = PolylinePoints();
+  late PolylinePoints polylinePoints;
   String googleAPIKey = 'AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw';
-// for my custom icons
-  BitmapDescriptor? sourceIcon;
-  BitmapDescriptor? destinationIcon;
+  late BitmapDescriptor sourceIcon;
+  late BitmapDescriptor destinationIcon;
+  late CameraPosition initialLocation;
+  LocationData currentLocation = LocationData.fromMap({
+    "latitude": 42.7477863,
+    "longitude": -71.1699932,
+  });
+  late LocationData destinationLocation;
+  late Location location;
+  late StreamSubscription<LocationData> locationData;
   @override
   void initState() {
     super.initState();
-    setSourceAndDestinationIcons();
+    if (mounted) {
+      location = new Location();
+      polylinePoints = PolylinePoints();
+      locationData = location.onLocationChanged.listen((LocationData cLoc) {
+        if (LatLng(currentLocation.latitude!, currentLocation.longitude!) !=
+            LatLng(cLoc.latitude!, cLoc.longitude!)) {
+          print('LOCATION IS UPDATED');
+          setState(() {
+            currentLocation = cLoc;
+          });
+          updatePinOnMap();
+        }
+      });
+      setSourceAndDestinationIcons();
+      setInitialLocation();
+    }
+  }
+
+  @override
+  void dispose() {
+    locationData.cancel();
+    super.dispose();
+  }
+
+  void updatePinOnMap() async {
+    CameraPosition cPosition = CameraPosition(
+      zoom: CAMERA_ZOOM,
+      tilt: CAMERA_TILT,
+      bearing: CAMERA_BEARING,
+      target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+    );
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLngBounds(
+        LatLngBounds(
+          southwest:
+              LatLng(currentLocation.latitude!, currentLocation.longitude!),
+          northeast: LatLng(
+              destinationLocation.latitude!, destinationLocation.longitude!),
+        ),
+        40,
+      ),
+    );
+    if (mounted) {
+      setState(() {
+        var pinPosition =
+            LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        _markers.removeWhere((m) => m.markerId.value == 'sourcePin');
+        _markers.add(
+          Marker(
+            markerId: MarkerId('sourcePin'),
+            position: pinPosition,
+            icon: sourceIcon,
+          ),
+        );
+      });
+    }
+    setPolylines();
   }
 
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), 'assets/driving_pin.png');
+
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/destination_map_marker.png');
   }
 
-  void onMapCreated(GoogleMapController controller) async {
-    _controller.complete(controller);
-    setMapPins();
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(
-              widget.SOURCE_LOCATION.latitude,
-              widget.SOURCE_LOCATION.longitude,
-            ),
-            zoom: 15.0,
-            bearing: 60,
-            tilt: 30),
+  void setInitialLocation() async {
+    currentLocation = await location.getLocation();
+    destinationLocation = LocationData.fromMap({
+      "latitude": widget.DEST_LOCATION.latitude,
+      "longitude": widget.DEST_LOCATION.longitude
+    });
+    updatePinOnMap();
+  }
+
+  void showPinsOnMap() {
+    var pinPosition =
+        LatLng(currentLocation.latitude!, currentLocation.longitude!);
+    var destPosition =
+        LatLng(widget.DEST_LOCATION.latitude, widget.DEST_LOCATION.longitude);
+    _markers.add(
+      Marker(
+        markerId: MarkerId('sourcePin'),
+        position: pinPosition,
+        icon: sourceIcon,
       ),
     );
-    await updateCameraLocation(
-        LatLng(
-          widget.SOURCE_LOCATION.latitude,
-          widget.SOURCE_LOCATION.longitude,
-        ),
-        LatLng(
-          widget.DEST_LOCATION.latitude,
-          widget.DEST_LOCATION.longitude,
-        ),
-        controller);
-    if (!widget.isBoat) {
-      setPolylines();
+    _markers.add(
+      Marker(
+        markerId: MarkerId('destPin'),
+        position: destPosition,
+        icon: destinationIcon,
+      ),
+    );
+  }
+
+  void setPolylines() async {
+    if (mounted) {
+      setState(() {
+        _polylines.clear();
+        polylineCoordinates.clear();
+      });
     }
-  }
-
-  Future<void> updateCameraLocation(
-    LatLng source,
-    LatLng destination,
-    GoogleMapController mapController,
-  ) async {
-    // ignore: unnecessary_null_comparison
-    if (mapController == null) return;
-
-    LatLngBounds bounds;
-
-    if (source.latitude > destination.latitude &&
-        source.longitude > destination.longitude) {
-      bounds = LatLngBounds(southwest: destination, northeast: source);
-    } else if (source.longitude > destination.longitude) {
-      bounds = LatLngBounds(
-          southwest: LatLng(source.latitude, destination.longitude),
-          northeast: LatLng(destination.latitude, source.longitude));
-    } else if (source.latitude > destination.latitude) {
-      bounds = LatLngBounds(
-          southwest: LatLng(destination.latitude, source.longitude),
-          northeast: LatLng(source.latitude, destination.longitude));
-    } else {
-      bounds = LatLngBounds(southwest: source, northeast: destination);
-    }
-
-    CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 200);
-    return checkCameraLocation(cameraUpdate, mapController);
-  }
-
-  Future<void> checkCameraLocation(
-      CameraUpdate cameraUpdate, GoogleMapController mapController) async {
-    mapController.animateCamera(cameraUpdate);
-    LatLngBounds l1 = await mapController.getVisibleRegion();
-    LatLngBounds l2 = await mapController.getVisibleRegion();
-
-    if (l1.southwest.latitude == -60 || l2.southwest.latitude == -60) {
-      return checkCameraLocation(cameraUpdate, mapController);
-    }
-  }
-
-  void check(CameraUpdate u, GoogleMapController c) async {
-    c.animateCamera(u);
-    c.animateCamera(u);
-    LatLngBounds l1 = await c.getVisibleRegion();
-    LatLngBounds l2 = await c.getVisibleRegion();
-    print(l1.toString());
-    print(l2.toString());
-    if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
-      check(u, c);
-  }
-
-  void setMapPins() {
-    setState(() {
-      // source pin
-      _markers.add(Marker(
-        markerId: MarkerId('sourcePin'),
-        position: widget.SOURCE_LOCATION,
-      ));
-      // destination pin
-      _markers.add(Marker(
-          markerId: MarkerId('destPin'),
-          position: widget.DEST_LOCATION,
-          icon: destinationIcon!));
-    });
-  }
-
-  setPolylines() async {
     PolylineResult result1 = await polylinePoints.getRouteBetweenCoordinates(
       googleAPIKey,
-      PointLatLng(
-          widget.SOURCE_LOCATION.latitude, widget.SOURCE_LOCATION.longitude),
+      PointLatLng(currentLocation.latitude!, currentLocation.longitude!),
       PointLatLng(
           widget.DEST_LOCATION.latitude, widget.DEST_LOCATION.longitude),
     );
     List<PointLatLng> result = result1.points;
     if (result.isNotEmpty) {
-      // loop through all PointLatLng points and convert them
-      // to a list of LatLng, required by the Polyline
       result.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
+      if (mounted) {
+        setState(() {
+          _polylines.add(
+            Polyline(
+              width: 5,
+              polylineId: PolylineId('ploy'),
+              color: Colors.black,
+              points: polylineCoordinates,
+            ),
+          );
+        });
+      }
     }
-    setState(() {
-      // create a Polyline instance
-      // with an id, an RGB color and the list of LatLng pairs
-      Polyline polyline = Polyline(
-          polylineId: PolylineId("poly"),
-          color: Color.fromARGB(255, 40, 122, 198),
-          points: polylineCoordinates);
-
-      // add the constructed polyline as a set of points
-      // to the polyline set, which will eventually
-      // end up showing up on the map
-      _polylines.add(polyline);
-    });
-  }
-
-  Future showBasicBottomSheet() async {
-    await _bottomSheetService.showBottomSheet(
-      title: 'The basic bottom sheet',
-      description:
-          'Use this bottom sheet function to show something to the user. It\'s better than the standard alert dialog in terms of UI quality.',
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    CameraPosition initialLocation = CameraPosition(
+    initialLocation = CameraPosition(
         zoom: CAMERA_ZOOM,
-        bearing: CAMERA_BEARING,
         tilt: CAMERA_TILT,
+        bearing: CAMERA_BEARING,
         target: widget.SOURCE_LOCATION);
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
-          children: [
+          children: <Widget>[
             GoogleMap(
               myLocationEnabled: true,
               compassEnabled: true,
@@ -213,59 +192,10 @@ class _BookingMapState extends State<BookingMap> {
               polylines: _polylines,
               mapType: MapType.normal,
               initialCameraPosition: initialLocation,
-              onMapCreated: onMapCreated,
-            ),
-            Positioned(
-              top: screenHeight(context) / 1.7,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25),
-                  ),
-                ),
-                height: 180.0,
-                width: screenWidth(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 50,
-                      child: Image.asset(
-                        Assets.firebase,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 3,
-                    ),
-                    Text(
-                      '',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Finding the best ride for you',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    // SizedBox(
-                    //   height: 3,
-                    // ),
-                    // CircularProgressIndicator(
-                    //   valueColor: AlwaysStoppedAnimation(Colors.black),
-                    // ),
-                  ],
-                ),
-              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                showPinsOnMap();
+              },
             ),
           ],
         ),
