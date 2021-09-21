@@ -3,6 +3,7 @@ import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
+import 'package:avenride/ui/car_booking/car_booking_view.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/food_card.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';

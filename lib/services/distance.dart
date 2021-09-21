@@ -96,6 +96,7 @@ class Calculate {
     print('############ $response');
     print(jsonDecode(response.body));
     final data = jsonDecode(response.body);
+    print(data);
     print(data['rows'][0]['elements'][0]['distance']['text']);
     print(data['rows'][0]['elements'][0]['duration']['text']);
     return {

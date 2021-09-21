@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
-const double CAMERA_ZOOM = 9;
+const double CAMERA_ZOOM = 13;
 const double CAMERA_TILT = 13;
 const double CAMERA_BEARING = 30;
 
@@ -72,17 +72,21 @@ class _BookingMapState extends State<BookingMap> {
       target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
     );
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest:
-              LatLng(currentLocation.latitude!, currentLocation.longitude!),
-          northeast: LatLng(
-              destinationLocation.latitude!, destinationLocation.longitude!),
+    if (destinationLocation.latitude! <= currentLocation.latitude!) {
+      controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+    } else {
+      controller.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          LatLngBounds(
+            southwest:
+                LatLng(currentLocation.latitude!, currentLocation.longitude!),
+            northeast: LatLng(
+                destinationLocation.latitude!, destinationLocation.longitude!),
+          ),
+          40,
         ),
-        40,
-      ),
-    );
+      );
+    }
     if (mounted) {
       setState(() {
         var pinPosition =
@@ -186,7 +190,7 @@ class _BookingMapState extends State<BookingMap> {
           children: <Widget>[
             GoogleMap(
               myLocationEnabled: true,
-              compassEnabled: true,
+              compassEnabled: false,
               tiltGesturesEnabled: false,
               markers: _markers,
               polylines: _polylines,

@@ -16,6 +16,8 @@ import 'package:avenride/ui/shared/constants.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:date_format/date_format.dart';
 
 void setupBottomSheetUi() {
   final bottomSheetService = locator<BottomSheetService>();
@@ -58,12 +60,49 @@ class FloatingBoxBottomSheet extends StatefulWidget {
 
 class _FloatingBoxBottomSheetState extends State<FloatingBoxBottomSheet> {
   final _userService = locator<UserService>();
+  TextEditingController _dateController =
+      TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
+  TextEditingController _timeController = TextEditingController(
+      text: formatDate(
+          DateTime(DateTime.now().year, DateTime.now().day,
+              DateTime.now().month, DateTime.now().hour, DateTime.now().minute),
+          [hh, ':', nn, " ", am]).toString());
   int selectedIndex = 0;
   bool isbusy = false;
   double price = 0.0;
   String fp = '';
   double sprice = double.parse(carTypes[0].price);
   NameIMG selectedCar = NameIMG('AVR', Assets.car1, '100.0');
+  TimeOfDay selectedTime =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
+  String? _hour, _minute, _time;
+  DateTime selectedDate = DateTime.now();
+  double? height;
+  double? width;
+
+  String? setTime, setDate, setLaguageType, setLaguageSize;
+  Future<DateTime> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        initialDatePickerMode: DatePickerMode.day,
+        firstDate: DateTime(2015),
+        lastDate: DateTime(2101));
+    selectedDate = picked!;
+    return selectedDate;
+  }
+
+  Future<String> selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+    );
+    if (picked != null) selectedTime = picked;
+    _hour = selectedTime.hour.toString();
+    _minute = selectedTime.minute.toString();
+    _time = _hour! + ' : ' + _minute!;
+    return _time!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,171 +115,172 @@ class _FloatingBoxBottomSheetState extends State<FloatingBoxBottomSheet> {
       });
     }
 
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Container(
-        padding: EdgeInsets.all(25),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
+    return Container(
+      padding: EdgeInsets.all(25),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(
+            widget.request!.title!,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[900],
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              widget.request!.title!,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[900],
-              ),
-            ),
-            verticalSpaceMedium,
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                itemCount: carTypes.length,
-                itemBuilder: (context, index) {
-                  NameIMG car = carTypes[index];
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                        sprice = double.parse(car.price);
-                        price = storedprice + sprice;
-                        selectedCar = car;
-                        print(price);
-                      });
-                    },
-                    child: Container(
-                        color: (selectedIndex == index)
-                            ? Colors.amber.withOpacity(0.5)
-                            : Colors.transparent,
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: Image.asset(
-                                    car.imagePath,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                horizontalSpaceTiny,
-                                Text(
-                                  car.name,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              '${car.price}Nan',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )
-                        //  ListTile(
-                        //   onTap: () {
-                        //     setState(() {
-                        //       selectedIndex = index;
-                        //     });
-                        //   },
-                        //   leading: Text(
-                        //     carTypes[index],
-                        //   ),
-                        //   title: Container(
-                        //     width: 30,
-                        //     height: 50,
-                        //     child: Image.asset(
-                        //       Assets.bananaBoat,
-                        //       fit: BoxFit.contain,
-                        //     ),
-                        //   ),
-
-                        // ),
-                        ),
-                  );
-                },
-              ),
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Container(
-                color: Colors.amberAccent,
-                padding: EdgeInsets.all(5),
-                child: Text(
-                  'Total - $price',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ]),
-            verticalSpaceRegular,
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
               children: [
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.red,
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Select Date:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              selectDate(context).then((value) {
+                                _dateController.text =
+                                    DateFormat.yMd().format(value);
+                              });
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 40,
+                              alignment: Alignment.center,
+                              decoration:
+                                  BoxDecoration(color: Colors.grey[200]),
+                              child: TextFormField(
+                                textAlign: TextAlign.center,
+                                enabled: false,
+                                keyboardType: TextInputType.text,
+                                controller: _dateController,
+                                decoration: InputDecoration(
+                                    disabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    contentPadding: EdgeInsets.only(top: 0.0)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    textStyle:
-                        MaterialStateProperty.all(TextStyle(fontSize: 18)),
-                  ),
-                  onPressed: () {
-                    widget.completer!(SheetResponse(confirmed: false));
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Theme.of(context).primaryColor,
-                    ),
-                    textStyle:
-                        MaterialStateProperty.all(TextStyle(fontSize: 18)),
-                  ),
-                  onPressed: () async {
-                    if (_userService.hasLoggedInUser) {
-                      setState(() {
-                        fp = price.toString();
-                        isbusy = true;
-                      });
-                      Increment({
-                        'CarType': selectedCar.name,
-                        'price': fp,
-                      });
-                      print(store.carride);
-                      widget.completer!(
-                          SheetResponse(confirmed: true, data: price));
-                    }
-                  },
-                  child: isbusy
-                      ? Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation(Colors.black),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Select Time:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        )
-                      : Text(
-                          widget.request!.mainButtonTitle!,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                )
+                          InkWell(
+                            onTap: () {
+                              selectTime(context).then((value) {
+                                _timeController.text = value;
+                                _timeController.text = formatDate(
+                                    DateTime(
+                                        DateTime.now().year,
+                                        DateTime.now().day,
+                                        DateTime.now().month,
+                                        selectedTime.hour,
+                                        selectedTime.minute),
+                                    [hh, ':', nn, " ", am]).toString();
+                              });
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 40,
+                              alignment: Alignment.center,
+                              decoration:
+                                  BoxDecoration(color: Colors.grey[200]),
+                              child: TextFormField(
+                                textAlign: TextAlign.center,
+                                enabled: false,
+                                keyboardType: TextInputType.text,
+                                controller: _timeController,
+                                decoration: InputDecoration(
+                                    disabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    // labelText: 'Time',
+                                    contentPadding: EdgeInsets.all(5)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+          verticalSpaceRegular,
+          Container(
+            width: screenWidth(context) / 1.5,
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).primaryColor,
+                ),
+                textStyle: MaterialStateProperty.all(TextStyle(fontSize: 18)),
+              ),
+              onPressed: () async {
+                if (_userService.hasLoggedInUser) {
+                  setState(() {
+                    fp = price.toString();
+                    isbusy = true;
+                  });
+                  Increment({
+                    'CarType': selectedCar.name,
+                    'price': fp,
+                  });
+                  print(store.carride);
+                  widget
+                      .completer!(SheetResponse(confirmed: true, data: price));
+                }
+              },
+              child: isbusy
+                  ? Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.black),
+                      ),
+                    )
+                  : Text(
+                      widget.request!.mainButtonTitle!,
+                      style: TextStyle(color: Colors.black),
+                    ),
+            ),
+          ),
+        ],
       ),
     );
   }
