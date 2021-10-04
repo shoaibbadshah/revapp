@@ -38,7 +38,7 @@ class CarBookingViewModel extends BaseViewModel {
       stop2PlaceId = '';
   Position? currentPosition;
   String placeRates = '', placeDistances = '', duration = '', rate = '';
-  final log = getLogger('StartUpViewModel');
+  final log = getLogger('CarBookingViewModel');
   late LatLng loc1, loc2, stop1loc3, stop2loc4;
   List<PlacesAutoCompleteResult> _autoCompleteResults = [];
   List<PlacesAutoCompleteResult> get autoCompleteResults =>
@@ -81,6 +81,30 @@ class CarBookingViewModel extends BaseViewModel {
         notifyListeners();
       }
     }
+  }
+
+  void setLocOnChange() async {
+    setBusy(true);
+    _placesService.initialize(
+      apiKey: env['GOOGLE_MAPS_API_KEY']!,
+    );
+    await getCurrentLocation();
+    var googleGeocoding = GoogleGeocoding(
+      env['GOOGLE_MAPS_API_KEY']!,
+    );
+    var risult = await googleGeocoding.geocoding.getReverse(
+      LatLon(
+        currentPosition!.latitude,
+        currentPosition!.longitude,
+      ),
+    );
+    if (risult != null) {
+      GeocodingResult re = risult.results![0];
+      currentPlaceId = re.placeId!;
+      currentText.text = re.formattedAddress!;
+      notifyListeners();
+    }
+    setBusy(false);
   }
 
   void setCurrentLoc() async {

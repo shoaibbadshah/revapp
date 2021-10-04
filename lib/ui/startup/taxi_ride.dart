@@ -64,9 +64,12 @@ class _TaxiRideState extends State<TaxiRide> {
         ),
       ]),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigationService.navigateToView(CarRideView(
-          formType: Taxi,
-        )),
+        onPressed: () => _navigationService.navigateToView(
+          CarRideView(
+            isDropLatLng: false,
+            formType: Taxi,
+          ),
+        ),
         child: Icon(
           Icons.add,
           color: Colors.black,

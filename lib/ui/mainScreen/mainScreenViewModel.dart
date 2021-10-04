@@ -33,6 +33,7 @@ class MainScreenViewModel extends BaseViewModel {
     _navigationService.navigateWithTransition(
       CarRideView(
         formType: Cartype,
+        isDropLatLng: false,
       ),
       transition: 'rightToLeft',
     );
@@ -42,6 +43,7 @@ class MainScreenViewModel extends BaseViewModel {
     _navigationService.navigateWithTransition(
       CarRideView(
         formType: Taxi,
+        isDropLatLng: false,
       ),
       transition: 'rightToLeft',
     );
@@ -51,6 +53,7 @@ class MainScreenViewModel extends BaseViewModel {
     _navigationService.navigateWithTransition(
       CarRideView(
         formType: Ambulance,
+        isDropLatLng: false,
       ),
       transition: 'rightToLeft',
     );
@@ -92,6 +95,7 @@ class MainScreenViewModel extends BaseViewModel {
     _navigationService.navigateWithTransition(
       CarRideView(
         formType: DeliveryService,
+        isDropLatLng: false,
       ),
       transition: 'rightToLeft',
     );

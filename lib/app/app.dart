@@ -1,3 +1,4 @@
+import 'package:avenride/api/paystack_api.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/distance_service.dart';
 import 'package:avenride/services/location_service.dart';
@@ -37,6 +38,7 @@ import 'package:stacked_services/stacked_services.dart';
     Singleton(classType: FirebaseAuthenticationService),
     LazySingleton(classType: UserService),
     LazySingleton(classType: FirestoreApi),
+    LazySingleton(classType: PaystackApi),
     LazySingleton(classType: PlacesService),
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: LocationService),

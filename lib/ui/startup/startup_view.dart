@@ -180,7 +180,9 @@ class StartUpView extends StatelessWidget {
               : Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
-                    BackMap(),
+                    BackMap(
+                      onLocationChange: () {},
+                    ),
                     Positioned(
                       top: 40,
                       child: FlutterSwitch(

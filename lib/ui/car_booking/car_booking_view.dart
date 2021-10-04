@@ -269,7 +269,11 @@ class CarBookingView extends StatelessWidget {
                     : Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
-                          BackMap(),
+                          BackMap(
+                            onLocationChange: () {
+                              model.setLocOnChange();
+                            },
+                          ),
                         ],
                       ),
               ),

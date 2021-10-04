@@ -10,8 +10,8 @@ import 'package:stacked/stacked.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BackMap extends StatefulWidget {
-  BackMap({Key? key}) : super(key: key);
-
+  final Function() onLocationChange;
+  BackMap({Key? key, required this.onLocationChange}) : super(key: key);
   @override
   _BackMapState createState() => _BackMapState();
 }
@@ -39,7 +39,7 @@ class _BackMapState extends State<BackMap> {
   @override
   Widget build(BuildContext context) {
     initialLocation = CameraPosition(
-      zoom: CAMERA_ZOOM,
+      zoom: 10,
       bearing: CAMERA_BEARING,
       tilt: CAMERA_TILT,
       target: currentLocation,
@@ -56,6 +56,7 @@ class _BackMapState extends State<BackMap> {
               location: currentLocation,
               completer: _controller,
             );
+            widget.onLocationChange();
           }
         });
       },

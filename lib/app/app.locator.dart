@@ -13,6 +13,7 @@ import 'package:stacked_firebase_auth/stacked_firebase_auth.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import '../api/firestore_api.dart';
+import '../api/paystack_api.dart';
 import '../services/distance.dart';
 import '../services/distance_service.dart';
 import '../services/location_service.dart';
@@ -31,6 +32,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerSingleton(FirebaseAuthenticationService());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => FirestoreApi());
+  locator.registerLazySingleton(() => PaystackApi());
   locator.registerLazySingleton(() => PlacesService());
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => LocationService());

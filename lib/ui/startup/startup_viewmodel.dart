@@ -75,6 +75,7 @@ class StartUpViewModel extends BaseViewModel {
   navigateToTaxiRide() {
     navigationService.navigateWithTransition(
       CarRideView(
+        isDropLatLng: false,
         formType: Taxi,
       ),
       transition: 'rightToLeft',
@@ -92,6 +93,7 @@ class StartUpViewModel extends BaseViewModel {
     _placesService.initialize(apiKey: env['GOOGLE_MAPS_API_KEY']!);
     navigationService.navigateWithTransition(
       CarRideView(
+        isDropLatLng: false,
         formType: Ambulance,
       ),
       transition: 'rightToLeft',
@@ -133,6 +135,7 @@ class StartUpViewModel extends BaseViewModel {
   navigateToDeliveryServices() {
     navigationService.navigateWithTransition(
       CarRideView(
+        isDropLatLng: false,
         formType: DeliveryService,
       ),
       transition: 'rightToLeft',

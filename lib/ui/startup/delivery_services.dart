@@ -65,9 +65,12 @@ class _DeliveryServicesState extends State<DeliveryServices> {
         ),
       ]),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigationService.navigateToView(CarRideView(
-          formType: DeliveryService,
-        )),
+        onPressed: () => _navigationService.navigateToView(
+          CarRideView(
+            isDropLatLng: false,
+            formType: DeliveryService,
+          ),
+        ),
         child: Icon(
           Icons.add,
           color: Colors.black,

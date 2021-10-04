@@ -66,6 +66,7 @@ class _AmbulanceRideState extends State<AmbulanceRide> {
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigationService.navigateToView(CarRideView(
+          isDropLatLng: false,
           formType: Ambulance,
         )),
         child: Icon(

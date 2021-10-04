@@ -21,7 +21,7 @@ class CarRideView extends StatelessWidget {
   CarRideView({
     Key? key,
     required this.formType,
-    this.isDropLatLng = false,
+    required this.isDropLatLng,
     this.dropLat,
     this.dropLng,
   }) : super(key: key);

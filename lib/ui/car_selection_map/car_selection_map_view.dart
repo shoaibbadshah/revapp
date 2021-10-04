@@ -14,12 +14,20 @@ class CarSelectionMapView extends StatelessWidget {
       : super(key: key);
 
   final LatLng start, end;
+  void _onTap(GlobalKey key) {
+    final dynamic tooltip = key.currentState;
+    tooltip?.ensureTooltipVisible();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final key = GlobalKey<State<Tooltip>>();
+    final key1 = GlobalKey<State<Tooltip>>();
     return ViewModelBuilder<CarSelectionMapViewModel>.reactive(
       onModelReady: (model) {
         MyStore store = VxState.store as MyStore;
+        model.setSrcDest(store.carride['startLocation'],
+            store.carride['destination'], store.carride['distace']);
         double storedprice = double.parse(store.carride['price']);
         model.setInitialPrice(storedprice);
         model.submitBtnText = 'AVR (total: ${storedprice + 100})';
@@ -27,39 +35,80 @@ class CarSelectionMapView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         bottomSheet: Container(
           padding: EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            border: Border.fromBorderSide(
-              BorderSide(
-                color: Colors.black,
-                width: 4,
-              ),
-            ),
-          ),
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          height: 100,
+          child: Column(
             children: [
-              Container(
-                width: screenWidth(context) / 1.4,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(model.submitBtnText),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  model.setTiemDate();
-                },
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  color: Colors.black,
-                  child: Icon(
-                    Icons.timer,
-                    color: Colors.white,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      model.navigateToPayment();
+                    },
+                    child: Container(
+                      width: screenWidth(context) / 2.7,
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                model.rideType,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(model.paymentMethod),
+                            ],
+                          ),
+                          Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              )
+                  Tooltip(
+                    key: key1,
+                    preferBelow: false,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                    message:
+                        'Dear esteem customer. You are guaranteed Multi - Payments options by selecting best payment method of your choice. Avenride we are near you',
+                    child: IconButton(
+                      onPressed: () => _onTap(key1),
+                      icon: Icon(
+                        Icons.info,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: screenWidth(context) / 1.4,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Confirm ${model.submitBtnText}'),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      model.setTiemDate();
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      color: Colors.black,
+                      child: Icon(
+                        Icons.timer,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
@@ -81,6 +130,9 @@ class CarSelectionMapView extends StatelessWidget {
                         child: BookingMap(
                           DEST_LOCATION: end,
                           SOURCE_LOCATION: start,
+                          source: model.source,
+                          destination: model.destination,
+                          duration: model.time.toInt(),
                         ),
                       ),
                       Positioned(
@@ -105,7 +157,7 @@ class CarSelectionMapView extends StatelessWidget {
                           snap: true,
                           snappings: [
                             screenHeight(context) / 2.1,
-                            double.infinity
+                            screenHeight(context) / 0.1,
                           ],
                           positioning: SnapPositioning.pixelOffset,
                         ),
@@ -146,18 +198,57 @@ class CarSelectionMapView extends StatelessWidget {
                                                   ),
                                                 ),
                                                 horizontalSpaceTiny,
-                                                Text(
-                                                  car.name,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      car.name,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          '7 mins',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                        horizontalSpaceTiny,
+                                                        Icon(
+                                                          Icons.person,
+                                                          size: 12,
+                                                        ),
+                                                        Text(
+                                                          '4 seats',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      'Increased Demand',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
-                                            Text(
-                                              '${car.price}Nan',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                            Container(
+                                              width: screenWidth(context) / 2.3,
+                                              child: Text(
+                                                '₦${(model.storedprice - double.parse(car.price)).toString()} - ${(model.storedprice + double.parse(car.price)).toString()}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -171,22 +262,75 @@ class CarSelectionMapView extends StatelessWidget {
                         },
                         headerBuilder: (context, state) {
                           return Container(
-                            height: 28,
-                            width: double.infinity,
-                            alignment: Alignment.center,
+                            height: 60,
                             child: Column(
                               children: [
-                                verticalSpaceTiny,
                                 Container(
-                                  width: 40,
-                                  color: Colors.grey,
-                                  height: 4,
+                                  height: 30,
+                                  width: double.infinity,
+                                  color: Colors.blue,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '✅\ 1000 Already discounted on this trip',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Tooltip(
+                                        key: key,
+                                        preferBelow: false,
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 5),
+                                        message:
+                                            'Avenride cares about you dear esteem customer. Having you in mind, we have discounted this trip 100%  with ₦1000. Please have a safe trip.Avenride - we are near you',
+                                        child: IconButton(
+                                          onPressed: () => _onTap(key),
+                                          icon: Icon(
+                                            Icons.info,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                verticalSpaceTiny,
-                                Text(
-                                  'swipe up to see more!',
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                Container(
+                                  height: 30,
+                                  color: Colors.blue,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(10),
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                    height: 30,
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: [
+                                        verticalSpaceTiny,
+                                        Container(
+                                          width: 40,
+                                          color: Colors.grey,
+                                          height: 4,
+                                        ),
+                                        verticalSpaceTiny,
+                                        Text(
+                                          'swipe up to see more!',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
