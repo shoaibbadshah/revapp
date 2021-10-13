@@ -4,7 +4,9 @@ import 'package:avenride/services/distance_service.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
+import 'package:avenride/ui/confirmpickup/confirmpickup_view.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
+import 'package:avenride/ui/searchingdriver/seacrhdriver_view.dart';
 import 'package:places_service/places_service.dart';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/services/user_service.dart';
@@ -31,7 +33,9 @@ import 'package:stacked_services/stacked_services.dart';
     CupertinoRoute(page: AddressSelectionView),
     CupertinoRoute(page: CarRideView),
     CupertinoRoute(page: BoatRideView),
+    CupertinoRoute(page: ConfirmPickUpView),
     CupertinoRoute(page: BookingView),
+    CupertinoRoute(page: SearchDriverView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

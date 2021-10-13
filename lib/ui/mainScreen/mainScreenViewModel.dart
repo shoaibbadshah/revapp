@@ -1,6 +1,7 @@
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/services/user_service.dart';
+import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
@@ -97,6 +98,13 @@ class MainScreenViewModel extends BaseViewModel {
         formType: DeliveryService,
         isDropLatLng: false,
       ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToAvenFood() {
+    _navigationService.navigateWithTransition(
+      AvenFoodView(),
       transition: 'rightToLeft',
     );
   }

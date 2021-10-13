@@ -50,6 +50,8 @@ class _MyAppState extends State<MyApp> {
 
 class MyStore extends VxStore {
   Map<String, dynamic> carride = {};
+  String paymentMethod = 'Cash';
+  String rideType = 'Personal Ride';
 }
 
 class Increment extends VxMutation<MyStore> {
@@ -59,5 +61,17 @@ class Increment extends VxMutation<MyStore> {
   @override
   perform() {
     store!.carride.addAll(carride);
+  }
+}
+
+class ChangePaymentMethod extends VxMutation<MyStore> {
+  final String method;
+  final String ride;
+  ChangePaymentMethod(this.method, this.ride);
+
+  @override
+  perform() {
+    store!.paymentMethod = method;
+    store!.rideType = ride;
   }
 }

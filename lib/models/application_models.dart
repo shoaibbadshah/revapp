@@ -279,21 +279,21 @@ class CarModel {
     String s = json.encode(doc.data());
     Map<String, dynamic> data = jsonDecode(s);
     return CarModel(
+      destination: data['destination'],
+      distace: data['distace'] ?? '0',
+      dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
+      paymentStatus: data['paymentStatus'] ?? Pending,
+      price: data['price'].toString(),
+      pushToken: data['pushToken'] ?? '',
+      rideType: data['rideType'] ?? '',
+      scheduledDate: data['scheduledDate'],
+      scheduleTime: data['scheduleTime'],
       paymentType: data['PaymentType'],
       carType: data['CarType'],
-      destination: data['destination'],
       startLocation: data['startLocation'],
-      rideType: data['rideType'] ?? '',
       id: doc.id,
-      dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
       selectedPlace:
           GeoPoint(data['selectedPlace'][0], data['selectedPlace'][1]),
-      paymentStatus: data['paymentStatus'] ?? Pending,
-      scheduleTime: data['scheduleTime'],
-      scheduledDate: data['scheduledDate'],
-      distace: data['distace'] ?? '0',
-      price: data['price'] ?? '0',
-      pushToken: data['pushToken'] ?? '',
     );
   }
 }

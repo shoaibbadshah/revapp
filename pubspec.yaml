@@ -59,6 +59,7 @@ dependencies:
   permission_handler: ^6.0.1+1
   flare_flutter: ^3.0.2
   sliding_sheet: ^0.5.0
+  avatar_glow: ^2.0.1
   #Location
   places_service: ^0.1.0
   geolocator:
@@ -73,13 +74,13 @@ dependencies:
   url_strategy: ^0.2.0
   webview_flutter: ^2.0.8
   universal_io: ^2.0.4
-
+  http_auth: ^1.0.1
   # data models
   freezed_annotation: ^0.14.1
   json_annotation: ^4.0.1
   flutter_dotenv: ^4.0.0-nullsafety.1
   provider: ^5.0.0
-
+  shared_preferences: ^2.0.8
   random_string:  ^2.2.0-nullsafety
   image_picker: ^0.8.0
   

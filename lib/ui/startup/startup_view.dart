@@ -8,6 +8,7 @@ import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/food_card.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
+import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/back_map.dart';
 import 'package:avenride/ui/startup/current_rides.dart';
 import 'package:avenride/ui/startup/side_drawer.dart';
@@ -126,8 +127,8 @@ class StartUpView extends StatelessWidget {
           snappingDuration: Duration(seconds: 1),
         ),
       ],
-      initialSnappingPosition: SnappingPosition.pixels(
-        positionPixels: 260,
+      initialSnappingPosition: SnappingPosition.factor(
+        positionFactor: 0.8,
         snappingCurve: Curves.elasticOut,
         snappingDuration: Duration(milliseconds: 1750),
       ),
@@ -154,14 +155,35 @@ class StartUpView extends StatelessWidget {
           color: model.status ? Colors.amber : Colors.green,
           child: ListView(
             children: [
-              !model.status ? BoatRideCard(model: model) : SizedBox(),
-              model.status ? CarRideCard(model: model) : SizedBox(),
+              Container(
+                height: 60,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Card(
+                  color: Colors.white,
+                  child: ListTile(
+                    onTap: model.navigateToCardRide,
+                    title: Text(
+                      'Where to?',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              verticalSpaceSmall,
+              CarRideCard(
+                model: model,
+              ),
+              // BoatRideCard(
+              //   model: model,
+              // ),
               FlightRideCard(
                 model: model,
               ),
-              FoodCard(
-                model: model,
-              ),
+              // FoodCard(
+              //   model: model,
+              // ),
             ],
           ),
         ),

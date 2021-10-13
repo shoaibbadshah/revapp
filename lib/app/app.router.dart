@@ -8,6 +8,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 import '../ui/address_selection/address_selection_view.dart';
@@ -15,9 +16,11 @@ import '../ui/avenfood/avenfood_view.dart';
 import '../ui/boat_ride/boat_ride_view.dart';
 import '../ui/booking/booking_view.dart';
 import '../ui/car_ride/car_ride_view.dart';
+import '../ui/confirmpickup/confirmpickup_view.dart';
 import '../ui/create_account/create_account_view.dart';
 import '../ui/login/login_view.dart';
 import '../ui/mainScreen/mainScreenView.dart';
+import '../ui/searchingdriver/seacrhdriver_view.dart';
 import '../ui/second/second_view.dart';
 import '../ui/startup/startup_view.dart';
 
@@ -31,7 +34,9 @@ class Routes {
   static const String addressSelectionView = '/address-selection-view';
   static const String carRideView = '/car-ride-view';
   static const String boatRideView = '/boat-ride-view';
+  static const String confirmPickUpView = '/confirm-pick-up-view';
   static const String bookingView = '/booking-view';
+  static const String searchDriverView = '/search-driver-view';
   static const all = <String>{
     startUpView,
     mainScreenView,
@@ -42,7 +47,9 @@ class Routes {
     addressSelectionView,
     carRideView,
     boatRideView,
+    confirmPickUpView,
     bookingView,
+    searchDriverView,
   };
 }
 
@@ -59,7 +66,9 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.addressSelectionView, page: AddressSelectionView),
     RouteDef(Routes.carRideView, page: CarRideView),
     RouteDef(Routes.boatRideView, page: BoatRideView),
+    RouteDef(Routes.confirmPickUpView, page: ConfirmPickUpView),
     RouteDef(Routes.bookingView, page: BookingView),
+    RouteDef(Routes.searchDriverView, page: SearchDriverView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -141,12 +150,34 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    ConfirmPickUpView: (data) {
+      var args = data.getArgs<ConfirmPickUpViewArguments>(nullOk: false);
+      return CupertinoPageRoute<dynamic>(
+        builder: (context) => ConfirmPickUpView(
+          key: args.key,
+          start: args.start,
+          end: args.end,
+        ),
+        settings: data,
+      );
+    },
     BookingView: (data) {
       var args = data.getArgs<BookingViewArguments>(nullOk: false);
       return CupertinoPageRoute<dynamic>(
         builder: (context) => BookingView(
           key: args.key,
           enableAppBar: args.enableAppBar,
+        ),
+        settings: data,
+      );
+    },
+    SearchDriverView: (data) {
+      var args = data.getArgs<SearchDriverViewArguments>(nullOk: false);
+      return CupertinoPageRoute<dynamic>(
+        builder: (context) => SearchDriverView(
+          key: args.key,
+          start: args.start,
+          end: args.end,
         ),
         settings: data,
       );
@@ -204,9 +235,26 @@ class BoatRideViewArguments {
   BoatRideViewArguments({this.key, required this.isBoat});
 }
 
+/// ConfirmPickUpView arguments holder class
+class ConfirmPickUpViewArguments {
+  final Key? key;
+  final LatLng start;
+  final LatLng end;
+  ConfirmPickUpViewArguments(
+      {this.key, required this.start, required this.end});
+}
+
 /// BookingView arguments holder class
 class BookingViewArguments {
   final Key? key;
   final bool enableAppBar;
   BookingViewArguments({this.key, required this.enableAppBar});
+}
+
+/// SearchDriverView arguments holder class
+class SearchDriverViewArguments {
+  final Key? key;
+  final LatLng start;
+  final LatLng end;
+  SearchDriverViewArguments({this.key, required this.start, required this.end});
 }

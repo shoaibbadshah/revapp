@@ -80,9 +80,9 @@ class _BookingMapState extends State<BookingMap> {
       target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
     );
     final GoogleMapController controller = await _controller.future;
-    if (destinationLocation.latitude! <= currentLocation.latitude!) {
-      controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
-    } else {
+
+    if (destinationLocation.latitude! >= currentLocation.latitude! &&
+        destinationLocation.longitude! >= currentLocation.longitude!) {
       controller.animateCamera(
         CameraUpdate.newLatLngBounds(
           LatLngBounds(
@@ -91,9 +91,12 @@ class _BookingMapState extends State<BookingMap> {
             northeast: LatLng(
                 destinationLocation.latitude!, destinationLocation.longitude!),
           ),
-          60,
+          100,
         ),
       );
+    } else {
+      print('object');
+      controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
     }
     if (mounted) {
       setState(() {

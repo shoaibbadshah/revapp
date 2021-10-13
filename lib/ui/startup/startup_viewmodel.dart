@@ -5,6 +5,7 @@ import 'package:avenride/app/router_names.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
+import 'package:avenride/ui/boat_booking/boat_booking_view.dart';
 import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/car_booking/car_booking_view.dart';
 import 'package:avenride/ui/car_ride/car_ride_view.dart';
@@ -51,9 +52,7 @@ class StartUpViewModel extends BaseViewModel {
 
   navigateToBoatRide() {
     navigationService.navigateWithTransition(
-      BoatRideView(
-        isBoat: true,
-      ),
+      BoatBookingView(),
       transition: 'rightToLeft',
     );
   }
@@ -242,7 +241,7 @@ class StartUpViewModel extends BaseViewModel {
       {required LatLng location,
       required Completer<GoogleMapController> completer}) async {
     CameraPosition cPosition = CameraPosition(
-      zoom: CAMERA_ZOOM,
+      zoom: 10,
       tilt: CAMERA_TILT,
       bearing: CAMERA_BEARING,
       target: LatLng(location.latitude, location.longitude),

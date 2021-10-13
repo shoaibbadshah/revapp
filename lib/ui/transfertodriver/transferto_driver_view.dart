@@ -2,15 +2,15 @@ import 'package:avenride/ui/addbank/add_bank_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
+import 'package:avenride/ui/transfertodriver/transferto_driver_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class AddBankView extends StatelessWidget {
-  const AddBankView({Key? key}) : super(key: key);
-
+class TransferToDriverView extends StatelessWidget {
+  const TransferToDriverView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AddBankViewModel>.reactive(
+    return ViewModelBuilder<TransferToDriverViewModel>.reactive(
       onModelReady: (model) {
         model.listAllBanks();
         model.accountNoController.addListener(() {});
@@ -34,6 +34,15 @@ class AddBankView extends StatelessWidget {
             : ListView(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 children: [
+                  Center(
+                    child: Text(
+                      'Tranfer to Driver Account',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -156,19 +165,13 @@ class AddBankView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (model.isNameVisible) {
-                          model.handleSubmit(context, true);
-                        } else {
-                          model.handleSubmit(context, false);
-                        }
+                        model.handleSubmit(context);
                       },
                       child: model.loading
                           ? CircularProgressIndicator(
                               color: Colors.black,
                             )
-                          : Text(model.isNameVisible
-                              ? 'Add Account'
-                              : 'Verify Acccount'),
+                          : Text(model.isNameVisible ? 'Transfer' : 'Verify'),
                       style: ButtonStyle(
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -182,7 +185,7 @@ class AddBankView extends StatelessWidget {
                 ],
               ),
       ),
-      viewModelBuilder: () => AddBankViewModel(),
+      viewModelBuilder: () => TransferToDriverViewModel(),
     );
   }
 }

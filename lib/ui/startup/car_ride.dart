@@ -331,28 +331,6 @@ class _CarListState extends State<CarList> {
                             ),
                           ],
                         ),
-                        verticalSpaceSmall,
-                        Container(
-                          margin: EdgeInsetsDirectional.only(
-                            start: 1.0,
-                            end: 1.0,
-                          ),
-                          height: 2.0,
-                          width: screenWidth(context) / 1.6,
-                          color: Colors.grey.shade300,
-                        ),
-                        verticalSpaceTiny,
-                        PaymentStatusLabel(
-                          price: car.price,
-                          busy: isBusy,
-                          onButtonTapped: () {
-                            setState(() {
-                              isBusy = true;
-                            });
-                            startPayment(price: car.price, id: car.id);
-                          },
-                          paymentStatus: car.paymentStatus,
-                        ),
                         verticalSpaceTiny,
                       ],
                     ),

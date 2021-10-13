@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class AddBankViewModel extends BaseViewModel {
+class TransferToDriverViewModel extends BaseViewModel {
   final _paystackApiService = locator<PaystackApi>();
   final firestoreApi = locator<FirestoreApi>();
   final userService = locator<UserService>();
@@ -59,8 +59,8 @@ class AddBankViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void handleSubmit(BuildContext context, bool bool) async {
-    if (bool == false) {
+  void handleSubmit(BuildContext context) async {
+    if (isNameVisible == false) {
       loading = true;
       notifyListeners();
       final data = await _paystackApiService.verifyUserAccount(
@@ -76,18 +76,18 @@ class AddBankViewModel extends BaseViewModel {
       loading = false;
       notifyListeners();
     }
-    if (bool) {
-      await firestoreApi.updateRider(
-        data: {
-          'bankDetails': {
-            "bankName": choosenBank,
-            "accountNo": accountNoController.text,
-            "name": nameController.text,
-          }
-        },
-        user: userService.currentUser.id,
-      );
-      _navigationService.back();
-    }
+    // if (isNameVisible) {
+    //   await firestoreApi.updateRider(
+    //     data: {
+    //       'bankDetails': {
+    //         "bankName": choosenBank,
+    //         "accountNo": accountNoController.text,
+    //         "name": nameController.text,
+    //       }
+    //     },
+    //     user: userService.currentUser.id,
+    //   );
+    //   _navigationService.back();
+    // }
   }
 }

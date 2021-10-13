@@ -111,7 +111,7 @@ class FirestoreApi {
     try {
       final userDocument = usersCollection.doc(user);
       userDocument.update(data);
-      log.v('UserCreated at ${userDocument.path}');
+      log.v('UserUpdated at ${userDocument.path}');
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to update user address',
@@ -295,8 +295,6 @@ class FirestoreApi {
   }
 
   Future<bool> createCarRide({required Map carride, required User user}) async {
-    log.i('Ride Details: $carride and user data: $user');
-
     try {
       final userDocument = carRideCollection.doc();
       await userDocument.set(carride);
@@ -438,8 +436,9 @@ class FirestoreApi {
         .orderBy('scheduledDate', descending: true)
         .orderBy('scheduleTime', descending: true)
         .snapshots()
-        .map((list) =>
-            list.docs.map((doc) => CarModel.fromFirestore(doc)).toList());
+        .map((list) => list.docs.map((doc) {
+              return CarModel.fromFirestore(doc);
+            }).toList());
   }
 
   Stream<List<TaxiModel>> streamtaxi(String userId) {

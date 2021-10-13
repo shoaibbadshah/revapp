@@ -1,5 +1,6 @@
 import 'package:avenride/main.dart';
 import 'package:avenride/ui/car_selection_map/car_selection_map_viewmodel.dart';
+import 'package:avenride/ui/confirmpickup/confirmpickup_view.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
@@ -26,6 +27,8 @@ class CarSelectionMapView extends StatelessWidget {
     return ViewModelBuilder<CarSelectionMapViewModel>.reactive(
       onModelReady: (model) {
         MyStore store = VxState.store as MyStore;
+        model.rideType = store.rideType;
+        model.paymentMethod = store.paymentMethod;
         model.setSrcDest(store.carride['startLocation'],
             store.carride['destination'], store.carride['distace']);
         double storedprice = double.parse(store.carride['price']);
@@ -46,7 +49,7 @@ class CarSelectionMapView extends StatelessWidget {
                       model.navigateToPayment();
                     },
                     child: Container(
-                      width: screenWidth(context) / 2.7,
+                      width: screenWidth(context) / 1.6,
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         children: [
@@ -89,7 +92,9 @@ class CarSelectionMapView extends StatelessWidget {
                   Container(
                     width: screenWidth(context) / 1.4,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        model.onConfirmPressed(start, end);
+                      },
                       child: Text('Confirm ${model.submitBtnText}'),
                     ),
                   ),
@@ -143,9 +148,14 @@ class CarSelectionMapView extends StatelessWidget {
                             model.navigationService.back();
                           },
                           child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                            ),
                             child: Icon(
-                              Icons.arrow_back,
-                              size: 30,
+                              Icons.arrow_back_ios_new_outlined,
                             ),
                           ),
                         ),
@@ -156,7 +166,7 @@ class CarSelectionMapView extends StatelessWidget {
                         snapSpec: SnapSpec(
                           snap: true,
                           snappings: [
-                            screenHeight(context) / 2.1,
+                            screenHeight(context) / 1.7,
                             screenHeight(context) / 0.1,
                           ],
                           positioning: SnapPositioning.pixelOffset,
@@ -273,7 +283,7 @@ class CarSelectionMapView extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        '✅\ 1000 Already discounted on this trip',
+                                        '₦1000 Already discounted on this trip',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -289,7 +299,7 @@ class CarSelectionMapView extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(
                                             vertical: 5, horizontal: 5),
                                         message:
-                                            'Avenride cares about you dear esteem customer. Having you in mind, we have discounted this trip 100%  with ₦1000. Please have a safe trip.Avenride - we are near you',
+                                            'Avenride cares about you dear esteem customer. Having you in mind, we have discounted this trip with ₦1000. Please have a safe trip.Avenride - we are near you',
                                         child: IconButton(
                                           onPressed: () => _onTap(key),
                                           icon: Icon(

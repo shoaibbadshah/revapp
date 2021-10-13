@@ -32,6 +32,7 @@ class CarBookingViewModel extends BaseViewModel {
   FocusNode stop1FocusNode = FocusNode();
   FocusNode stop2FocusNode = FocusNode();
   bool isDest = true, isCurr = false;
+  String scheduledDate = '', scheduledTime = '';
   String currentPlaceId = '',
       destinationPlaceId = '',
       stop1PlaceId = '',
@@ -84,10 +85,6 @@ class CarBookingViewModel extends BaseViewModel {
   }
 
   void setLocOnChange() async {
-    setBusy(true);
-    _placesService.initialize(
-      apiKey: env['GOOGLE_MAPS_API_KEY']!,
-    );
     await getCurrentLocation();
     var googleGeocoding = GoogleGeocoding(
       env['GOOGLE_MAPS_API_KEY']!,
@@ -104,7 +101,6 @@ class CarBookingViewModel extends BaseViewModel {
       currentText.text = re.formattedAddress!;
       notifyListeners();
     }
-    setBusy(false);
   }
 
   void setCurrentLoc() async {
@@ -319,11 +315,12 @@ class CarBookingViewModel extends BaseViewModel {
             'startLocation': currentText.text,
             'destination': destinationText.text,
             'stop1Location': stop1Text.text,
-            'scheduleTime': '',
+            'scheduleTime': scheduledTime,
+            'scheduledDate': scheduledDate,
             'userId': currentUser.id,
             'price': placeRates,
             'distace': placeDistances,
-            'paymentStatus': 'Pending',
+            'paymentStatus': 'Confirmed',
             'drivers': null,
             'selectedPlace': [
               currentPosition!.latitude,
@@ -343,11 +340,12 @@ class CarBookingViewModel extends BaseViewModel {
                 'destination': destinationText.text,
                 'stop1Location': stop1Text.text,
                 'stop2Location': stop2Text.text,
-                'scheduleTime': '',
+                'scheduleTime': scheduledTime,
+                'scheduledDate': scheduledDate,
                 'userId': currentUser.id,
                 'price': placeRates,
                 'distace': placeDistances,
-                'paymentStatus': 'Pending',
+                'paymentStatus': 'Confirmed',
                 'drivers': null,
                 'selectedPlace': [
                   currentPosition!.latitude,
@@ -371,16 +369,18 @@ class CarBookingViewModel extends BaseViewModel {
             : {
                 'startLocation': currentText.text,
                 'destination': destinationText.text,
-                'scheduleTime': '',
+                'scheduleTime': scheduledTime,
+                'scheduledDate': scheduledDate,
                 'userId': currentUser.id,
                 'price': placeRates,
                 'distace': placeDistances,
-                'paymentStatus': 'Pending',
+                'paymentStatus': 'Confirmed',
                 'drivers': null,
                 'selectedPlace': [
                   currentPosition!.latitude,
                   currentPosition!.longitude,
                 ],
+                'PaymentType': 'Cash',
                 'dropoffplace': [
                   loc2.latitude,
                   loc2.longitude,
