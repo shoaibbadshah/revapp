@@ -119,7 +119,7 @@ class BoatRideViewModel extends BaseViewModel {
           'dropLocation': droploc,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
-          'userId': currentUser.id,
+          'userId': currentUser!.id,
           'paymentStatus': 'Pending',
           'laguageType': setLaguageType,
           'laguageSize': setLaguageSize,
@@ -148,7 +148,7 @@ class BoatRideViewModel extends BaseViewModel {
           'price': placeRate,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
-          'userId': currentUser.id,
+          'userId': currentUser!.id,
           'drivers': null,
           'paymentStatus': 'Pending',
           'pushToken': currentUser.pushToken,
@@ -207,7 +207,9 @@ class BoatRideViewModel extends BaseViewModel {
           if (!isBoat!) {
             _firestoreApi
                 .createDeliveryRide(
-                    carride: store.carride, user: _userService.currentUser)
+              carride: store.carride,
+              user: _userService.currentUser!,
+            )
                 .then((value) {
               if (value) {
                 _navigationService.back();
@@ -217,7 +219,9 @@ class BoatRideViewModel extends BaseViewModel {
           } else {
             _firestoreApi
                 .createBoatRide(
-                    carride: store.carride, user: _userService.currentUser)
+              carride: store.carride,
+              user: _userService.currentUser!,
+            )
                 .then((value) {
               if (value) {
                 _navigationService.back();

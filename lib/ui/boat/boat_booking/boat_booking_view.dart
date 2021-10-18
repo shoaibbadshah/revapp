@@ -1,4 +1,3 @@
-import 'package:avenride/main.dart';
 import 'package:avenride/ui/boat/boat_booking/boat_booking_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
@@ -7,7 +6,6 @@ import 'package:avenride/ui/startup/back_map.dart';
 import 'package:flutter/material.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:stacked/stacked.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 

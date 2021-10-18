@@ -101,23 +101,21 @@ class CarRideViewModel extends BaseViewModel {
         LatLng(result.geometry!.location.lat, result.geometry!.location.lng);
     pickUpAddress = result.formattedAddress!;
     isbusy = false;
-    if (_dropoffplace != null) {
-      await Calculate()
-          .calculateDistan(
-        dropoffplac1: _dropoffplace.latitude,
-        dropoffplac2: _dropoffplace.longitude,
-        selectedPlac1: _selectedPlace.latitude,
-        selectedPlac2: _selectedPlace.longitude,
-        formtype: formtype_get,
-      )
-          .then((value) {
-        placeDistances = value['distance'];
-        placeRates = value['placeRate'];
-        initialRate = value['placeRate'];
-        duration = value['duration'];
-        rate = value['rate'];
-      });
-    }
+    await Calculate()
+        .calculateDistan(
+      dropoffplac1: _dropoffplace.latitude,
+      dropoffplac2: _dropoffplace.longitude,
+      selectedPlac1: _selectedPlace.latitude,
+      selectedPlac2: _selectedPlace.longitude,
+      formtype: formtype_get,
+    )
+        .then((value) {
+      placeDistances = value['distance'];
+      placeRates = value['placeRate'];
+      initialRate = value['placeRate'];
+      duration = value['duration'];
+      rate = value['rate'];
+    });
     notifyListeners();
     return navigationService.back();
   }
@@ -306,7 +304,7 @@ class CarRideViewModel extends BaseViewModel {
           'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
-          'userId': currentUser.id,
+          'userId': currentUser!.id,
           'price': placeRate,
           'laguageType': setLaguageType,
           'laguageSize': setLaguageSize,
@@ -329,7 +327,7 @@ class CarRideViewModel extends BaseViewModel {
           'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
-          'userId': currentUser.id,
+          'userId': currentUser!.id,
           'price': placeRate,
           'distace': placeDistance,
           'paymentStatus': 'Pending',
@@ -352,7 +350,7 @@ class CarRideViewModel extends BaseViewModel {
           'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
-          'userId': currentUser.id,
+          'userId': currentUser!.id,
           'price': placeRate,
           'distace': placeDistance,
           'paymentStatus': 'Pending',
@@ -374,7 +372,7 @@ class CarRideViewModel extends BaseViewModel {
           'destination': dropOffAddress,
           'scheduleTime': time,
           'scheduledDate': DateFormat.yMd().format(selectedDate),
-          'userId': currentUser.id,
+          'userId': currentUser!.id,
           'price': placeRate,
           'distace': placeDistance,
           'paymentStatus': 'Pending',
@@ -446,7 +444,9 @@ class CarRideViewModel extends BaseViewModel {
             log.i(store.carride);
             _firestoreApi
                 .createCarRide(
-                    carride: store.carride, user: _userService.currentUser)
+              carride: store.carride,
+              user: _userService.currentUser!,
+            )
                 .then((value) {
               if (value) {
                 navigationService.back();
@@ -487,7 +487,9 @@ class CarRideViewModel extends BaseViewModel {
             log.i(store.carride);
             _firestoreApi
                 .createDeliveryServices(
-                    carride: store.carride, user: _userService.currentUser)
+              carride: store.carride,
+              user: _userService.currentUser!,
+            )
                 .then((value) {
               if (value) {
                 navigationService.back();
@@ -518,7 +520,9 @@ class CarRideViewModel extends BaseViewModel {
           MyStore store = VxState.store as MyStore;
           _firestoreApi
               .createTaxiRide(
-                  carride: store.carride, user: _userService.currentUser)
+            carride: store.carride,
+            user: _userService.currentUser!,
+          )
               .then((value) {
             if (value) {
               navigationService.back();
@@ -563,7 +567,9 @@ class CarRideViewModel extends BaseViewModel {
               MyStore store = VxState.store as MyStore;
               _firestoreApi
                   .createAmbulance(
-                      carride: store.carride, user: _userService.currentUser)
+                carride: store.carride,
+                user: _userService.currentUser!,
+              )
                   .then((value) {
                 if (value) {
                   navigationService.back();

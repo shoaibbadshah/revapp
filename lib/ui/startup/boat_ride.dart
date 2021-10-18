@@ -60,7 +60,7 @@ class _BoatRideState extends State<BoatRide> {
         verticalSpaceSmall,
         Expanded(
           child: StreamProvider<List<BoatModel>>.value(
-            value: _firestoreApi.streamboat(_userService.currentUser.id),
+            value: _firestoreApi.streamboat(_userService.currentUser!.id),
             initialData: [],
             child: BoatList(),
           ),
@@ -100,7 +100,7 @@ class _BoatListState extends State<BoatList> {
 
   startPayment({required String price, required String id}) async {
     Map headers = {
-      "email": _userService.currentUser.email.toString(),
+      "email": _userService.currentUser!.email.toString(),
       "amount": price,
     };
     final response = await http.post(

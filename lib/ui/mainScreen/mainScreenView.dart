@@ -40,7 +40,7 @@ class MainScreenView extends StatelessWidget {
                 Row(children: [
                   horizontalSpaceSmall,
                   Text(
-                    'Hi, ${model.userService.currentUser.name}',
+                    'Hi, ${model.userService.currentUser!.name}',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w500,

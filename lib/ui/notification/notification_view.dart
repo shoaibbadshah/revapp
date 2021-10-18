@@ -27,7 +27,7 @@ class NotificationView extends StatelessWidget {
         ),
         body: StreamProvider<List<Users>>.value(
           value:
-              model.firestoreApi.streamuser(model.userService.currentUser.id),
+              model.firestoreApi.streamuser(model.userService.currentUser!.id),
           initialData: [
             Users(
               id: 'id',

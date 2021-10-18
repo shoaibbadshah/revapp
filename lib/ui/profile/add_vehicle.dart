@@ -192,8 +192,9 @@ class _AddVehicleState extends State<AddVehicle> {
                   });
                   await _firestoreApi
                       .updateRider(
-                          data: store.carride,
-                          user: _userService.currentUser.id)
+                    data: store.carride,
+                    user: _userService.currentUser!.id,
+                  )
                       .then((value) {
                     setState(() {
                       loading = false;

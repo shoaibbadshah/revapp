@@ -28,14 +28,14 @@ class _ProfileInfoState extends State<ProfileInfo> {
   void initState() {
     super.initState();
     setState(() {
-      if (userService.currentUser.mobileNo != null) {
-        mobileNo = userService.currentUser.mobileNo!;
+      if (userService.currentUser!.mobileNo != null) {
+        mobileNo = userService.currentUser!.mobileNo!;
       }
-      if (userService.currentUser.name != null) {
-        name = userService.currentUser.name!;
+      if (userService.currentUser!.name != null) {
+        name = userService.currentUser!.name!;
       }
-      if (userService.currentUser.email != null) {
-        email = userService.currentUser.email!;
+      if (userService.currentUser!.email != null) {
+        email = userService.currentUser!.email!;
       }
     });
   }
@@ -135,7 +135,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     "name": name,
                     "email": email,
                     "mobileNo": mobileNo,
-                  }, user: userService.currentUser.id);
+                  }, user: userService.currentUser!.id);
                   final snackBar = SnackBar(
                     content: Text('Profile Updated Successsfully'),
                     action: SnackBarAction(

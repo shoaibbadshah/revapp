@@ -96,7 +96,7 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
                     body: item.headerValue == 'Car Ride'
                         ? StreamProvider<List<CarModel>>.value(
                             value: firestoreApi
-                                .streamcar(_userService.currentUser.id),
+                                .streamcar(_userService.currentUser!.id),
                             initialData: [],
                             child: Container(
                               height: 360,
@@ -107,7 +107,7 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
                         : item.headerValue == 'Bus/Taxi Ride'
                             ? StreamProvider<List<TaxiModel>>.value(
                                 value: firestoreApi
-                                    .streamtaxi(_userService.currentUser.id),
+                                    .streamtaxi(_userService.currentUser!.id),
                                 initialData: [],
                                 child: Container(
                                   height: 350,
@@ -118,7 +118,7 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
                             : item.headerValue == 'Ambulance'
                                 ? StreamProvider<List<AmbulanceModel>>.value(
                                     value: firestoreApi.streamambulance(
-                                      _userService.currentUser.id,
+                                      _userService.currentUser!.id,
                                     ),
                                     initialData: [],
                                     child: Container(
@@ -133,7 +133,7 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
                                         List<DeliveryServicesModel>>.value(
                                         value:
                                             firestoreApi.streamdeliveryservices(
-                                                _userService.currentUser.id),
+                                                _userService.currentUser!.id),
                                         initialData: [],
                                         child: Column(
                                           children: [
@@ -148,7 +148,7 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
                                     : item.headerValue == 'Boat Ride'
                                         ? StreamProvider<List<BoatModel>>.value(
                                             value: firestoreApi.streamboat(
-                                                _userService.currentUser.id),
+                                                _userService.currentUser!.id),
                                             initialData: [],
                                             child: Column(
                                               children: [
@@ -165,7 +165,7 @@ class _BookingSubScreenState extends State<BookingSubScreen> {
                                                 List<DeliveryModel>>.value(
                                                 value: firestoreApi
                                                     .streamdelivery(_userService
-                                                        .currentUser.id),
+                                                        .currentUser!.id),
                                                 initialData: [],
                                                 child: Column(
                                                   children: [

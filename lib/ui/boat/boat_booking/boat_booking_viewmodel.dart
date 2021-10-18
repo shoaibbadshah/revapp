@@ -152,7 +152,7 @@ class BoatBookingViewModel extends BaseViewModel {
         'price': '1000.00',
         'scheduleTime': time,
         'scheduledDate': date,
-        'userId': currentUser.id,
+        'userId': currentUser!.id,
         'drivers': null,
         'paymentStatus': 'Confirmed',
         'pushToken': currentUser.pushToken,

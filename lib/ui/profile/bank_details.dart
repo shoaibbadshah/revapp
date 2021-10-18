@@ -160,7 +160,7 @@ class _BankDetailsState extends State<BankDetails> {
                   await _firestoreApi
                       .updateRider(
                           data: store.carride,
-                          user: _userService.currentUser.id)
+                          user: _userService.currentUser!.id)
                       .then((value) {
                     setState(() {
                       loading = false;

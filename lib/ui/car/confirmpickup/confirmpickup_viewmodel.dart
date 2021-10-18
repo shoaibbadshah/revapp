@@ -4,9 +4,7 @@ import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
-import 'package:avenride/ui/searchingdriver/seacrhdriver_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
-import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -151,7 +149,10 @@ class ConfirmPickUpViewModel extends BaseViewModel {
 
   void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
     await _firestoreApi
-        .createCarRide(carride: store.carride, user: _userService.currentUser)
+        .createCarRide(
+      carride: store.carride,
+      user: _userService.currentUser!,
+    )
         .then((value) {
       log.v(value);
       if (value) {

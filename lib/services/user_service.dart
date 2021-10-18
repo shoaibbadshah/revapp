@@ -10,7 +10,7 @@ class UserService {
   final _firebaseAuthenticationService =
       locator<FirebaseAuthenticationService>();
   User? _currentUser;
-  User get currentUser => _currentUser!;
+  User? get currentUser => _currentUser;
 
   bool get hasLoggedInUser => _firebaseAuthenticationService.hasUser;
 

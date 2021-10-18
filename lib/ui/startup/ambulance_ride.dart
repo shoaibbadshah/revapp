@@ -58,7 +58,7 @@ class _AmbulanceRideState extends State<AmbulanceRide> {
         verticalSpaceSmall,
         Expanded(
           child: StreamProvider<List<AmbulanceModel>>.value(
-            value: _firestoreApi.streamambulance(_userService.currentUser.id),
+            value: _firestoreApi.streamambulance(_userService.currentUser!.id),
             initialData: [],
             child: AmbulanceList(),
           ),
@@ -95,7 +95,7 @@ class _AmbulanceListState extends State<AmbulanceList> {
 
   startPayment({required String price, required String id}) async {
     Map headers = {
-      "email": _userService.currentUser.email.toString(),
+      "email": _userService.currentUser!.email.toString(),
       "amount": price,
     };
     final response = await http.post(

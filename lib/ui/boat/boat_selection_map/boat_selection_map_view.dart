@@ -1,6 +1,5 @@
 import 'package:avenride/main.dart';
 import 'package:avenride/ui/boat/boat_selection_map/boat_selection_map_viewmodel.dart';
-import 'package:avenride/ui/car/car_selection_map/car_selection_map_viewmodel.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';

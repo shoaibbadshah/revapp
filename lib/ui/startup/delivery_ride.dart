@@ -58,7 +58,7 @@ class _DeliveryRideState extends State<DeliveryRide> {
         verticalSpaceSmall,
         Expanded(
           child: StreamProvider<List<DeliveryModel>>.value(
-            value: _firestoreApi.streamdelivery(_userService.currentUser.id),
+            value: _firestoreApi.streamdelivery(_userService.currentUser!.id),
             initialData: [],
             child: DeliveryList(),
           ),
@@ -98,7 +98,7 @@ class _DeliveryListState extends State<DeliveryList> {
 
   startPayment({required String price, required String id}) async {
     Map headers = {
-      "email": _userService.currentUser.email.toString(),
+      "email": _userService.currentUser!.email.toString(),
       "amount": price,
     };
     final response = await http.post(

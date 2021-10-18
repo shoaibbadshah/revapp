@@ -62,7 +62,7 @@ Future uploadPic({required Map file, required String folderName}) async {
   var snapshot = await _firebaseStorage
       .ref()
       .child(
-          'Riders/${_userService.currentUser.id}/$folderName/${file['name']}')
+          'Riders/${_userService.currentUser!.id}/$folderName/${file['name']}')
       .putFile(file['file']);
   var downloadUrl = await snapshot.ref.getDownloadURL();
   return downloadUrl;

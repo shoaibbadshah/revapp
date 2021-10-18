@@ -122,7 +122,7 @@ class _ProfileSubState extends State<ProfileSub> {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Users>>.value(
-      value: firestoreApi.streamuser(userService.currentUser.id),
+      value: firestoreApi.streamuser(userService.currentUser!.id),
       initialData: [
         Users(
           id: 'id',

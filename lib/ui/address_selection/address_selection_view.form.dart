@@ -34,6 +34,7 @@ mixin $AddressSelectionView on StatelessWidget {
     // The dispose function for a TextEditingController sets all listeners to null
 
     addressController.dispose();
+    addressFocusNode.dispose();
   }
 }
 

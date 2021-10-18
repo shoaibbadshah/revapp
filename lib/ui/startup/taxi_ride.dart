@@ -57,7 +57,7 @@ class _TaxiRideState extends State<TaxiRide> {
         verticalSpaceSmall,
         Expanded(
           child: StreamProvider<List<TaxiModel>>.value(
-            value: _firestoreApi.streamtaxi(_userService.currentUser.id),
+            value: _firestoreApi.streamtaxi(_userService.currentUser!.id),
             initialData: [],
             child: TaxiList(),
           ),
@@ -97,7 +97,7 @@ class _TaxiListState extends State<TaxiList> {
 
   startPayment({required String price, required String id}) async {
     Map headers = {
-      "email": _userService.currentUser.email.toString(),
+      "email": _userService.currentUser!.email.toString(),
       "amount": price,
     };
     final response = await http.post(

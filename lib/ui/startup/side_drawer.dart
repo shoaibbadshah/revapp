@@ -23,7 +23,7 @@ class StartUpSideDraer extends StatelessWidget {
               model.userService.hasLoggedInUser && model.userId != null
                   ? StreamProvider<List<Users>>.value(
                       value: model.firestoreApi
-                          .streamuser(model.userService.currentUser.id),
+                          .streamuser(model.userService.currentUser!.id),
                       initialData: [
                         Users(
                           id: 'id',

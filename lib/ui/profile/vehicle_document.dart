@@ -52,7 +52,7 @@ class _VehicleDocumentState extends State<VehicleDocument> {
   Widget build(BuildContext context) {
     if (links.length == 4) {
       _firestoreApi
-          .updateRider(data: store.carride, user: _userService.currentUser.id)
+          .updateRider(data: store.carride, user: _userService.currentUser!.id)
           .then((value) {
         setState(() {
           loading = false;

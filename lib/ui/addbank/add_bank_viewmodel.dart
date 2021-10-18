@@ -85,7 +85,7 @@ class AddBankViewModel extends BaseViewModel {
             "name": nameController.text,
           }
         },
-        user: userService.currentUser.id,
+        user: userService.currentUser!.id,
       );
       _navigationService.back();
     }

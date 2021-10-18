@@ -6,7 +6,6 @@ import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
-import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -62,7 +61,7 @@ class BoatConfirmPickUpViewModel extends BaseViewModel {
   }
 
   void setTiemDate() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
       enableDrag: false,
       barrierDismissible: true,
@@ -214,7 +213,7 @@ class BoatConfirmPickUpViewModel extends BaseViewModel {
 
   void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
     await _firestoreApi
-        .createBoatRide(carride: store.carride, user: _userService.currentUser)
+        .createBoatRide(carride: store.carride, user: _userService.currentUser!)
         .then((value) {
       log.v(value);
       if (value) {

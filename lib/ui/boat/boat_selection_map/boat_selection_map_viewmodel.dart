@@ -45,7 +45,7 @@ class BoatSelectionMapViewModel extends BaseViewModel {
   }
 
   void setTiemDate() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
       enableDrag: false,
       barrierDismissible: true,

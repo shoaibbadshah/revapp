@@ -148,54 +148,56 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   void checkData(BuildContext context) {
-    if (userService.currentUser.email!.isEmpty ||
-        userService.currentUser.name!.isEmpty ||
-        userService.currentUser.mobileNo!.isEmpty) {
-      Future<bool> _onBackPressed() {
-        return Future.delayed(Duration(milliseconds: 200), () {
-          return false;
-        });
-      }
+    if (userService.currentUser != null) {
+      if (userService.currentUser!.email!.isEmpty ||
+          userService.currentUser!.name!.isEmpty ||
+          userService.currentUser!.mobileNo!.isEmpty) {
+        Future<bool> _onBackPressed() {
+          return Future.delayed(Duration(milliseconds: 200), () {
+            return false;
+          });
+        }
 
-      Alert(
-        context: context,
-        title: "Please Update your Info",
-        desc: "click below to update your info",
-        closeFunction: _onBackPressed,
-        onWillPopActive: true,
-        buttons: [
-          DialogButton(
-            child: Text(
-              "Click Here",
-              style: TextStyle(color: Colors.black, fontSize: 18),
+        Alert(
+          context: context,
+          title: "Please Update your Info",
+          desc: "click below to update your info",
+          closeFunction: _onBackPressed,
+          onWillPopActive: true,
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Click Here",
+                style: TextStyle(color: Colors.black, fontSize: 18),
+              ),
+              onPressed: () async {
+                navigationService.navigateToView(ProfileInfo(
+                  isMainScreen: true,
+                ));
+              },
+              width: 120,
             ),
-            onPressed: () async {
-              navigationService.navigateToView(ProfileInfo(
-                isMainScreen: true,
-              ));
-            },
-            width: 120,
-          ),
-        ],
-      ).show();
+          ],
+        ).show();
+      }
     }
   }
 
   Future<void> runStartupLogic() async {
     setBusy(true);
-    if (userService.hasLoggedInUser) {
+    if (userService.hasLoggedInUser || userService.currentUser != null) {
       log.v('We have a user session on disk. Sync the user profile ...');
       await userService.syncUserAccount();
-      if (userService.currentUser.pushToken != _notifyService.pushToken) {
+      if (userService.currentUser!.pushToken != _notifyService.pushToken) {
         firestoreApi.updateRider(
           data: {
             'pushToken': _notifyService.pushToken,
           },
-          user: userService.currentUser.id,
+          user: userService.currentUser!.id,
         );
       }
       final currentUser = userService.currentUser;
-      userId = currentUser.id;
+      userId = currentUser!.id;
       log.v('User sync complete. User profile');
       setBusy(false);
     } else {
@@ -215,8 +217,8 @@ class StartUpViewModel extends BaseViewModel {
   Future<void> messageHandler(RemoteMessage message) async {
     log.i('New notification Recieved');
     List data = [];
-    if (userService.currentUser.notification != null) {
-      data = userService.currentUser.notification!;
+    if (userService.currentUser!.notification != null) {
+      data = userService.currentUser!.notification!;
     }
     data.add({
       'data': message.data,
@@ -228,7 +230,7 @@ class StartUpViewModel extends BaseViewModel {
     });
     firestoreApi.updateRider(data: {
       'notification': data,
-    }, user: userService.currentUser.id);
+    }, user: userService.currentUser!.id);
     log.i('New notification and it is updated');
     data = [];
   }

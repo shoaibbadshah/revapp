@@ -109,11 +109,6 @@ class _FloatingBoxBottomSheetState extends State<FloatingBoxBottomSheet> {
     MyStore store = VxState.store as MyStore;
     double storedprice = double.parse(store.carride['price']);
     price = storedprice + sprice;
-    Future<bool> _onBackPressed() {
-      return Future.delayed(Duration(milliseconds: 200), () {
-        return false;
-      });
-    }
 
     return Container(
       padding: EdgeInsets.all(25),
@@ -532,7 +527,7 @@ class _PaywebState extends State<Payweb> {
               'transactionId': data['data']['id'],
               'reference': data['data']['reference'],
             },
-          }, user: _userService.currentUser, docId: widget.docid);
+          }, user: _userService.currentUser!, docId: widget.docid);
         }
         if (widget.payfor == 'car') {
           _firestoreApi.updateCarPaymentInfo(data: {
@@ -541,7 +536,7 @@ class _PaywebState extends State<Payweb> {
               'transactionId': data['data']['id'],
               'reference': data['data']['reference'],
             },
-          }, user: _userService.currentUser, docId: widget.docid);
+          }, user: _userService.currentUser!, docId: widget.docid);
         }
         if (widget.payfor == 'ambulance') {
           _firestoreApi.updateAmbulancePaymentInfo(data: {
@@ -550,7 +545,7 @@ class _PaywebState extends State<Payweb> {
               'transactionId': data['data']['id'],
               'reference': data['data']['reference'],
             },
-          }, user: _userService.currentUser, docId: widget.docid);
+          }, user: _userService.currentUser!, docId: widget.docid);
         }
         if (widget.payfor == 'boat') {
           _firestoreApi.updateBoatPaymentInfo(data: {
@@ -559,7 +554,7 @@ class _PaywebState extends State<Payweb> {
               'transactionId': data['data']['id'],
               'reference': data['data']['reference'],
             },
-          }, user: _userService.currentUser, docId: widget.docid);
+          }, user: _userService.currentUser!, docId: widget.docid);
         }
         if (widget.payfor == 'delivery') {
           _firestoreApi.updateDeliveryPaymentInfo(data: {
@@ -568,7 +563,7 @@ class _PaywebState extends State<Payweb> {
               'transactionId': data['data']['id'],
               'reference': data['data']['reference'],
             },
-          }, user: _userService.currentUser, docId: widget.docid);
+          }, user: _userService.currentUser!, docId: widget.docid);
         }
         if (widget.payfor == 'deliveryservices') {
           _firestoreApi.updateDeliveryServicesPaymentInfo(data: {
@@ -577,7 +572,7 @@ class _PaywebState extends State<Payweb> {
               'transactionId': data['data']['id'],
               'reference': data['data']['reference'],
             },
-          }, user: _userService.currentUser, docId: widget.docid);
+          }, user: _userService.currentUser!, docId: widget.docid);
         }
         return true;
       }
