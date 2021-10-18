@@ -1,5 +1,5 @@
 import 'package:avenride/app/router_names.dart';
-import 'package:avenride/ui/car_ride/car_ride_view.dart';
+import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';

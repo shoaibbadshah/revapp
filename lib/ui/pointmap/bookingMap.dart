@@ -122,7 +122,6 @@ class _BookingMapState extends State<BookingMap> {
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         'assets/destination_map_marker.png');
-    print(widget.duration);
     final icon1 = await placeToMarker(
         Place(
           id: '',

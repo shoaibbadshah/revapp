@@ -172,15 +172,14 @@ class BoatModel {
   factory BoatModel.fromFirestore(DocumentSnapshot doc) {
     String s = json.encode(doc.data());
     Map<String, dynamic> data = jsonDecode(s);
-
     return BoatModel(
-      paymentType: data['PaymentType'],
-      dropLocation: data['dropLocation'],
-      paymentStatus: data['paymentStatus'],
-      pickLocation: data['pickLocation'],
+      paymentType: data['PaymentType'].toString(),
+      dropLocation: data['dropLocation'].toString(),
+      paymentStatus: data['paymentStatus'].toString(),
+      pickLocation: data['pickLocation'].toString(),
       id: doc.id,
       scheduleTime: data['scheduleTime'],
-      price: data['price'],
+      price: data['price'].toString(),
       scheduledDate: data['scheduledDate'],
       boatType: data['BoatType'],
       pickupLat: data['pickupLat'],

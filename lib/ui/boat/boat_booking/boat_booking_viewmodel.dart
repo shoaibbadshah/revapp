@@ -1,10 +1,8 @@
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/app.logger.dart';
-import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
-import 'package:avenride/services/distance.dart';
-import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/user_service.dart';
+import 'package:avenride/ui/boat/boat_selection_map/boat_selection_map_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,10 +11,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:places_service/places_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:intl/intl.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class BoatBookingViewModel extends BaseViewModel {
-  final _placesService = locator<PlacesService>();
   final _userService = locator<UserService>();
+
+  final _navigationService = locator<NavigationService>();
   TextEditingController currentText = TextEditingController();
   TextEditingController destinationText = TextEditingController();
   TextEditingController stop1Text = TextEditingController();
@@ -164,6 +164,12 @@ class BoatBookingViewModel extends BaseViewModel {
       };
       Increment(result);
       log.v(result);
+      _navigationService.navigateToView(
+        BoatSelectionMapView(
+          start: LatLng(start.latd, start.long),
+          end: LatLng(end.latd, end.long),
+        ),
+      );
     }
   }
 

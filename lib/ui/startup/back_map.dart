@@ -47,11 +47,13 @@ class _BackMapState extends State<BackMap> {
     return ViewModelBuilder<StartUpViewModel>.reactive(
       onModelReady: (model) {
         location = new Location();
-        locationData = location.onLocationChanged.listen((LocationData cLoc) {
+        locationData =
+            location.onLocationChanged.listen((LocationData cLoc) async {
           if (currentLocation != LatLng(cLoc.latitude!, cLoc.longitude!)) {
             setState(() {
               currentLocation = LatLng(cLoc.latitude!, cLoc.longitude!);
             });
+            await model.setMarkers(currentLocation);
             model.updatePinOnMap(
               location: currentLocation,
               completer: _controller,
@@ -68,6 +70,7 @@ class _BackMapState extends State<BackMap> {
         compassEnabled: true,
         tiltGesturesEnabled: false,
         mapType: MapType.normal,
+        markers: model.markers,
         initialCameraPosition: initialLocation,
         onMapCreated: (controller) {
           model.onMapCreated(controller, _controller);

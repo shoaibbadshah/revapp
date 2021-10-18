@@ -1,7 +1,7 @@
+import 'package:avenride/ui/boat/boat_ride/boat_ride_viewmodel.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:avenride/main.dart';
-import 'package:avenride/ui/boat_ride/boat_ride_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -18,10 +18,11 @@ class BoatRideView extends StatelessWidget {
   TextEditingController _dateController =
       TextEditingController(text: DateFormat.yMd().format(DateTime.now()));
   TextEditingController _timeController = TextEditingController(
-      text: formatDate(
-          DateTime(DateTime.now().year, DateTime.now().day,
-              DateTime.now().month, DateTime.now().hour, DateTime.now().minute),
-          [hh, ':', nn, " ", am]).toString());
+    text: formatDate(
+        DateTime(DateTime.now().year, DateTime.now().day, DateTime.now().month,
+            DateTime.now().hour, DateTime.now().minute),
+        [hh, ':', nn, " ", am]).toString(),
+  );
 
   @override
   Widget build(BuildContext context) {

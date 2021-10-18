@@ -4,16 +4,18 @@ import 'package:avenride/services/distance_service.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
-import 'package:avenride/ui/confirmpickup/confirmpickup_view.dart';
+import 'package:avenride/ui/boat/boat_confirmpickup/boat_confirmpickup_view.dart';
+import 'package:avenride/ui/boat/boat_ride/boat_ride_view.dart';
+import 'package:avenride/ui/boat/boatsearchingdriver/boat_seacrhdriver_view.dart';
+import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
+import 'package:avenride/ui/car/confirmpickup/confirmpickup_view.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/searchingdriver/seacrhdriver_view.dart';
 import 'package:places_service/places_service.dart';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/address_selection/address_selection_view.dart';
-import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
-import 'package:avenride/ui/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/create_account/create_account_view.dart';
 import 'package:avenride/ui/login/login_view.dart';
 import 'package:avenride/ui/second/second_view.dart';
@@ -36,6 +38,8 @@ import 'package:stacked_services/stacked_services.dart';
     CupertinoRoute(page: ConfirmPickUpView),
     CupertinoRoute(page: BookingView),
     CupertinoRoute(page: SearchDriverView),
+    CupertinoRoute(page: BoatConfirmPickUpView),
+    CupertinoRoute(page: BoatSearchDriverView),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

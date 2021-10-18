@@ -1,19 +1,18 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/router_names.dart';
-import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
-import 'package:avenride/ui/boat_booking/boat_booking_view.dart';
-import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
-import 'package:avenride/ui/car_booking/car_booking_view.dart';
-import 'package:avenride/ui/car_ride/car_ride_view.dart';
+import 'package:avenride/ui/boat/boat_booking/boat_booking_view.dart';
+import 'package:avenride/ui/boat/boat_ride/boat_ride_view.dart';
+import 'package:avenride/ui/car/car_booking/car_booking_view.dart';
+import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
 import 'package:avenride/ui/pointmap/MyMap.dart';
 import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -39,11 +38,13 @@ class StartUpViewModel extends BaseViewModel {
   final firestoreApi = locator<FirestoreApi>();
   final _notifyService = locator<PushNotificationService>();
   late Location location;
+  Set<Marker> markers = Set<Marker>();
   late StreamSubscription<LocationData> locationData;
   Position? currentPosition;
   bool status = true;
   String? userId;
   int index = 0;
+
   Future<void> logout() async {
     await userService.logout;
     log.v('Successfully Loggeg out');
@@ -89,7 +90,7 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToAmbulanceRide() {
-    _placesService.initialize(apiKey: env['GOOGLE_MAPS_API_KEY']!);
+    _placesService.initialize(apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!);
     navigationService.navigateWithTransition(
       CarRideView(
         isDropLatLng: false,
@@ -259,5 +260,60 @@ class StartUpViewModel extends BaseViewModel {
         setLocation(cLoc);
       }
     });
+  }
+
+  setMarkers(LatLng point) async {
+    List ra = [
+      12345,
+      11345,
+      93000,
+      99309,
+      98989,
+      32459,
+    ];
+    BitmapDescriptor sourceIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(
+        devicePixelRatio: 2.5,
+        size: Size(80, 80),
+      ),
+      'assets/images/carslogo.png',
+    );
+    for (var i = 0; i < 5; i++) {
+      final latlong = getRandomLocation(point, ra[i]);
+      markers.add(
+        Marker(
+          markerId: MarkerId('marke no $i'),
+          position: latlong,
+          icon: sourceIcon,
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  LatLng getRandomLocation(LatLng point, int radius) {
+    //This is to generate 10 random points
+    double x0 = point.latitude;
+    double y0 = point.longitude;
+
+    Random random = new Random();
+
+    // Convert radius from meters to degrees
+    double radiusInDegrees = radius / 111000;
+
+    double u = random.nextDouble();
+    double v = random.nextDouble();
+    double w = radiusInDegrees * sqrt(u);
+    double t = 2 * pi * v;
+    double x = w * cos(t);
+    double y = w * sin(t) * 1.75;
+
+    // Adjust the x-coordinate for the shrinking of the east-west distances
+    double newX = x / sin(y0);
+
+    double foundLatitude = newX + x0;
+    double foundLongitude = y + y0;
+    LatLng randomLatLng = new LatLng(foundLatitude, foundLongitude);
+    return randomLatLng;
   }
 }

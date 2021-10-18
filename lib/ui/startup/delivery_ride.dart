@@ -9,7 +9,7 @@ import 'package:avenride/main.dart';
 import 'package:avenride/models/application_models.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/BottomSheetUi/setup_bottom_sheet_ui.dart';
-import 'package:avenride/ui/boat_ride/boat_ride_view.dart';
+import 'package:avenride/ui/boat/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';

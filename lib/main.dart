@@ -8,12 +8,12 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'app/app.locator.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_dotenv/flutter_dotenv.dart' as dotenv;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await DotEnv.load(fileName: ".env");
+  await dotenv.dotenv.load(fileName: ".env");
   setupLocator();
   setPathUrlStrategy();
   setupBottomSheetUi();

@@ -5,8 +5,7 @@ import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/user_service.dart';
-import 'package:avenride/ui/car_selection_map/car_selection_map_view.dart';
-import 'package:avenride/ui/pointmap/RealTimeMap.dart';
+import 'package:avenride/ui/car/car_selection_map/car_selection_map_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -87,7 +86,7 @@ class CarBookingViewModel extends BaseViewModel {
   void setLocOnChange() async {
     await getCurrentLocation();
     var googleGeocoding = GoogleGeocoding(
-      env['GOOGLE_MAPS_API_KEY']!,
+      dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
@@ -106,11 +105,11 @@ class CarBookingViewModel extends BaseViewModel {
   void setCurrentLoc() async {
     setBusy(true);
     _placesService.initialize(
-      apiKey: env['GOOGLE_MAPS_API_KEY']!,
+      apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     await getCurrentLocation();
     var googleGeocoding = GoogleGeocoding(
-      env['GOOGLE_MAPS_API_KEY']!,
+      dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
@@ -174,7 +173,7 @@ class CarBookingViewModel extends BaseViewModel {
 
   void selectFromMap() {
     _navigationService.navigateToView(PlacePicker(
-      apiKey: env['GOOGLE_MAPS_API_KEY']!,
+      apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
       initialPosition: LatLng(_locationService.currentLocation.latitude,
           _locationService.currentLocation.longitude),
       useCurrentLocation: true,

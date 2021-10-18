@@ -160,7 +160,7 @@ class CarRideViewModel extends BaseViewModel {
   Future<void> setPickUpAddress() async {
     setBusy(true);
     var googleGeocoding = GoogleGeocoding(
-      env['GOOGLE_MAPS_API_KEY']!,
+      dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     await getCurrentLocation();
     var risult = await googleGeocoding.geocoding.getReverse(
@@ -177,7 +177,7 @@ class CarRideViewModel extends BaseViewModel {
   Future<void> setDropOffAddress(LatLng data) async {
     setBusy(true);
     var googleGeocoding = GoogleGeocoding(
-      env['GOOGLE_MAPS_API_KEY']!,
+      dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding
         .getReverse(LatLon(data.latitude, data.longitude));
@@ -213,7 +213,7 @@ class CarRideViewModel extends BaseViewModel {
     if (status) {
       await getCurrentLocation();
       navigationService.navigateToView(PlacePicker(
-        apiKey: env['GOOGLE_MAPS_API_KEY']!,
+        apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
         initialPosition: pickup
             ? LatLng(currentPosition!.latitude, currentPosition!.longitude)
             : LatLng(_dropoffplace.latitude, _dropoffplace.longitude),

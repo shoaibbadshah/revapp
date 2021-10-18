@@ -94,10 +94,12 @@ void showBottomFlash({
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _navigationService.navigateToView(BookingView(
-                      enableAppBar: true,
-                    ));
-                    return controller.dismiss();
+                    _navigationService.navigateToView(
+                      BookingView(
+                        enableAppBar: true,
+                      ),
+                    );
+                    controller.dismiss();
                   },
                   child: Text(
                     'Continue',

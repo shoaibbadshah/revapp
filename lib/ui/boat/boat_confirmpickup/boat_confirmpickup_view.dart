@@ -1,8 +1,6 @@
 import 'package:avenride/main.dart';
-import 'package:avenride/ui/confirmpickup/confirmpickup_viewmodel.dart';
+import 'package:avenride/ui/boat/boat_confirmpickup/boat_confirmpickup_viewmodel.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
-import 'package:avenride/ui/searchingdriver/seacrhdriver_view.dart';
-import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -10,8 +8,8 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-class ConfirmPickUpView extends StatelessWidget {
-  ConfirmPickUpView({Key? key, required this.start, required this.end})
+class BoatConfirmPickUpView extends StatelessWidget {
+  BoatConfirmPickUpView({Key? key, required this.start, required this.end})
       : super(key: key);
 
   final LatLng start, end;
@@ -25,16 +23,16 @@ class ConfirmPickUpView extends StatelessWidget {
   Widget build(BuildContext context) {
     final key = GlobalKey<State<Tooltip>>();
     final key1 = GlobalKey<State<Tooltip>>();
-    return ViewModelBuilder<ConfirmPickUpViewModel>.reactive(
+    return ViewModelBuilder<BoatConfirmPickUpViewModel>.reactive(
       onModelReady: (model) {
         MyStore store = VxState.store as MyStore;
         model.rideType = store.rideType;
         model.paymentMethod = store.paymentMethod;
-        model.setSrcDest(store.carride['startLocation'],
-            store.carride['destination'], store.carride['distace']);
+        model.setSrcDest(store.carride['pickLocation'],
+            store.carride['dropLocation'], '100');
         double storedprice = store.carride['price'];
         model.setInitialPrice(storedprice);
-        model.submitBtnText = 'AVR (total: ${storedprice + 100})';
+        model.submitBtnText = 'AV Boat 75 (total: ${storedprice + 100})';
       },
       builder: (context, model, child) => Scaffold(
         bottomSheet: Container(
@@ -246,8 +244,11 @@ class ConfirmPickUpView extends StatelessWidget {
                                               ),
                                               IconButton(
                                                 onPressed: () {
-                                                  model.navigateToMapPicker(
-                                                      true);
+                                                  model.buildShowSearch(
+                                                    context,
+                                                    'pickupLocation',
+                                                    false,
+                                                  );
                                                 },
                                                 icon: Icon(Icons.edit),
                                               ),
@@ -277,8 +278,11 @@ class ConfirmPickUpView extends StatelessWidget {
                                               ),
                                               IconButton(
                                                 onPressed: () {
-                                                  model.navigateToMapPicker(
-                                                      false);
+                                                  model.buildShowSearch(
+                                                    context,
+                                                    'dropLocation',
+                                                    true,
+                                                  );
                                                 },
                                                 icon: Icon(Icons.edit),
                                               ),
@@ -305,7 +309,7 @@ class ConfirmPickUpView extends StatelessWidget {
                                         children: [
                                           verticalSpaceMedium,
                                           Icon(
-                                            Icons.local_taxi,
+                                            Icons.directions_boat_rounded,
                                           ),
                                         ],
                                       ),
@@ -533,7 +537,7 @@ class ConfirmPickUpView extends StatelessWidget {
           ),
         ),
       ),
-      viewModelBuilder: () => ConfirmPickUpViewModel(),
+      viewModelBuilder: () => BoatConfirmPickUpViewModel(),
     );
   }
 }

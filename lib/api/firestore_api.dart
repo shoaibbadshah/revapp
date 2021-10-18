@@ -310,8 +310,6 @@ class FirestoreApi {
 
   Future<bool> createBoatRide(
       {required Map carride, required User user}) async {
-    log.i('Ride Details: $carride and user data: $user');
-
     try {
       final userDocument = boatRideCollection.doc();
       await userDocument.set(carride);

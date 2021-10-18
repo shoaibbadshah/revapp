@@ -3,7 +3,6 @@ import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
-import 'package:avenride/ui/confirmpickup/confirmpickup_view.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

@@ -1,6 +1,7 @@
 import 'package:avenride/main.dart';
-import 'package:avenride/ui/car_booking/car_booking_viewmodel.dart';
+import 'package:avenride/ui/boat/boat_booking/boat_booking_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
+import 'package:avenride/ui/shared/styles.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/back_map.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +11,13 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 
-class CarBookingView extends StatelessWidget {
-  CarBookingView({Key? key}) : super(key: key);
+class BoatBookingView extends StatelessWidget {
+  BoatBookingView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<CarBookingViewModel>.reactive(
+    return ViewModelBuilder<BoatBookingViewModel>.reactive(
       onModelReady: (model) {
-        MyStore store = VxState.store as MyStore;
         model.scheduledTime = formatDate(
             DateTime(
                 DateTime.now().year,
@@ -28,7 +28,6 @@ class CarBookingView extends StatelessWidget {
             [hh, ':', nn, " ", am]).toString();
         model.scheduledDate =
             DateFormat.yMd().format(DateTime.now()).toString();
-        store.carride = {};
         model.setCurrentLoc();
       },
       builder: (context, model, child) {
@@ -188,90 +187,60 @@ class CarBookingView extends StatelessWidget {
             sheetBelow: SnappingSheetContent(
               draggable: true,
               child: Container(
-                color: Colors.white,
-                child: model.hasAutoCompleteResults
-                    ? ListView.builder(
-                        itemCount: model.autoCompleteResults.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            color: Colors.grey.shade100,
-                            child: ListTile(
-                              onTap: () {
-                                final s =
-                                    model.autoCompleteResults[index].mainText;
-                                model.setSearchAdddress(
-                                  s!,
-                                  model.autoCompleteResults[index].placeId
-                                      .toString(),
-                                );
-                              },
-                              title: Text(
-                                  model.autoCompleteResults[index].mainText ??
-                                      ''),
-                              subtitle: Text(model.autoCompleteResults[index]
-                                      .secondaryText ??
-                                  ''),
-                            ),
-                          );
-                        },
-                      )
-                    : ListView(
-                        children: [
-                          Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0.0,
-                            child: ListTile(
-                              title: Text('save this location'),
-                            ),
-                          ),
-                          Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0.0,
-                            child: ListTile(
-                              title: Text('select from map'),
-                              onTap: model.selectFromMap,
-                            ),
-                          ),
-                          Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0.0,
-                            child: ListTile(
-                              title: Text('MMIA Lag Int Airpt'),
-                              onTap: () {
-                                model.setAirport(MMIA,
-                                    'Murtala Muhammed International Airport');
-                              },
-                            ),
-                          ),
-                          Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0.0,
-                            child: ListTile(
-                              title: Text('Abj Int Airpt'),
-                              onTap: () {
-                                model.setAirport(
-                                    Abj, 'Abuja-Nnamdi Azikiwe Airport');
-                              },
-                            ),
-                          ),
-                          Card(
-                            color: Colors.grey.shade100,
-                            elevation: 0.0,
-                            child: ListTile(
-                              title: Text('PH Int Airpt'),
-                              onTap: () {
-                                model.setAirport(
-                                    PH, 'Port Harcourt International Airport');
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-              ),
+                  color: Colors.white,
+                  child: model.searchList.length != 0
+                      ? ListView.builder(
+                          itemCount: model.searchList.length,
+                          itemBuilder: (context, index) {
+                            return DecoratedBox(
+                              decoration: BoxDecoration(
+                                border: Border.fromBorderSide(
+                                  BorderSide(
+                                    color: Colors.amber,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  model.searchList[index].loc,
+                                  style: ktsMediumGreyBodyText,
+                                ),
+                                onTap: () {
+                                  model.onLocSelected(model.searchList[index]);
+                                },
+                              ),
+                            );
+                          },
+                        )
+                      : ListView.builder(
+                          itemCount: boatLoc.length,
+                          itemBuilder: (context, index) {
+                            return DecoratedBox(
+                              decoration: BoxDecoration(
+                                border: Border.fromBorderSide(
+                                  BorderSide(
+                                    color: Colors.amber,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  boatLoc[index].loc,
+                                  style: ktsMediumGreyBodyText,
+                                ),
+                                onTap: () {
+                                  model.onLocSelected(boatLoc[index]);
+                                },
+                              ),
+                            );
+                          },
+                        )),
             ),
             child: SafeArea(
               child: DecoratedBox(
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.amber[50],
                 ),
                 child: model.isBusy
@@ -285,7 +254,6 @@ class CarBookingView extends StatelessWidget {
                         children: [
                           BackMap(
                             onLocationChange: () {
-                              model.setLocOnChange();
                               print('car_booking');
                             },
                           ),
@@ -299,7 +267,7 @@ class CarBookingView extends StatelessWidget {
       onDispose: (model) {
         model.runDispose();
       },
-      viewModelBuilder: () => CarBookingViewModel(),
+      viewModelBuilder: () => BoatBookingViewModel(),
     );
   }
 }

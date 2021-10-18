@@ -13,10 +13,12 @@ import 'package:stacked/stacked.dart';
 
 import '../ui/address_selection/address_selection_view.dart';
 import '../ui/avenfood/avenfood_view.dart';
-import '../ui/boat_ride/boat_ride_view.dart';
+import '../ui/boat/boat_confirmpickup/boat_confirmpickup_view.dart';
+import '../ui/boat/boat_ride/boat_ride_view.dart';
+import '../ui/boat/boatsearchingdriver/boat_seacrhdriver_view.dart';
 import '../ui/booking/booking_view.dart';
-import '../ui/car_ride/car_ride_view.dart';
-import '../ui/confirmpickup/confirmpickup_view.dart';
+import '../ui/car/car_ride/car_ride_view.dart';
+import '../ui/car/confirmpickup/confirmpickup_view.dart';
 import '../ui/create_account/create_account_view.dart';
 import '../ui/login/login_view.dart';
 import '../ui/mainScreen/mainScreenView.dart';
@@ -37,6 +39,8 @@ class Routes {
   static const String confirmPickUpView = '/confirm-pick-up-view';
   static const String bookingView = '/booking-view';
   static const String searchDriverView = '/search-driver-view';
+  static const String boatConfirmPickUpView = '/boat-confirm-pick-up-view';
+  static const String boatSearchDriverView = '/boat-search-driver-view';
   static const all = <String>{
     startUpView,
     mainScreenView,
@@ -50,6 +54,8 @@ class Routes {
     confirmPickUpView,
     bookingView,
     searchDriverView,
+    boatConfirmPickUpView,
+    boatSearchDriverView,
   };
 }
 
@@ -69,6 +75,8 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.confirmPickUpView, page: ConfirmPickUpView),
     RouteDef(Routes.bookingView, page: BookingView),
     RouteDef(Routes.searchDriverView, page: SearchDriverView),
+    RouteDef(Routes.boatConfirmPickUpView, page: BoatConfirmPickUpView),
+    RouteDef(Routes.boatSearchDriverView, page: BoatSearchDriverView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -182,6 +190,28 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    BoatConfirmPickUpView: (data) {
+      var args = data.getArgs<BoatConfirmPickUpViewArguments>(nullOk: false);
+      return CupertinoPageRoute<dynamic>(
+        builder: (context) => BoatConfirmPickUpView(
+          key: args.key,
+          start: args.start,
+          end: args.end,
+        ),
+        settings: data,
+      );
+    },
+    BoatSearchDriverView: (data) {
+      var args = data.getArgs<BoatSearchDriverViewArguments>(nullOk: false);
+      return CupertinoPageRoute<dynamic>(
+        builder: (context) => BoatSearchDriverView(
+          key: args.key,
+          start: args.start,
+          end: args.end,
+        ),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -257,4 +287,22 @@ class SearchDriverViewArguments {
   final LatLng start;
   final LatLng end;
   SearchDriverViewArguments({this.key, required this.start, required this.end});
+}
+
+/// BoatConfirmPickUpView arguments holder class
+class BoatConfirmPickUpViewArguments {
+  final Key? key;
+  final LatLng start;
+  final LatLng end;
+  BoatConfirmPickUpViewArguments(
+      {this.key, required this.start, required this.end});
+}
+
+/// BoatSearchDriverView arguments holder class
+class BoatSearchDriverViewArguments {
+  final Key? key;
+  final LatLng start;
+  final LatLng end;
+  BoatSearchDriverViewArguments(
+      {this.key, required this.start, required this.end});
 }

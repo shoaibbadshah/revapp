@@ -1,9 +1,9 @@
 import 'package:avenride/app/router_names.dart';
+import 'package:avenride/ui/car/car_ride/car_ride_viewmodel.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:avenride/main.dart';
-import 'package:avenride/ui/car_ride/car_ride_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

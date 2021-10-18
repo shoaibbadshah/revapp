@@ -1,16 +1,9 @@
-import 'dart:async';
-import 'package:avenride/api/firestore_api.dart';
-import 'package:avenride/app/app.locator.dart';
-import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
-import 'package:avenride/ui/car_booking/car_booking_view.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
-import 'package:avenride/ui/mainScreen/food_card.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/back_map.dart';
-import 'package:avenride/ui/startup/current_rides.dart';
 import 'package:avenride/ui/startup/side_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_switch/flutter_switch.dart';
