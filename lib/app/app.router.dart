@@ -7,9 +7,9 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import '../ui/address_selection/address_selection_view.dart';
 import '../ui/avenfood/avenfood_view.dart';
@@ -19,10 +19,10 @@ import '../ui/boat/boatsearchingdriver/boat_seacrhdriver_view.dart';
 import '../ui/booking/booking_view.dart';
 import '../ui/car/car_ride/car_ride_view.dart';
 import '../ui/car/confirmpickup/confirmpickup_view.dart';
+import '../ui/car/searchingdriver/seacrhdriver_view.dart';
 import '../ui/create_account/create_account_view.dart';
 import '../ui/login/login_view.dart';
 import '../ui/mainScreen/mainScreenView.dart';
-import '../ui/searchingdriver/seacrhdriver_view.dart';
 import '../ui/second/second_view.dart';
 import '../ui/startup/startup_view.dart';
 
@@ -186,6 +186,11 @@ class StackedRouter extends RouterBase {
           key: args.key,
           start: args.start,
           end: args.end,
+          rideId: args.rideId,
+          collectionType: args.collectionType,
+          startText: args.startText,
+          endText: args.endText,
+          time: args.time,
         ),
         settings: data,
       );
@@ -286,7 +291,20 @@ class SearchDriverViewArguments {
   final Key? key;
   final LatLng start;
   final LatLng end;
-  SearchDriverViewArguments({this.key, required this.start, required this.end});
+  final String rideId;
+  final String collectionType;
+  final String startText;
+  final String endText;
+  final String time;
+  SearchDriverViewArguments(
+      {this.key,
+      required this.start,
+      required this.end,
+      required this.rideId,
+      required this.collectionType,
+      required this.startText,
+      required this.endText,
+      required this.time});
 }
 
 /// BoatConfirmPickUpView arguments holder class

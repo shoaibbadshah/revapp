@@ -45,7 +45,7 @@ class CarSelectionMapViewModel extends BaseViewModel {
   }
 
   void setTiemDate() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
       enableDrag: false,
       barrierDismissible: true,
@@ -64,7 +64,6 @@ class CarSelectionMapViewModel extends BaseViewModel {
   void navigateToPayment() {
     navigationService.navigateToView(PaymentView(
       updatePreferences: () {
-        log.v('message ${store.paymentMethod} and ${store.rideType}');
         rideType = store.rideType;
         paymentMethod = store.paymentMethod;
         notifyListeners();
@@ -80,7 +79,6 @@ class CarSelectionMapViewModel extends BaseViewModel {
       'rideType': rideType,
       'CarType': selectedCar.name,
     });
-    log.v(store.carride);
     navigationService.replaceWith(
       Routes.confirmPickUpView,
       arguments: ConfirmPickUpViewArguments(end: en, start: st),

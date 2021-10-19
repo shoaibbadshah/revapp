@@ -106,8 +106,6 @@ class FirestoreApi {
 
   Future<void> updateRider(
       {required Map<String, dynamic> data, required String user}) async {
-    log.i('rider data:$data and user data: $user');
-
     try {
       final userDocument = usersCollection.doc(user);
       userDocument.update(data);
@@ -294,12 +292,13 @@ class FirestoreApi {
     }
   }
 
-  Future<bool> createCarRide({required Map carride, required User user}) async {
+  Future<String> createCarRide(
+      {required Map carride, required User user}) async {
     try {
       final userDocument = carRideCollection.doc();
       await userDocument.set(carride);
       log.v('CarRide created at ${userDocument.path}');
-      return true;
+      return userDocument.id;
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create a ride',
@@ -488,6 +487,35 @@ class FirestoreApi {
               .toList());
     } catch (error) {
       log.v(error);
+      throw Exception('Error in getting delivery data');
+    }
+  }
+
+  Stream<CarModelRideDetail> streamRide(
+    String collectionType,
+    String rideId,
+  ) {
+    try {
+      return FirebaseFirestore.instance
+          .collection(collectionType)
+          .doc(rideId)
+          .snapshots()
+          .map((doc) => CarModelRideDetail.fromFirestore(doc));
+    } catch (error) {
+      throw Exception('Error in getting delivery data');
+    }
+  }
+
+  Stream<DriverModel> streamDriver(
+    String rideId,
+  ) {
+    try {
+      return FirebaseFirestore.instance
+          .collection('riders')
+          .doc(rideId)
+          .snapshots()
+          .map((doc) => DriverModel.fromFirestore(doc));
+    } catch (error) {
       throw Exception('Error in getting delivery data');
     }
   }

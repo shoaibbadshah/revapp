@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
@@ -34,6 +36,8 @@ class StartUpView extends StatelessWidget {
         });
         FirebaseMessaging.onMessage
             .listen((RemoteMessage message) => model.messageHandler(message));
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) =>
+            model.messageOpenedApp(message, context));
       },
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: BottomNavigationBar(

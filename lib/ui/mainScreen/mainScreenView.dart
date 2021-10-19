@@ -422,7 +422,7 @@ class CarRideCard extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.white,
                       border: Border.all(
                         width: 2,
                         color: Colors.black,
@@ -485,7 +485,7 @@ class CarRideCard extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.white,
                       border: Border.all(
                         width: 2,
                         color: Colors.black,

@@ -235,6 +235,34 @@ class StartUpViewModel extends BaseViewModel {
     data = [];
   }
 
+  Future<void> messageOpenedApp(
+      RemoteMessage message, BuildContext context) async {
+    log.i('New notification Recieved');
+    List data = [];
+    if (userService.currentUser!.notification != null) {
+      data = userService.currentUser!.notification!;
+    }
+    data.add({
+      'data': message.data,
+      'title': message.notification!.title == null
+          ? ''
+          : message.notification!.title,
+      'body':
+          message.notification!.body == null ? '' : message.notification!.body,
+    });
+    firestoreApi.updateRider(
+      data: {
+        'notification': data,
+      },
+      user: userService.currentUser!.id,
+    );
+    log.i('New notification and it is updated');
+    final snackBar =
+        SnackBar(content: Text('driver found, opt is ${message.data['otp']}'));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    data = [];
+  }
+
   void updateBottomNav(int i) {
     index = i;
     notifyListeners();

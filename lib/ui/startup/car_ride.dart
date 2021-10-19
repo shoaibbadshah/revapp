@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:avenride/app/app.router.dart';
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/pointmap/RealTimeMap.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +95,6 @@ class _CarListState extends State<CarList> {
   final _userService = locator<UserService>();
 
   MyStore store = VxState.store as MyStore;
-  final _firestoreApi = locator<FirestoreApi>();
 
   final _navigationService = locator<NavigationService>();
 
@@ -147,12 +147,22 @@ class _CarListState extends State<CarList> {
               CarModel car = cars[index];
               return InkWell(
                 onTap: () {
-                  _navigationService.navigateToView(
-                    RealTimeMap(
-                      DEST_LOCATION: LatLng(car.dropoffplace.latitude,
-                          car.dropoffplace.longitude),
-                      SOURCE_LOCATION: LatLng(car.selectedPlace.latitude,
-                          car.selectedPlace.longitude),
+                  _navigationService.navigateTo(
+                    Routes.searchDriverView,
+                    arguments: SearchDriverViewArguments(
+                      start: LatLng(
+                        car.selectedPlace.latitude,
+                        car.selectedPlace.longitude,
+                      ),
+                      end: LatLng(
+                        car.dropoffplace.latitude,
+                        car.dropoffplace.longitude,
+                      ),
+                      rideId: car.id,
+                      collectionType: 'CarRide',
+                      endText: car.destination,
+                      startText: car.startLocation,
+                      time: car.distace,
                     ),
                   );
                 },

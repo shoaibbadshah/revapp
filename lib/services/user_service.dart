@@ -31,7 +31,7 @@ class UserService {
   }
 
   Future<void> syncOrCreateUserAccount({required User user}) async {
-    log.i('user:$user');
+    log.i('user:${user.id}');
 
     await syncUserAccount();
 

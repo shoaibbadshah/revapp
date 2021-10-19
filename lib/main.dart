@@ -21,10 +21,12 @@ void main() async {
   _pushservice.initializePushNotificationService();
   final _calculate = locator<Calculate>();
   await _calculate.getCurrentLocation();
-  runApp(VxState(
-    store: MyStore(),
-    child: MyApp(),
-  ));
+  runApp(
+    VxState(
+      store: MyStore(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

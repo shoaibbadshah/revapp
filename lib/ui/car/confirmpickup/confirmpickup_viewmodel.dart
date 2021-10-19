@@ -59,7 +59,7 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   }
 
   void setTiemDate() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
       enableDrag: false,
       barrierDismissible: true,
@@ -72,9 +72,6 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   void setSrcDest(String src, String dest, String distanceTime) {
     source = src;
     destination = dest;
-    log.v("VALUE IS $distanceTime");
-    final val = distanceTime.split(" ");
-    log.v("VALUE IS $val");
     time = double.parse(distanceTime);
     setInitialData();
   }
@@ -92,7 +89,6 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   void navigateToPayment() {
     navigationService.navigateToView(PaymentView(
       updatePreferences: () {
-        log.v('message ${store.paymentMethod} and ${store.rideType}');
         rideType = store.rideType;
         paymentMethod = store.paymentMethod;
         notifyListeners();
@@ -116,9 +112,8 @@ class ConfirmPickUpViewModel extends BaseViewModel {
             speed: position.speed,
             speedAccuracy: position.speedAccuracy);
       }).catchError((e) {
-        print(e);
+        throw Exception(e);
       });
-      log.v('CURRENT POS: $currentPosition');
       return currentPosition;
     }
   }
@@ -155,10 +150,18 @@ class ConfirmPickUpViewModel extends BaseViewModel {
     )
         .then((value) {
       log.v(value);
-      if (value) {
+      if (value != '') {
         navigationService.replaceWith(
           Routes.searchDriverView,
-          arguments: SearchDriverViewArguments(start: st, end: en),
+          arguments: SearchDriverViewArguments(
+            start: st,
+            end: en,
+            collectionType: 'CarRide',
+            rideId: value,
+            endText: dropOffAddress,
+            startText: pickUpAddess,
+            time: distance,
+          ),
         );
         final snackBar = SnackBar(
             content: Text('Booking is successful view in rides section!'));

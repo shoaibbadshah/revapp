@@ -165,7 +165,7 @@ class CarBookingViewModel extends BaseViewModel {
             speed: position.speed,
             speedAccuracy: position.speedAccuracy);
       }).catchError((e) {
-        print(e);
+        throw Exception(e);
       });
       return currentPosition;
     }
@@ -272,7 +272,6 @@ class CarBookingViewModel extends BaseViewModel {
       await _placesService.getPlaceDetails(destinationPlaceId).then((value) {
         loc2 = LatLng(value.lat!, value.lng!);
       });
-      log.v('loc2 is $loc2');
       await saveData();
       _navigationService.navigateToView(CarSelectionMapView(
         end: loc2,
@@ -422,7 +421,6 @@ class CarBookingViewModel extends BaseViewModel {
     final place = _placesService.getAutoComplete(text);
     await place.then((value) {
       PlacesAutoCompleteResult placesAutoCompleteResult = value[0];
-      log.v(placesAutoCompleteResult.placeId);
       destinationPlaceId = placesAutoCompleteResult.placeId!;
       destinationText.text = placesAutoCompleteResult.mainText!;
     });

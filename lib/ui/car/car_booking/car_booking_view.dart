@@ -286,7 +286,6 @@ class CarBookingView extends StatelessWidget {
                           BackMap(
                             onLocationChange: () {
                               model.setLocOnChange();
-                              print('car_booking');
                             },
                           ),
                         ],

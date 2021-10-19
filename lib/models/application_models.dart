@@ -297,6 +297,139 @@ class CarModel {
   }
 }
 
+class CarModelRideDetail {
+  final String paymentType;
+  final String destination;
+  final String startLocation;
+  final String scheduleTime;
+  final String scheduledDate;
+  final String carType;
+  final String drivers;
+  final String distace;
+  final String paymentStatus;
+  final String price;
+  final String otp;
+  final String id;
+  final GeoPoint selectedPlace;
+  final GeoPoint dropoffplace;
+  final String pushToken;
+  final String rideType;
+  CarModelRideDetail(
+      {required this.destination,
+      required this.distace,
+      required this.selectedPlace,
+      required this.dropoffplace,
+      required this.price,
+      required this.pushToken,
+      required this.drivers,
+      required this.otp,
+      required this.carType,
+      required this.paymentStatus,
+      required this.id,
+      required this.paymentType,
+      required this.startLocation,
+      required this.scheduleTime,
+      required this.rideType,
+      required this.scheduledDate});
+
+  factory CarModelRideDetail.fromFirestore(DocumentSnapshot doc) {
+    String s = json.encode(doc.data());
+    Map<String, dynamic> data = jsonDecode(s);
+    return CarModelRideDetail(
+      drivers: data['drivers'] ?? '',
+      destination: data['destination'],
+      distace: data['distace'] ?? '0',
+      dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
+      paymentStatus: data['paymentStatus'] ?? Pending,
+      price: data['price'].toString(),
+      pushToken: data['pushToken'] ?? '',
+      rideType: data['rideType'] ?? '',
+      otp: data['otp'] ?? '',
+      scheduledDate: data['scheduledDate'],
+      scheduleTime: data['scheduleTime'],
+      paymentType: data['PaymentType'],
+      carType: data['CarType'],
+      startLocation: data['startLocation'],
+      id: doc.id,
+      selectedPlace:
+          GeoPoint(data['selectedPlace'][0], data['selectedPlace'][1]),
+    );
+  }
+}
+
+class DriverModel {
+  final String id;
+  final String email;
+  final String defaultAddress;
+  final String name;
+  final String photourl;
+  final String personaldocs;
+  final String bankdocs;
+  final String vehicle;
+  final String vehicledocs;
+  final String totalpayout;
+  final String mobileNo;
+  final bool isVehicle;
+  final bool isBoat;
+  final Map vehicleDetails;
+  final List rides;
+  final List cargo;
+  final List car;
+  final List taxi;
+  final List ambulance;
+  final List delivery;
+
+  DriverModel({
+    required this.id,
+    required this.isVehicle,
+    required this.isBoat,
+    required this.email,
+    required this.defaultAddress,
+    required this.taxi,
+    required this.ambulance,
+    required this.delivery,
+    required this.name,
+    required this.photourl,
+    required this.personaldocs,
+    required this.vehicleDetails,
+    required this.mobileNo,
+    required this.totalpayout,
+    required this.bankdocs,
+    required this.vehicle,
+    required this.vehicledocs,
+    required this.rides,
+    required this.car,
+    required this.cargo,
+  });
+
+  factory DriverModel.fromFirestore(DocumentSnapshot doc) {
+    String s = json.encode(doc.data());
+    Map<String, dynamic> data = jsonDecode(s);
+    return DriverModel(
+      id: doc.id,
+      isBoat: false,
+      isVehicle: data['vehicle'] == Confirmed ? true : false,
+      bankdocs: data['bankdocs'],
+      defaultAddress: '',
+      mobileNo: data['mobileNo'] ?? '',
+      email: data['email'],
+      totalpayout: data['totalpayout'],
+      name: data['name'] ?? '',
+      personaldocs: data['personaldocs'],
+      photourl: data['photourl'] == null ? '' : data['photourl'],
+      vehicle: data['vehicle'],
+      vehicleDetails: data['vehicledetails'] ?? {},
+      vehicledocs: data['vehicledocs'],
+      rides: data['rides'],
+      cargo: data['cargo'],
+      car: data['car'],
+      ambulance: data['ambulance'],
+      delivery: data['delivery'],
+      taxi: data['taxi'],
+    );
+  }
+}
+
 class TaxiModel {
   final String paymentType;
   final String destination;

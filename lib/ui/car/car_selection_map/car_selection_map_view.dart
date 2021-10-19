@@ -389,7 +389,6 @@ class _CarTypesSelectionState extends State<CarTypesSelection> {
               sprice = double.parse(car.price);
               price = storedprice + sprice;
               selectedCar = car;
-              print(price);
             });
           },
           child: Container(
