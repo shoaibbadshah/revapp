@@ -74,7 +74,7 @@ class PaymentView extends StatelessWidget {
                       },
                       child: Card(
                         color: model.choosenRide == model.rides[index]
-                            ? Colors.grey[200]
+                            ? Colors.grey[400]
                             : Colors.white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +125,7 @@ class PaymentView extends StatelessWidget {
                       child: Card(
                         color: model.choosenPaymentMethod ==
                                 model.paymentMethods[index]
-                            ? Colors.grey[200]
+                            ? Colors.grey[400]
                             : Colors.white,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

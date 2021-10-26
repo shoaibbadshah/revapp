@@ -140,7 +140,6 @@ class _CarListState extends State<CarList> {
         ? NotAvailable()
         : ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),
-            scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 20),
             itemCount: cars.length,
             itemBuilder: (context, index) {

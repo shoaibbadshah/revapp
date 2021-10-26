@@ -13,6 +13,7 @@ import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:stacked/stacked.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 class SearchDriverView extends StatelessWidget {
   SearchDriverView({
@@ -247,16 +248,30 @@ class SearchDriverView extends StatelessWidget {
                                                     ),
                                                   ),
                                                   padding: EdgeInsets.all(0.5),
-                                                  child: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.grey,
-                                                    radius: 30,
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      child: Image.network(
-                                                          driver.photourl),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      model.navigationService
+                                                          .navigateToView(
+                                                        DetailScreen(
+                                                          imgUrl:
+                                                              driver.photourl,
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                      radius: 30,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(30),
+                                                        child: Hero(
+                                                          tag: 'imageHero',
+                                                          child: Image.network(
+                                                              driver.photourl),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -331,31 +346,39 @@ class SearchDriverView extends StatelessWidget {
                                                 ),
                                               ),
                                               horizontalSpaceMedium,
-                                              Column(
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        30,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Share.share(
+                                                      'https://avenweb.web.app/');
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          30,
+                                                        ),
+                                                        border: Border.all(
+                                                          color: Colors.grey,
+                                                          width: 1,
+                                                        ),
                                                       ),
-                                                      border: Border.all(
-                                                        color: Colors.grey,
-                                                        width: 1,
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: Icon(
+                                                        Icons.location_on_sharp,
                                                       ),
                                                     ),
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Icon(
-                                                      Icons.location_on_sharp,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    'Share Ride Info',
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                    ),
-                                                  )
-                                                ],
+                                                    Text(
+                                                      'Share Ride Info',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                               horizontalSpaceMedium,
                                               Column(
@@ -799,6 +822,29 @@ class SearchDriverView extends StatelessWidget {
         ),
       ),
       viewModelBuilder: () => SearchDriverViewModel(),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  const DetailScreen({Key? key, required this.imgUrl}) : super(key: key);
+  final String imgUrl;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Center(
+          child: Hero(
+            tag: 'imageHero',
+            child: Image.network(
+              imgUrl,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

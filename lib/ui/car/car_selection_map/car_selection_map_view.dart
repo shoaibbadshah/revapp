@@ -10,9 +10,13 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
 class CarSelectionMapView extends StatelessWidget {
-  CarSelectionMapView({Key? key, required this.start, required this.end})
-      : super(key: key);
-
+  CarSelectionMapView({
+    Key? key,
+    required this.start,
+    required this.end,
+    required this.bookingtype,
+  }) : super(key: key);
+  final String bookingtype;
   final LatLng start, end;
   void _onTap(GlobalKey key) {
     final dynamic tooltip = key.currentState;
@@ -25,6 +29,7 @@ class CarSelectionMapView extends StatelessWidget {
     final key1 = GlobalKey<State<Tooltip>>();
     return ViewModelBuilder<CarSelectionMapViewModel>.reactive(
       onModelReady: (model) {
+        model.bookingType = bookingtype;
         MyStore store = VxState.store as MyStore;
         model.rideType = store.rideType;
         model.paymentMethod = store.paymentMethod;

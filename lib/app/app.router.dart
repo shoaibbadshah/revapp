@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -163,6 +164,7 @@ class StackedRouter extends RouterBase {
       return CupertinoPageRoute<dynamic>(
         builder: (context) => ConfirmPickUpView(
           key: args.key,
+          bookingtype: args.bookingtype,
           start: args.start,
           end: args.end,
         ),
@@ -175,6 +177,7 @@ class StackedRouter extends RouterBase {
         builder: (context) => BookingView(
           key: args.key,
           enableAppBar: args.enableAppBar,
+          bookingtype: args.bookingtype,
         ),
         settings: data,
       );
@@ -273,17 +276,23 @@ class BoatRideViewArguments {
 /// ConfirmPickUpView arguments holder class
 class ConfirmPickUpViewArguments {
   final Key? key;
+  final String bookingtype;
   final LatLng start;
   final LatLng end;
   ConfirmPickUpViewArguments(
-      {this.key, required this.start, required this.end});
+      {this.key,
+      required this.bookingtype,
+      required this.start,
+      required this.end});
 }
 
 /// BookingView arguments holder class
 class BookingViewArguments {
   final Key? key;
   final bool enableAppBar;
-  BookingViewArguments({this.key, required this.enableAppBar});
+  final String bookingtype;
+  BookingViewArguments(
+      {this.key, required this.enableAppBar, required this.bookingtype});
 }
 
 /// SearchDriverView arguments holder class

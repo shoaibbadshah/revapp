@@ -10,6 +10,7 @@ class Assets {
   static String doneimg = _imagesRoot + "close.png";
   static String bananaBoat = _imagesRoot + "banana.png";
   static String ambulance = _imagesRoot + "ambulance.png";
+  static String aeroplane = _imagesRoot + "aeroplane.png";
 
   static String cola = _imagesRoot + "foodicons/cola/cola.jpg";
   static String hamburger = _imagesRoot + "foodicons/hamburger/hamburger.jpg";
@@ -33,14 +34,16 @@ class Assets {
   static String ride3 = _imagesRoot + "ride3.PNG";
 
   static String car1 = _imagesRoot + "car4.PNG";
+  static String redcar = _imagesRoot + "redcar.png";
+  static String whitecar = _imagesRoot + "whitecar.png";
   static String car2 = _imagesRoot + "car5.PNG";
   static String car3 = _imagesRoot + "car6.PNG";
   static String car4 = _imagesRoot + "car1.PNG";
   static String car5 = _imagesRoot + "car2.PNG";
   static String car6 = _imagesRoot + "car3.PNG";
   static String carlogo = _imagesRoot + "carslogo.png";
-  static String taxilogo = _imagesRoot + "taxi.jpg";
-  static String deliverylogo = _imagesRoot + "delivery.jpg";
+  static String taxilogo = _imagesRoot + "taxi.png";
+  static String deliverylogo = _imagesRoot + "delivery.png";
 
   static String boat1 = _imagesRoot + "ogaride.PNG";
   static String boat2 = _imagesRoot + "familyride.PNG";
@@ -73,10 +76,10 @@ LatLng Abj = LatLng(9.009739944779172, 7.269213318952354);
 LatLng PH = LatLng(5.015331700522605, 6.95408079731267);
 
 List<NameIMG> carTypes = [
-  NameIMG('AVR', Assets.carlogo, '100.0'),
-  NameIMG('AVRX', Assets.carlogo, '200.0'),
-  NameIMG('AVRXL', Assets.carlogo, '300.0'),
-  NameIMG("AVR EXEC", Assets.carlogo, '400.0'),
+  NameIMG('AVR', Assets.whitecar, '100.0'),
+  NameIMG('AVRX', Assets.whitecar, '200.0'),
+  NameIMG('AVRXL', Assets.whitecar, '300.0'),
+  NameIMG("AVR EXEC", Assets.whitecar, '400.0'),
 ];
 
 class NameIMG {

@@ -392,35 +392,35 @@ class CarRideCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    height: 80,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.white,
                       border: Border.all(
                         width: 2,
                         color: Colors.black,
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Ride',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        verticalSpaceTiny,
                         InkWell(
                           onTap: model.navigateToCardRide,
                           child: Container(
-                            width: 70,
-                            height: 70,
-                            child: Image.asset(Assets.carlogo),
+                            width: 60,
+                            height: 60,
+                            child: Image.asset(Assets.whitecar),
                           ),
                         ),
                       ],
                     ),
                   ),
                   Container(
+                    height: 80,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -436,9 +436,8 @@ class CarRideCard extends StatelessWidget {
                           'Bus/Taxi Hire',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        verticalSpaceTiny,
                         InkWell(
-                          onTap: model.navigateToCardRide,
+                          onTap: model.navigateToTaxiRide,
                           child: Container(
                             width: 70,
                             height: 70,
@@ -455,35 +454,7 @@ class CarRideCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Send/Pickups',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        verticalSpaceTiny,
-                        InkWell(
-                          onTap: model.navigateToCardRide,
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            child: Image.asset(Assets.deliverylogo),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
+                    height: 80,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -492,20 +463,50 @@ class CarRideCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    child: Column(
                       children: [
+                        verticalSpaceTiny,
+                        Text(
+                          'Send/Pickups',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        InkWell(
+                          onTap: model.navigateToNewDelivery,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset(Assets.deliverylogo),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: [
+                        verticalSpaceTiny,
                         Text(
                           'Boat',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        verticalSpaceTiny,
                         InkWell(
                           onTap: model.navigateToBoatRide,
                           child: Container(
-                            width: 60,
-                            height: 60,
+                            width: 50,
+                            height: 50,
                             child: Image.asset(Assets.boat1),
                           ),
                         ),
@@ -519,35 +520,36 @@ class CarRideCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
+                    height: 80,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.white,
                       border: Border.all(
                         width: 2,
                         color: Colors.black,
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
                       children: [
+                        InkWell(
+                          onTap: model.navigateToNewAmbulance,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset(Assets.ambulance),
+                          ),
+                        ),
                         Text(
                           'Ambulance',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         verticalSpaceTiny,
-                        InkWell(
-                          onTap: model.navigateToCardRide,
-                          child: Container(
-                            width: 70,
-                            height: 70,
-                            child: Image.asset(Assets.ambulance),
-                          ),
-                        ),
                       ],
                     ),
                   ),
                   Container(
+                    height: 80,
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 2,
@@ -555,23 +557,22 @@ class CarRideCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
                       children: [
+                        InkWell(
+                          onTap: model.navigateToAvenFood,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset(Assets.hamburger),
+                          ),
+                        ),
                         Text(
                           'Food',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         verticalSpaceTiny,
-                        InkWell(
-                          onTap: model.navigateToAvenFood,
-                          child: Container(
-                            width: 70,
-                            height: 70,
-                            child: Image.asset(Assets.hamburger),
-                          ),
-                        ),
                       ],
                     ),
                   ),

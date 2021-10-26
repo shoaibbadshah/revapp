@@ -9,9 +9,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ConfirmPickUpView extends StatelessWidget {
-  ConfirmPickUpView({Key? key, required this.start, required this.end})
-      : super(key: key);
-
+  ConfirmPickUpView({
+    Key? key,
+    required this.bookingtype,
+    required this.start,
+    required this.end,
+  }) : super(key: key);
+  final String bookingtype;
   final LatLng start, end;
 
   void _onTap(GlobalKey key) {
@@ -25,6 +29,7 @@ class ConfirmPickUpView extends StatelessWidget {
     final key1 = GlobalKey<State<Tooltip>>();
     return ViewModelBuilder<ConfirmPickUpViewModel>.reactive(
       onModelReady: (model) {
+        model.bookingType = bookingtype;
         MyStore store = VxState.store as MyStore;
         model.rideType = store.rideType;
         model.paymentMethod = store.paymentMethod;

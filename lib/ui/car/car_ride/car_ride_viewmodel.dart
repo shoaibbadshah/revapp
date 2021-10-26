@@ -523,7 +523,7 @@ class CarRideViewModel extends BaseViewModel {
             user: _userService.currentUser!,
           )
               .then((value) {
-            if (value) {
+            if (value != '') {
               navigationService.back();
               return showBottomFlash(context: context);
             }

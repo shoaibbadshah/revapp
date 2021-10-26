@@ -20,6 +20,8 @@ import 'package:avenride/main.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'package:http/http.dart' as http;
+
 class BoatConfirmPickUpViewModel extends BaseViewModel {
   final log = getLogger('BoatSelectionMapViewModel');
   final _bottomSheetService = locator<BottomSheetService>();
@@ -214,9 +216,11 @@ class BoatConfirmPickUpViewModel extends BaseViewModel {
   void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
     await _firestoreApi
         .createBoatRide(carride: store.carride, user: _userService.currentUser!)
-        .then((value) {
-      log.v(value);
+        .then((value) async {
       if (value) {
+        SetBookinType(bookingtype: "");
+        final response = await http.get(Uri.parse(
+            'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
         navigationService.replaceWith(
           Routes.boatSearchDriverView,
           arguments: BoatSearchDriverViewArguments(start: st, end: en),

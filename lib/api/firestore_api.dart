@@ -356,7 +356,7 @@ class FirestoreApi {
     }
   }
 
-  Future<bool> createTaxiRide(
+  Future<String> createTaxiRide(
       {required Map carride, required User user}) async {
     log.i('Ride Details: $carride and user data: $user');
 
@@ -364,7 +364,7 @@ class FirestoreApi {
       final userDocument = taxiRideCollection.doc();
       await userDocument.set(carride);
       log.v('Taxi created at ${userDocument.path}');
-      return true;
+      return userDocument.id;
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create a Taxi',

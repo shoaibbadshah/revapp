@@ -17,7 +17,7 @@ class CarSelectionMapViewModel extends BaseViewModel {
   MyStore store = VxState.store as MyStore;
   int selectedIndex = 0;
   bool isbusy = false;
-  String paymentMethod = 'Cash';
+  String paymentMethod = 'Cash', bookingType = '';
   double price = 0.0;
   String fp = '';
   double sprice = double.parse(carTypes[0].price);
@@ -76,12 +76,13 @@ class CarSelectionMapViewModel extends BaseViewModel {
     store.carride.addAll({
       'PaymentType': paymentMethod,
       'price': price,
-      'rideType': rideType,
+      'ridepreference': rideType,
       'CarType': selectedCar.name,
     });
     navigationService.replaceWith(
       Routes.confirmPickUpView,
-      arguments: ConfirmPickUpViewArguments(end: en, start: st),
+      arguments: ConfirmPickUpViewArguments(
+          end: en, start: st, bookingtype: bookingType),
     );
   }
 }

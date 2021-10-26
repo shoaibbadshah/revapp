@@ -459,7 +459,6 @@ class TaxiModel {
   factory TaxiModel.fromFirestore(DocumentSnapshot doc) {
     String s = json.encode(doc.data());
     Map<String, dynamic> data = jsonDecode(s);
-
     return TaxiModel(
       paymentType: data['PaymentType'],
       destination: data['destination'],
@@ -472,7 +471,7 @@ class TaxiModel {
       scheduleTime: data['scheduleTime'],
       scheduledDate: data['scheduledDate'],
       distace: data['distace'] ?? '0',
-      price: data['price'] ?? '0',
+      price: data['price'].toString(),
     );
   }
 }

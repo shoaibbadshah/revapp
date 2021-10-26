@@ -5,12 +5,19 @@ import 'package:avenride/ui/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StartUpSideDraer extends StatelessWidget {
+class StartUpSideDraer extends StatefulWidget {
   StartUpSideDraer({
     Key? key,
     required this.model,
   }) : super(key: key);
   final StartUpViewModel model;
+
+  @override
+  State<StartUpSideDraer> createState() => _StartUpSideDraerState();
+}
+
+class _StartUpSideDraerState extends State<StartUpSideDraer> {
+  bool bookingVisible = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -20,10 +27,11 @@ class StartUpSideDraer extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              model.userService.hasLoggedInUser && model.userId != null
+              widget.model.userService.hasLoggedInUser &&
+                      widget.model.userId != null
                   ? StreamProvider<List<Users>>.value(
-                      value: model.firestoreApi
-                          .streamuser(model.userService.currentUser!.id),
+                      value: widget.model.firestoreApi
+                          .streamuser(widget.model.userService.currentUser!.id),
                       initialData: [
                         Users(
                           id: 'id',
@@ -79,22 +87,92 @@ class StartUpSideDraer extends StatelessWidget {
               DrawerItem(
                 title: 'Home',
                 icon: Icons.home,
-                onTapped: () => model.navigateToHome(),
+                onTapped: () => widget.model.navigateToHome(),
               ),
-              DrawerItem(
-                title: 'My Bookings',
-                icon: Icons.list,
-                onTapped: () => model.navigateToBooking(),
+              ListTile(
+                onTap: () {
+                  setState(() {
+                    bookingVisible = !bookingVisible;
+                  });
+                },
+                leading: Icon(
+                  Icons.list,
+                  color: Colors.amber,
+                ),
+                title: Row(
+                  children: [
+                    Text(
+                      'My Bookings',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Icon(Icons.arrow_drop_down),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Car Ride',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingCar(),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Ambulance',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingAmbulance(),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Send/Pickups',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingSendPickups(),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Bus/taxi',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingBusTaxi(),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Boat',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingBoat(),
+                  ),
+                ),
               ),
               DrawerItem(
                 title: 'My Profile',
                 icon: Icons.person,
-                onTapped: () => model.navigateToProfile(),
+                onTapped: () => widget.model.navigateToProfile(),
               ),
               DrawerItem(
                 title: 'Logout',
                 icon: Icons.login,
-                onTapped: model.logout,
+                onTapped: widget.model.logout,
               ),
             ],
           ),

@@ -90,10 +90,14 @@ class Calculate {
       Uri.parse(
           'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${selectedPlac.latitude},${selectedPlac.longitude}&destinations=${dropoffplac.latitude}%2C${dropoffplac.longitude}&key=AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw'),
     );
-    final data = jsonDecode(response.body);
+    String duration = '0';
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      duration = data['rows'][0]['elements'][0]['duration']['text'];
+    }
     return {
       'distance': distance.toStringAsFixed(2),
-      'duration': data['rows'][0]['elements'][0]['duration']['text'],
+      'duration': duration,
       'placeRate': placeRate,
       'rate': rate,
     };

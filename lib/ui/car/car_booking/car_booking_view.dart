@@ -11,12 +11,13 @@ import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 
 class CarBookingView extends StatelessWidget {
-  CarBookingView({Key? key}) : super(key: key);
-
+  CarBookingView({Key? key, required this.bookingtype}) : super(key: key);
+  final String bookingtype;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<CarBookingViewModel>.reactive(
       onModelReady: (model) {
+        model.bookingType = bookingtype;
         MyStore store = VxState.store as MyStore;
         model.scheduledTime = formatDate(
             DateTime(
@@ -30,6 +31,7 @@ class CarBookingView extends StatelessWidget {
             DateFormat.yMd().format(DateTime.now()).toString();
         store.carride = {};
         model.setCurrentLoc();
+        // model.setLocOnChange();
       },
       builder: (context, model, child) {
         return Scaffold(
@@ -221,6 +223,17 @@ class CarBookingView extends StatelessWidget {
                             color: Colors.grey.shade100,
                             elevation: 0.0,
                             child: ListTile(
+                              onTap: () {
+                                model.useCurrentLoc();
+                              },
+                              leading: Icon(Icons.location_on),
+                              title: Text('use your current location'),
+                            ),
+                          ),
+                          Card(
+                            color: Colors.grey.shade100,
+                            elevation: 0.0,
+                            child: ListTile(
                               title: Text('save this location'),
                             ),
                           ),
@@ -238,8 +251,10 @@ class CarBookingView extends StatelessWidget {
                             child: ListTile(
                               title: Text('MMIA Lag Int Airpt'),
                               onTap: () {
-                                model.setAirport(MMIA,
-                                    'Murtala Muhammed International Airport');
+                                model.setAirport(
+                                  MMIA,
+                                  'Murtala Muhammed International Airport',
+                                );
                               },
                             ),
                           ),
@@ -250,7 +265,9 @@ class CarBookingView extends StatelessWidget {
                               title: Text('Abj Int Airpt'),
                               onTap: () {
                                 model.setAirport(
-                                    Abj, 'Abuja-Nnamdi Azikiwe Airport');
+                                  Abj,
+                                  'Abuja-Nnamdi Azikiwe Airport',
+                                );
                               },
                             ),
                           ),
@@ -261,7 +278,9 @@ class CarBookingView extends StatelessWidget {
                               title: Text('PH Int Airpt'),
                               onTap: () {
                                 model.setAirport(
-                                    PH, 'Port Harcourt International Airport');
+                                  PH,
+                                  'Port Harcourt International Airport',
+                                );
                               },
                             ),
                           ),
@@ -286,6 +305,10 @@ class CarBookingView extends StatelessWidget {
                           BackMap(
                             onLocationChange: () {
                               model.setLocOnChange();
+                              final snackBar =
+                                  SnackBar(content: Text('Location changed!'));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             },
                           ),
                         ],

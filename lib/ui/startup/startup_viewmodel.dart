@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/router_names.dart';
+import 'package:avenride/main.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:avenride/ui/avenfood/avenfood_view.dart';
 import 'package:avenride/ui/boat/boat_booking/boat_booking_view.dart';
@@ -10,7 +10,6 @@ import 'package:avenride/ui/boat/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/car/car_booking/car_booking_view.dart';
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
-import 'package:avenride/ui/pointmap/MyMap.dart';
 import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -22,8 +21,6 @@ import 'package:avenride/app/app.router.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/startup/startup_view.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -37,9 +34,6 @@ class StartUpViewModel extends BaseViewModel {
   final _placesService = locator<PlacesService>();
   final firestoreApi = locator<FirestoreApi>();
   final _notifyService = locator<PushNotificationService>();
-  late Location location;
-  Set<Marker> markers = Set<Marker>();
-  late StreamSubscription<LocationData> locationData;
   Position? currentPosition;
   bool status = true;
   String? userId;
@@ -66,17 +60,40 @@ class StartUpViewModel extends BaseViewModel {
   }
 
   navigateToCardRide() {
+    SetBookinType(bookingtype: Cartype);
     navigationService.navigateWithTransition(
-      CarBookingView(),
+      CarBookingView(
+        bookingtype: Cartype,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToNewDelivery() {
+    SetBookinType(bookingtype: DeliveryService);
+    navigationService.navigateWithTransition(
+      CarBookingView(
+        bookingtype: Cartype,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToNewAmbulance() {
+    SetBookinType(bookingtype: Ambulance);
+    navigationService.navigateWithTransition(
+      CarBookingView(
+        bookingtype: Ambulance,
+      ),
       transition: 'rightToLeft',
     );
   }
 
   navigateToTaxiRide() {
+    SetBookinType(bookingtype: Taxi);
     navigationService.navigateWithTransition(
-      CarRideView(
-        isDropLatLng: false,
-        formType: Taxi,
+      CarBookingView(
+        bookingtype: Taxi,
       ),
       transition: 'rightToLeft',
     );
@@ -114,10 +131,51 @@ class StartUpViewModel extends BaseViewModel {
     );
   }
 
-  navigateToBooking() {
+  navigateToBookingCar() {
     navigationService.navigateWithTransition(
       BookingView(
         enableAppBar: true,
+        bookingtype: Cartype,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToBookingBusTaxi() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: Taxi,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToBookingAmbulance() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: Ambulance,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToBookingSendPickups() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: DeliveryService,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToBookingBoat() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: BoatRidetype,
       ),
       transition: 'rightToLeft',
     );
@@ -207,13 +265,6 @@ class StartUpViewModel extends BaseViewModel {
     }
   }
 
-  void onMapCreated(GoogleMapController controller,
-      Completer<GoogleMapController> _controller) {
-    if (!_controller.isCompleted) {
-      _controller.complete(controller);
-    }
-  }
-
   Future<void> messageHandler(RemoteMessage message) async {
     log.i('New notification Recieved');
     List data = [];
@@ -266,84 +317,5 @@ class StartUpViewModel extends BaseViewModel {
   void updateBottomNav(int i) {
     index = i;
     notifyListeners();
-  }
-
-  updatePinOnMap(
-      {required LatLng location,
-      required Completer<GoogleMapController> completer}) async {
-    CameraPosition cPosition = CameraPosition(
-      zoom: 10,
-      tilt: CAMERA_TILT,
-      bearing: CAMERA_BEARING,
-      target: LatLng(location.latitude, location.longitude),
-    );
-    final GoogleMapController controller = await completer.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
-    log.d('databse updaeted');
-  }
-
-  liveLocation(
-      {required Function setLocation, required LatLng currentLocation}) {
-    location = new Location();
-    locationData = location.onLocationChanged.listen((LocationData cLoc) {
-      if (currentLocation != LatLng(cLoc.latitude!, cLoc.longitude!)) {
-        setLocation(cLoc);
-      }
-    });
-  }
-
-  setMarkers(LatLng point) async {
-    List ra = [
-      12345,
-      11345,
-      93000,
-      99309,
-      98989,
-      32459,
-    ];
-    BitmapDescriptor sourceIcon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(
-        devicePixelRatio: 2.5,
-        size: Size(80, 80),
-      ),
-      'assets/images/carslogo.png',
-    );
-    for (var i = 0; i < 5; i++) {
-      final latlong = getRandomLocation(point, ra[i]);
-      markers.add(
-        Marker(
-          markerId: MarkerId('marke no $i'),
-          position: latlong,
-          icon: sourceIcon,
-        ),
-      );
-    }
-    notifyListeners();
-  }
-
-  LatLng getRandomLocation(LatLng point, int radius) {
-    //This is to generate 10 random points
-    double x0 = point.latitude;
-    double y0 = point.longitude;
-
-    Random random = new Random();
-
-    // Convert radius from meters to degrees
-    double radiusInDegrees = radius / 111000;
-
-    double u = random.nextDouble();
-    double v = random.nextDouble();
-    double w = radiusInDegrees * sqrt(u);
-    double t = 2 * pi * v;
-    double x = w * cos(t);
-    double y = w * sin(t) * 1.75;
-
-    // Adjust the x-coordinate for the shrinking of the east-west distances
-    double newX = x / sin(y0);
-
-    double foundLatitude = newX + x0;
-    double foundLongitude = y + y0;
-    LatLng randomLatLng = new LatLng(foundLatitude, foundLongitude);
-    return randomLatLng;
   }
 }
