@@ -16,6 +16,7 @@ class BackMapViewModel extends BaseViewModel {
   bool maploading = true;
 
   Future<void> setMarkers(LatLng point) async {
+    markers.clear();
     List ra = [
       10345,
       10034,
@@ -40,7 +41,11 @@ class BackMapViewModel extends BaseViewModel {
                 ? Assets.deliverylogo
                 : type == Ambulance
                     ? Assets.ambulance
-                    : Assets.whitecar,
+                    : type == BoatRidetype
+                        ? Assets.boat1
+                        : type == WaterCargo
+                            ? Assets.cargo1
+                            : Assets.whitecar,
       );
     } else {
       sourceIcon = await BitmapDescriptor.fromAssetImage(

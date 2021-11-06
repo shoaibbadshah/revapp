@@ -4,6 +4,7 @@ import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class StartUpSideDraer extends StatefulWidget {
   StartUpSideDraer({
@@ -164,6 +165,17 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                   ),
                 ),
               ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Water Cargo',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingCargo(),
+                  ),
+                ),
+              ),
               DrawerItem(
                 title: 'My Profile',
                 icon: Icons.person,
@@ -173,6 +185,15 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                 title: 'Logout',
                 icon: Icons.login,
                 onTapped: widget.model.logout,
+              ),
+              DrawerItem(
+                title: 'Share',
+                icon: Icons.share,
+                onTapped: () {
+                  Share.share(
+                    'https://play.google.com/store/apps/details?id=com.bitcc.revapp',
+                  );
+                },
               ),
             ],
           ),

@@ -211,7 +211,7 @@ class BoatRideViewModel extends BaseViewModel {
               user: _userService.currentUser!,
             )
                 .then((value) {
-              if (value) {
+              if (value != '') {
                 _navigationService.back();
                 return showBottomFlash(context: context);
               }
@@ -223,7 +223,7 @@ class BoatRideViewModel extends BaseViewModel {
               user: _userService.currentUser!,
             )
                 .then((value) {
-              if (value) {
+              if (value != '') {
                 _navigationService.back();
                 return showBottomFlash(context: context);
               }

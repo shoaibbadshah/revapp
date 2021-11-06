@@ -1,3 +1,4 @@
+import 'package:avenride/main.dart';
 import 'package:avenride/ui/boat/boat_booking/boat_booking_viewmodel.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
@@ -264,6 +265,7 @@ class BoatBookingView extends StatelessWidget {
       },
       onDispose: (model) {
         model.runDispose();
+        SetBookinType(bookingtype: '');
       },
       viewModelBuilder: () => BoatBookingViewModel(),
     );

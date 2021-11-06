@@ -76,9 +76,6 @@ class BoatConfirmPickUpViewModel extends BaseViewModel {
   void setSrcDest(String src, String dest, String distanceTime) {
     source = src;
     destination = dest;
-    log.v("VALUE IS $distanceTime");
-    final val = distanceTime.split(" ");
-    log.v("VALUE IS $val");
     time = double.parse(distanceTime);
     setInitialData();
   }
@@ -214,21 +211,62 @@ class BoatConfirmPickUpViewModel extends BaseViewModel {
   }
 
   void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
-    await _firestoreApi
-        .createBoatRide(carride: store.carride, user: _userService.currentUser!)
-        .then((value) async {
-      if (value) {
-        SetBookinType(bookingtype: "");
-        final response = await http.get(Uri.parse(
-            'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
-        navigationService.replaceWith(
-          Routes.boatSearchDriverView,
-          arguments: BoatSearchDriverViewArguments(start: st, end: en),
-        );
-        final snackBar = SnackBar(
-            content: Text('Booking is successful view in rides section!'));
-        return ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    });
+    isbusy1 = true;
+    notifyListeners();
+    final type = GetBookinType().perform();
+    print(type);
+    if (type == WaterCargo) {
+      await _firestoreApi
+          .createDeliveryRide(
+              carride: store.carride, user: _userService.currentUser!)
+          .then((value) async {
+        if (value != '') {
+          SetBookinType(bookingtype: "");
+          final response = await http.get(Uri.parse(
+              'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
+          navigationService.replaceWith(
+            Routes.boatSearchDriverView,
+            arguments: BoatSearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'Delivery',
+              endText: dropOffAddress,
+              rideId: value,
+              startText: pickUpAddess,
+              time: time.toString(),
+            ),
+          );
+          final snackBar = SnackBar(
+              content: Text('Booking is successful view in rides section!'));
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else {
+      await _firestoreApi
+          .createBoatRide(
+              carride: store.carride, user: _userService.currentUser!)
+          .then((value) async {
+        if (value != '') {
+          SetBookinType(bookingtype: "");
+          final response = await http.get(Uri.parse(
+              'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
+          navigationService.replaceWith(
+            Routes.boatSearchDriverView,
+            arguments: BoatSearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'BoatRide',
+              endText: dropOffAddress,
+              rideId: value,
+              startText: pickUpAddess,
+              time: time.toString(),
+            ),
+          );
+          final snackBar = SnackBar(
+              content: Text('Booking is successful view in rides section!'));
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    }
   }
 }

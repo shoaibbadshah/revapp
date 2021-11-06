@@ -1,3 +1,4 @@
+import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/ui/car/car_selection_map/car_selection_map_viewmodel.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
@@ -29,6 +30,7 @@ class CarSelectionMapView extends StatelessWidget {
     final key1 = GlobalKey<State<Tooltip>>();
     return ViewModelBuilder<CarSelectionMapViewModel>.reactive(
       onModelReady: (model) {
+        model.type = GetBookinType().perform();
         model.bookingType = bookingtype;
         MyStore store = VxState.store as MyStore;
         model.rideType = store.rideType;
@@ -37,7 +39,13 @@ class CarSelectionMapView extends StatelessWidget {
             store.carride['destination'], store.carride['distace']);
         double storedprice = double.parse(store.carride['price']);
         model.setInitialPrice(storedprice);
-        model.submitBtnText = 'AVR (total: ${storedprice + 100})';
+        model.submitBtnText = '(total: ${storedprice + 100})';
+        if (model.type == DeliveryService) {
+          model.setCar(index: 0, car: deliveryTypes[0]);
+        }
+        if (model.type == Cartype) {
+          model.setCar(index: 0, car: carTypes[0]);
+        }
       },
       builder: (context, model, child) => Scaffold(
         bottomSheet: Container(
@@ -135,7 +143,9 @@ class CarSelectionMapView extends StatelessWidget {
                 : Stack(
                     children: [
                       Container(
-                        height: screenHeight(context) / 2,
+                        height: model.type == Taxi || model.type == Ambulance
+                            ? screenHeight(context) / 1.3
+                            : screenHeight(context) / 2,
                         child: BookingMap(
                           DEST_LOCATION: end,
                           SOURCE_LOCATION: start,
@@ -177,101 +187,194 @@ class CarSelectionMapView extends StatelessWidget {
                         ),
                         builder: (context, state) {
                           return Container(
-                            height: 500,
+                            height:
+                                model.type == Taxi || model.type == Ambulance
+                                    ? 50
+                                    : 500,
                             padding: EdgeInsets.symmetric(vertical: 20),
                             color: Colors.white,
-                            child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: carTypes.length,
-                              itemBuilder: (context, index) {
-                                NameIMG car = carTypes[index];
-                                return Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Card(
-                                    color: model.selectedIndex == index
-                                        ? Colors.grey.shade300
-                                        : Colors.white,
-                                    child: ListTile(
-                                      title: InkWell(
+                            child: model.type == DeliveryService
+                                ? ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: ScrollPhysics(),
+                                    itemCount: deliveryTypes.length,
+                                    itemBuilder: (context, index) {
+                                      NameIMG ride = deliveryTypes[index];
+                                      return InkWell(
                                         onTap: () {
-                                          model.setCar(car: car, index: index);
+                                          model.setCar(car: ride, index: index);
                                         },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
+                                        child: Container(
+                                            color: model.selectedIndex == index
+                                                ? Colors.grey.shade300
+                                                : Colors.white,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  child: Image.asset(
-                                                    car.imagePath,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                                horizontalSpaceTiny,
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                Row(
                                                   children: [
-                                                    Text(
-                                                      car.name,
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                    horizontalSpaceTiny,
+                                                    Container(
+                                                      width: 50,
+                                                      height: 50,
+                                                      child: Image.asset(
+                                                        ride.imagePath,
+                                                        fit: BoxFit.contain,
                                                       ),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          '7 mins',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                        horizontalSpaceTiny,
-                                                        Icon(
-                                                          Icons.person,
-                                                          size: 12,
-                                                        ),
-                                                        Text(
-                                                          '4 seats',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                    horizontalSpaceTiny,
                                                     Text(
-                                                      'Increased Demand',
+                                                      ride.name,
                                                       style: TextStyle(
-                                                        fontSize: 12,
-                                                      ),
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
                                                   ],
                                                 ),
+                                                // Text(
+                                                //   '${ride.price}Nan',
+                                                //   style: TextStyle(
+                                                //       fontWeight:
+                                                //           FontWeight.bold),
+                                                // ),
+                                                Container(
+                                                  width: screenWidth(context) /
+                                                      2.3,
+                                                  child: Text(
+                                                    '₦${(model.storedprice - double.parse(ride.price)).toString()} - ${(model.storedprice + double.parse(ride.price)).toString()}',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
+                                            )
+                                            // ListTile(
+                                            //   onTap: () {
+                                            //     setState(() {
+                                            //       selectedIndex = index;
+                                            //     });
+                                            //   },
+                                            //   title: Text(deliveryTypes[index]),
+                                            // ),
                                             ),
-                                            Container(
-                                              width: screenWidth(context) / 2.3,
-                                              child: Text(
-                                                '₦${(model.storedprice - double.parse(car.price)).toString()} - ${(model.storedprice + double.parse(car.price)).toString()}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
+                                      );
+                                    },
+                                  )
+                                : model.type == Taxi
+                                    ? SizedBox()
+                                    : ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: carTypes.length,
+                                        itemBuilder: (context, index) {
+                                          NameIMG car = carTypes[index];
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                            ),
+                                            child: Card(
+                                              color:
+                                                  model.selectedIndex == index
+                                                      ? Colors.grey.shade300
+                                                      : Colors.white,
+                                              child: ListTile(
+                                                title: InkWell(
+                                                  onTap: () {
+                                                    model.setCar(
+                                                        car: car, index: index);
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            width: 50,
+                                                            height: 50,
+                                                            child: Image.asset(
+                                                              car.imagePath,
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ),
+                                                          ),
+                                                          horizontalSpaceTiny,
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                car.name,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                              Row(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 40,
+                                                                    child: Text(
+                                                                      '${5 + index} mins',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  horizontalSpaceTiny,
+                                                                  Icon(
+                                                                    Icons
+                                                                        .person,
+                                                                    size: 12,
+                                                                  ),
+                                                                  Text(
+                                                                    '4 seats',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Container(
+                                                        width: screenWidth(
+                                                                context) /
+                                                            2.3,
+                                                        child: Text(
+                                                          '₦${(model.storedprice - double.parse(car.price)).toString()} - ${(model.storedprice + double.parse(car.price)).toString()}',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          );
+                                        },
                                       ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
                           );
                         },
                         headerBuilder: (context, state) {

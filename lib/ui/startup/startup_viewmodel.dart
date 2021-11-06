@@ -45,11 +45,34 @@ class StartUpViewModel extends BaseViewModel {
     runStartupLogic();
   }
 
-  navigateToBoatRide() {
-    navigationService.navigateWithTransition(
-      BoatBookingView(),
-      transition: 'rightToLeft',
-    );
+  navigateToBoatRide(BuildContext context) {
+    Alert(
+      context: context,
+      title: "Do you want to book?",
+      buttons: <DialogButton>[
+        DialogButton(
+          color: Colors.blue,
+          child: Text("Cargo Ride"),
+          onPressed: () {
+            SetBookinType(bookingtype: WaterCargo);
+            navigationService.replaceWithTransition(
+              BoatBookingView(),
+              transition: 'rightToLeft',
+            );
+          },
+        ),
+        DialogButton(
+          child: Text("Boat Ride"),
+          onPressed: () {
+            SetBookinType(bookingtype: BoatRidetype);
+            navigationService.replaceWithTransition(
+              BoatBookingView(),
+              transition: 'rightToLeft',
+            );
+          },
+        ),
+      ],
+    ).show();
   }
 
   navigateToProfile() {
@@ -176,6 +199,16 @@ class StartUpViewModel extends BaseViewModel {
       BookingView(
         enableAppBar: true,
         bookingtype: BoatRidetype,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateToBookingCargo() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: WaterCargo,
       ),
       transition: 'rightToLeft',
     );

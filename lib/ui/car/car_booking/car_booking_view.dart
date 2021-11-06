@@ -17,7 +17,7 @@ class CarBookingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<CarBookingViewModel>.reactive(
       onModelReady: (model) {
-        model.bookingType = bookingtype;
+        model.bookingType = GetBookinType().perform();
         MyStore store = VxState.store as MyStore;
         model.scheduledTime = formatDate(
             DateTime(
@@ -319,6 +319,7 @@ class CarBookingView extends StatelessWidget {
         );
       },
       onDispose: (model) {
+        SetBookinType(bookingtype: '');
         model.runDispose();
       },
       viewModelBuilder: () => CarBookingViewModel(),

@@ -44,5 +44,7 @@ class UserService {
   }
 
   Future<void> get logout async =>
-      await _firebaseAuthenticationService.logout().then((value) {});
+      await _firebaseAuthenticationService.logout().then((value) {
+        _currentUser = null;
+      });
 }

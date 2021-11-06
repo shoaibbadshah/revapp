@@ -98,7 +98,11 @@ class BoatConfirmPickUpView extends StatelessWidget {
                       onPressed: () {
                         model.onConfirmOrder(context, start, end);
                       },
-                      child: Text('Confirm your Order'),
+                      child: model.isbusy1
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text('Confirm your Order'),
                     ),
                   ),
                   InkWell(

@@ -118,23 +118,22 @@ class DeliveryServicesModel {
   factory DeliveryServicesModel.fromFirestore(DocumentSnapshot doc) {
     String s = json.encode(doc.data());
     Map<String, dynamic> data = jsonDecode(s);
-
     return DeliveryServicesModel(
       paymentType: data['PaymentType'],
-      carType: data['deliveryType'],
+      carType: data['CarType'] ?? "Bike",
       destination: data['destination'],
       startLocation: data['startLocation'],
       id: doc.id,
       dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
       selectedPlace:
           GeoPoint(data['selectedPlace'][0], data['selectedPlace'][1]),
-      laguageType: data['laguageType'],
-      laguageSize: data['laguageSize'],
+      laguageType: data['laguageType'] ?? "",
+      laguageSize: data['laguageSize'] ?? "",
       paymentStatus: data['paymentStatus'] ?? Pending,
       scheduleTime: data['scheduleTime'],
       scheduledDate: data['scheduledDate'],
       distace: data['distace'] ?? '0',
-      price: data['price'] ?? '0',
+      price: data['price'].toString(),
     );
   }
 }
@@ -190,6 +189,73 @@ class BoatModel {
   }
 }
 
+class BoatRideDetailModel {
+  final String paymentType;
+  final String dropLocation;
+  final String pickLocation;
+  final String scheduleTime;
+  final String scheduledDate;
+  final String boatType;
+  final String paymentStatus;
+  final String id;
+  final double pickupLat;
+  final double pickupLong;
+  final double dropoffLat;
+  final String price;
+  final bool rideEnded;
+  final double dropoffLong;
+  final String pushToken;
+  final String rideType;
+  final String otp;
+  final String drivers;
+
+  BoatRideDetailModel({
+    required this.paymentType,
+    required this.dropLocation,
+    required this.paymentStatus,
+    required this.pickLocation,
+    required this.scheduleTime,
+    required this.pickupLat,
+    required this.pickupLong,
+    required this.dropoffLat,
+    required this.price,
+    required this.dropoffLong,
+    required this.id,
+    required this.boatType,
+    required this.otp,
+    required this.drivers,
+    required this.rideEnded,
+    required this.pushToken,
+    required this.rideType,
+    required this.scheduledDate,
+  });
+
+  factory BoatRideDetailModel.fromFirestore(DocumentSnapshot doc) {
+    String s = json.encode(doc.data());
+    Map<String, dynamic> data = jsonDecode(s);
+    return BoatRideDetailModel(
+      drivers: data['drivers'] ?? '',
+      paymentType: data['PaymentType'].toString(),
+      dropLocation: data['dropLocation'].toString(),
+      paymentStatus: data['paymentStatus'].toString(),
+      pickLocation: data['pickLocation'].toString(),
+      id: doc.id,
+      rideEnded: data['RideEnded'] ?? false,
+      scheduleTime: data['scheduleTime'],
+      price: data['price'].toString(),
+      scheduledDate: data['scheduledDate'],
+      boatType: data['BoatType'],
+      pickupLat: data['pickupLat'],
+      pickupLong: data['pickupLong'],
+      dropoffLat: data['dropoffLat'],
+      dropoffLong: data['dropoffLong'],
+      pushToken: data['pushToken'] ?? '',
+      rideType: data['rideType'] ?? '',
+      otp: data['otp'] ?? '',
+    );
+  }
+}
+
 class DeliveryModel {
   final String paymentType;
   final String dropLocation;
@@ -228,7 +294,7 @@ class DeliveryModel {
       paymentType: data['PaymentType'],
       dropLocation: data['dropLocation'],
       paymentStatus: data['paymentStatus'],
-      price: data['price'],
+      price: data['price'].toString(),
       laguageType: data['laguageType'],
       laguageSize: data['laguageSize'],
       pickLocation: data['pickLocation'],
@@ -257,6 +323,7 @@ class CarModel {
   final GeoPoint selectedPlace;
   final GeoPoint dropoffplace;
   final String pushToken;
+  final bool rideEnded;
   final String rideType;
   CarModel(
       {required this.destination,
@@ -267,6 +334,7 @@ class CarModel {
       required this.pushToken,
       required this.carType,
       required this.paymentStatus,
+      required this.rideEnded,
       required this.id,
       required this.paymentType,
       required this.startLocation,
@@ -287,6 +355,7 @@ class CarModel {
       rideType: data['rideType'] ?? '',
       scheduledDate: data['scheduledDate'],
       scheduleTime: data['scheduleTime'],
+      rideEnded: data['rideEnded'] ?? false,
       paymentType: data['PaymentType'],
       carType: data['CarType'],
       startLocation: data['startLocation'],
@@ -308,6 +377,7 @@ class CarModelRideDetail {
   final String distace;
   final String paymentStatus;
   final String price;
+  final bool rideEnded;
   final String otp;
   final String id;
   final GeoPoint selectedPlace;
@@ -322,6 +392,7 @@ class CarModelRideDetail {
       required this.price,
       required this.pushToken,
       required this.drivers,
+      required this.rideEnded,
       required this.otp,
       required this.carType,
       required this.paymentStatus,
@@ -342,13 +413,14 @@ class CarModelRideDetail {
       dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
       paymentStatus: data['paymentStatus'] ?? Pending,
       price: data['price'].toString(),
+      rideEnded: data['RideEnded'] ?? false,
       pushToken: data['pushToken'] ?? '',
       rideType: data['rideType'] ?? '',
       otp: data['otp'] ?? '',
       scheduledDate: data['scheduledDate'],
       scheduleTime: data['scheduleTime'],
-      paymentType: data['PaymentType'],
-      carType: data['CarType'],
+      paymentType: data['PaymentType'] ?? "",
+      carType: data['CarType'] ?? "",
       startLocation: data['startLocation'],
       id: doc.id,
       selectedPlace:

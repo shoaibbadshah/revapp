@@ -216,6 +216,11 @@ class StackedRouter extends RouterBase {
           key: args.key,
           start: args.start,
           end: args.end,
+          rideId: args.rideId,
+          collectionType: args.collectionType,
+          startText: args.startText,
+          endText: args.endText,
+          time: args.time,
         ),
         settings: data,
       );
@@ -330,6 +335,18 @@ class BoatSearchDriverViewArguments {
   final Key? key;
   final LatLng start;
   final LatLng end;
+  final String rideId;
+  final String collectionType;
+  final String startText;
+  final String endText;
+  final String time;
   BoatSearchDriverViewArguments(
-      {this.key, required this.start, required this.end});
+      {this.key,
+      required this.start,
+      required this.end,
+      required this.rideId,
+      required this.collectionType,
+      required this.startText,
+      required this.endText,
+      required this.time});
 }

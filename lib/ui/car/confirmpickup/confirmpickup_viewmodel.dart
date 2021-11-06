@@ -27,7 +27,7 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   MyStore store = VxState.store as MyStore;
   int selectedIndex = 0;
-  bool isbusy = false;
+  bool isbusy = false, buttonPressed = true;
   String paymentMethod = 'Cash', bookingType = '';
   double price = 0.0;
   String fp = '';
@@ -130,13 +130,14 @@ class ConfirmPickUpViewModel extends BaseViewModel {
       useCurrentLocation: pickup ? true : false,
       selectInitialPosition: true,
       onPlacePicked: (result) {
-        if (pickup) {
-          pickUpAddess = result.formattedAddress!;
-        }
-        if (!pickup) {
-          dropOffAddress = result.formattedAddress!;
-        }
-        notifyListeners();
+        // if (pickup) {
+        //   pickUpAddess = result.formattedAddress!;
+        // }
+        // if (!pickup) {
+        //   dropOffAddress = result.formattedAddress!;
+        // }
+        // notifyListeners();
+        navigationService.back();
       },
     ));
     pickup ? isbusy = false : isbusy1 = false;
@@ -144,7 +145,9 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   }
 
   void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
+    buttonPressed = false;
     SetBookinType(bookingtype: "");
+    notifyListeners();
     if (bookingType == Taxi) {
       await _firestoreApi
           .createTaxiRide(
@@ -174,8 +177,7 @@ class ConfirmPickUpViewModel extends BaseViewModel {
           return ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       });
-    }
-    if (bookingType == Cartype) {
+    } else if (bookingType == Cartype) {
       await _firestoreApi
           .createCarRide(
         carride: store.carride,
@@ -200,6 +202,68 @@ class ConfirmPickUpViewModel extends BaseViewModel {
           final snackBar = SnackBar(
               content:
                   Text('Booking is successful view in car rides section!'));
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else if (bookingType == DeliveryService) {
+      await _firestoreApi
+          .createDeliveryServices(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        if (value != '') {
+          final response = await http.get(
+            Uri.parse(
+                'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'),
+          );
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'DeliveryServices',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+            content: Text(
+                'Booking is successful view in delivery booking rides section!'),
+          );
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else if (bookingType == Ambulance) {
+      await _firestoreApi
+          .createAmbulance(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        if (value != '') {
+          final response = await http.get(
+            Uri.parse(
+                'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'),
+          );
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'Ambulance',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+            content: Text(
+                'Booking is successful view in ambulance booking rides section!'),
+          );
           return ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       });

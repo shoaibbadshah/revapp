@@ -55,6 +55,7 @@ class _BackMapState extends State<BackMap> {
         locationData =
             location.onLocationChanged.listen((LocationData? cLoc) async {
           if (cLoc != null) {
+            await model.setMarkers(currentLocation);
             final distance = model.calculateDistance(currentLocation.latitude,
                 currentLocation.longitude, cLoc.latitude, cLoc.longitude);
             if (distance > 1.0) {
@@ -65,7 +66,6 @@ class _BackMapState extends State<BackMap> {
                 location: currentLocation,
                 completer: _controller,
               );
-              await model.setMarkers(currentLocation);
               widget.onLocationChange();
             }
           }

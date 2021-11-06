@@ -11,7 +11,7 @@ class Distance {
   List<LatLng> polylineCoordinates = [];
   Future calculateDistance(
       {required String selectedPlac, required String dropoffplac}) async {
-    final log = getLogger('StartUpViewModel');
+    final log = getLogger('calculateDistance');
     try {
       Position startCoordinates;
       Position destinationCoordinates;

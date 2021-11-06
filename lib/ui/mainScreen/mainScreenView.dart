@@ -297,7 +297,7 @@ class BoatRideCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: model.navigateToBoatRide,
+                    onTap: () => model.navigateToBoatRide(context),
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -503,7 +503,7 @@ class CarRideCard extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         InkWell(
-                          onTap: model.navigateToBoatRide,
+                          onTap: () => model.navigateToBoatRide(context),
                           child: Container(
                             width: 50,
                             height: 50,
@@ -519,6 +519,34 @@ class CarRideCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 2,
+                        color: Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: model.navigateToAvenFood,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: Image.asset(Assets.hamburger),
+                          ),
+                        ),
+                        Text(
+                          'Food',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        verticalSpaceTiny,
+                      ],
+                    ),
+                  ),
                   Container(
                     height: 80,
                     decoration: BoxDecoration(
@@ -542,34 +570,6 @@ class CarRideCard extends StatelessWidget {
                         ),
                         Text(
                           'Ambulance',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        verticalSpaceTiny,
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 80,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        width: 2,
-                        color: Colors.black,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        InkWell(
-                          onTap: model.navigateToAvenFood,
-                          child: Container(
-                            width: 50,
-                            height: 50,
-                            child: Image.asset(Assets.hamburger),
-                          ),
-                        ),
-                        Text(
-                          'Food',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         verticalSpaceTiny,

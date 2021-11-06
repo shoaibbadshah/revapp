@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:avenride/app/app.router.dart';
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
@@ -133,151 +135,145 @@ class _AmbulanceListState extends State<AmbulanceList> {
         ? NotAvailable()
         : ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),
-            scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 20),
             itemCount: ambulances.length,
             itemBuilder: (context, index) {
               AmbulanceModel ambulance = ambulances[index];
-              return Card(
-                elevation: 5,
+              return InkWell(
+                onTap: () {
+                  _navigationService.navigateTo(
+                    Routes.searchDriverView,
+                    arguments: SearchDriverViewArguments(
+                      start: LatLng(
+                        ambulance.selectedPlace.latitude,
+                        ambulance.selectedPlace.longitude,
+                      ),
+                      end: LatLng(
+                        ambulance.dropoffplace.latitude,
+                        ambulance.dropoffplace.longitude,
+                      ),
+                      rideId: ambulance.id,
+                      collectionType: 'Ambulance',
+                      endText: ambulance.destination,
+                      startText: ambulance.startLocation,
+                      time: ambulance.distace,
+                    ),
+                  );
+                },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  child: Column(
-                    children: [
-                      Row(
+                  padding: EdgeInsets.all(10.0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      child: Column(
                         children: [
-                          Column(
-                            children: <Widget>[
-                              Container(
-                                height: 18,
-                                width: 20,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                      width: 1.5, color: Colors.greenAccent),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.green,
-                                  ),
-                                  margin: EdgeInsets.all(2),
-                                ),
-                              ),
-                              verticalSpaceTiny,
-                              VxDash(
-                                direction: Axis.vertical,
-                                length: 40,
-                                dashLength: 8,
-                                dashGap: 4,
-                                dashColor: Colors.grey,
-                              ),
-                              verticalSpaceTiny,
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: Colors.blue,
-                              ),
-                            ],
-                          ),
-                          horizontalSpaceSmall,
-                          Column(
-                            children: <Widget>[
-                              Container(
-                                width: screenWidth(context) / 1.6,
-                                height: 40,
-                                child: Text(
-                                  ambulance.startLocation,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              verticalSpaceSmall,
-                              Container(
-                                height: 2.0,
-                                padding: EdgeInsets.all(0),
-                                width: screenWidth(context) / 1.6,
-                                color: Colors.grey.shade300,
-                                margin: EdgeInsets.only(right: 20),
-                              ),
-                              verticalSpaceSmall,
-                              Container(
-                                height: 40,
-                                width: screenWidth(context) / 1.6,
-                                child: Text(
-                                  ambulance.destination,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      verticalSpaceSmall,
-                      Container(
-                        margin: EdgeInsetsDirectional.only(
-                          start: 1.0,
-                          end: 1.0,
-                        ),
-                        height: 2.0,
-                        width: screenWidth(context) / 1.6,
-                        color: Colors.grey.shade300,
-                      ),
-                      Row(
-                        children: [
-                          Column(
+                          Row(
                             children: [
-                              verticalSpaceMedium,
-                              Icon(
-                                Icons.local_taxi,
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                    height: 18,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          width: 1.5,
+                                          color: Colors.greenAccent),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.green,
+                                      ),
+                                      margin: EdgeInsets.all(2),
+                                    ),
+                                  ),
+                                  verticalSpaceTiny,
+                                  VxDash(
+                                    direction: Axis.vertical,
+                                    length: 40,
+                                    dashLength: 8,
+                                    dashGap: 4,
+                                    dashColor: Colors.grey,
+                                  ),
+                                  verticalSpaceTiny,
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    color: Colors.blue,
+                                  ),
+                                ],
+                              ),
+                              horizontalSpaceSmall,
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                    width: screenWidth(context) / 1.6,
+                                    height: 40,
+                                    child: Text(
+                                      ambulance.startLocation,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  verticalSpaceSmall,
+                                  Container(
+                                    height: 2.0,
+                                    padding: EdgeInsets.all(0),
+                                    width: screenWidth(context) / 1.6,
+                                    color: Colors.grey.shade300,
+                                    margin: EdgeInsets.only(right: 20),
+                                  ),
+                                  verticalSpaceSmall,
+                                  Container(
+                                    height: 40,
+                                    width: screenWidth(context) / 1.6,
+                                    child: Text(
+                                      ambulance.destination,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          horizontalSpaceSmall,
-                          Column(
-                            children: [
-                              Text(
-                                'Distance',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              verticalSpaceSmall,
-                              Text(
-                                ambulance.distace,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ],
+                          verticalSpaceSmall,
+                          Container(
+                            margin: EdgeInsetsDirectional.only(
+                              start: 1.0,
+                              end: 1.0,
+                            ),
+                            height: 2.0,
+                            width: screenWidth(context) / 1.6,
+                            color: Colors.grey.shade300,
                           ),
-                          horizontalSpaceSmall,
-                          Column(
+                          Row(
                             children: [
-                              verticalSpaceRegular,
-                              Text(
-                                'Time',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
+                              Column(
+                                children: [
+                                  verticalSpaceMedium,
+                                  Icon(
+                                    Icons.local_taxi,
+                                  ),
+                                ],
                               ),
-                              verticalSpaceSmall,
+                              horizontalSpaceSmall,
                               Column(
                                 children: [
                                   Text(
-                                    ambulance.scheduleTime.toLowerCase(),
+                                    'Distance',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontSize: 16,
                                     ),
                                   ),
+                                  verticalSpaceSmall,
                                   Text(
-                                    ambulance.scheduledDate.toLowerCase(),
+                                    ambulance.distace,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -285,59 +281,78 @@ class _AmbulanceListState extends State<AmbulanceList> {
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          horizontalSpaceSmall,
-                          Column(
-                            children: [
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              verticalSpaceSmall,
-                              Container(
-                                color: Colors.white,
-                                child: Text(
-                                  ambulance.price,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
+                              horizontalSpaceSmall,
+                              Column(
+                                children: [
+                                  verticalSpaceRegular,
+                                  Text(
+                                    'Time',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
+                                  verticalSpaceSmall,
+                                  Column(
+                                    children: [
+                                      Text(
+                                        ambulance.scheduleTime.toLowerCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      Text(
+                                        ambulance.scheduledDate.toLowerCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              horizontalSpaceSmall,
+                              Column(
+                                children: [
+                                  Text(
+                                    'Price',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  verticalSpaceSmall,
+                                  Container(
+                                    color: Colors.white,
+                                    child: Text(
+                                      ambulance.price,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          verticalSpaceSmall,
+                          Container(
+                            margin: EdgeInsetsDirectional.only(
+                              start: 1.0,
+                              end: 1.0,
+                            ),
+                            height: 2.0,
+                            width: screenWidth(context) / 1.6,
+                            color: Colors.grey.shade300,
+                          ),
+                          verticalSpaceTiny,
                         ],
                       ),
-                      verticalSpaceSmall,
-                      Container(
-                        margin: EdgeInsetsDirectional.only(
-                          start: 1.0,
-                          end: 1.0,
-                        ),
-                        height: 2.0,
-                        width: screenWidth(context) / 1.6,
-                        color: Colors.grey.shade300,
-                      ),
-                      verticalSpaceTiny,
-                      PaymentStatusLabel(
-                        price: ambulance.price,
-                        busy: isBusy,
-                        onButtonTapped: () {
-                          setState(() {
-                            isBusy = true;
-                          });
-                          startPayment(
-                              price: ambulance.price, id: ambulance.id);
-                        },
-                        paymentStatus: ambulance.paymentStatus,
-                      ),
-                      verticalSpaceTiny,
-                    ],
+                    ),
                   ),
                 ),
               );

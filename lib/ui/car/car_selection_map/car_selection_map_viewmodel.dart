@@ -1,8 +1,11 @@
+import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
+import 'package:avenride/services/user_service.dart';
+import 'package:avenride/ui/BottomSheetUi/ambulance_extra_service.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,6 +17,9 @@ class CarSelectionMapViewModel extends BaseViewModel {
   final log = getLogger('CarSelectionMapViewModel');
   final _bottomSheetService = locator<BottomSheetService>();
   final navigationService = locator<NavigationService>();
+  final _userService = locator<UserService>();
+  final _firestoreApi = locator<FirestoreApi>();
+  String type = '';
   MyStore store = VxState.store as MyStore;
   int selectedIndex = 0;
   bool isbusy = false;
@@ -25,7 +31,7 @@ class CarSelectionMapViewModel extends BaseViewModel {
   NameIMG selectedCar = NameIMG('AVR', Assets.car1, '100.0');
   String source = '', destination = '';
   double time = 0;
-  String submitBtnText = 'AVR';
+  String submitBtnText = '';
 
   String rideType = 'Personal Ride';
 
@@ -72,17 +78,61 @@ class CarSelectionMapViewModel extends BaseViewModel {
     ));
   }
 
-  void onConfirmPressed(LatLng st, LatLng en) {
-    store.carride.addAll({
-      'PaymentType': paymentMethod,
-      'price': price,
-      'ridepreference': rideType,
-      'CarType': selectedCar.name,
-    });
+  void onConfirmPressed(LatLng st, LatLng en) async {
+    if (type == Ambulance) {
+      await showAmbulanceoptions();
+    }
+    if (type == Cartype) {
+      store.carride.addAll({
+        'PaymentType': paymentMethod,
+        'price': price,
+        'ridepreference': rideType,
+        'CarType': selectedCar.name,
+      });
+    } else if (type == DeliveryService) {
+      store.carride.addAll({
+        'PaymentType': paymentMethod,
+        'price': price,
+        'ridepreference': rideType,
+        'CarType': selectedCar.name,
+      });
+    } else {
+      store.carride.addAll({
+        'PaymentType': paymentMethod,
+        'price': price,
+        'ridepreference': rideType,
+      });
+    }
     navigationService.replaceWith(
       Routes.confirmPickUpView,
       arguments: ConfirmPickUpViewArguments(
-          end: en, start: st, bookingtype: bookingType),
+        end: en,
+        start: st,
+        bookingtype: bookingType,
+      ),
     );
+  }
+
+  Future<void> showAmbulanceoptions() async {
+    if (type == Ambulance) {
+      var ambulanceemercyResponse = await _bottomSheetService.showCustomSheet(
+        variant: BottomSheetType.ambulanceemergency,
+        enableDrag: false,
+        barrierDismissible: true,
+        title: 'Select Medical Emergency ',
+        mainButtonTitle: 'Continue',
+        secondaryButtonTitle: 'This is cool',
+      );
+      if (ambulanceemercyResponse!.confirmed) {
+        var ambulanceResponse = await _bottomSheetService.showCustomSheet(
+          variant: BottomSheetType.ambulance,
+          enableDrag: false,
+          barrierDismissible: true,
+          title: 'Select extra service',
+          mainButtonTitle: 'Continue',
+          secondaryButtonTitle: 'This is cool',
+        );
+      } else {}
+    } else {}
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/pointmap/RealTimeMap.dart';
+import 'package:avenride/ui/postride/feedback/feedback_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -140,30 +141,34 @@ class _CarListState extends State<CarList> {
         ? NotAvailable()
         : ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             itemCount: cars.length,
             itemBuilder: (context, index) {
               CarModel car = cars[index];
               return InkWell(
                 onTap: () {
-                  _navigationService.navigateTo(
-                    Routes.searchDriverView,
-                    arguments: SearchDriverViewArguments(
-                      start: LatLng(
-                        car.selectedPlace.latitude,
-                        car.selectedPlace.longitude,
+                  if (car.rideEnded) {
+                    _navigationService.navigateToView(FeedBackView());
+                  } else {
+                    _navigationService.navigateTo(
+                      Routes.searchDriverView,
+                      arguments: SearchDriverViewArguments(
+                        start: LatLng(
+                          car.selectedPlace.latitude,
+                          car.selectedPlace.longitude,
+                        ),
+                        end: LatLng(
+                          car.dropoffplace.latitude,
+                          car.dropoffplace.longitude,
+                        ),
+                        rideId: car.id,
+                        collectionType: 'CarRide',
+                        endText: car.destination,
+                        startText: car.startLocation,
+                        time: car.distace,
                       ),
-                      end: LatLng(
-                        car.dropoffplace.latitude,
-                        car.dropoffplace.longitude,
-                      ),
-                      rideId: car.id,
-                      collectionType: 'CarRide',
-                      endText: car.destination,
-                      startText: car.startLocation,
-                      time: car.distace,
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: Card(
                   elevation: 5,

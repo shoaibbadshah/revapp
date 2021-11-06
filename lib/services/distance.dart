@@ -69,9 +69,10 @@ class Calculate {
     LatLng dropoffplac = LatLng(dropoffplac1, dropoffplac2);
     Geodesy geodesy = Geodesy();
     num distance = geodesy.distanceBetweenTwoGeoPoints(
-            LatLng(selectedPlac.latitude, selectedPlac.longitude),
-            LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
-        1000;
+                LatLng(selectedPlac.latitude, selectedPlac.longitude),
+                LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
+            1000 +
+        25;
     num rate = 0;
     final placeRate = formtype == Cartype
         ? (distance * 1000.05).toStringAsFixed(2)
@@ -93,7 +94,12 @@ class Calculate {
     String duration = '0';
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      duration = data['rows'][0]['elements'][0]['duration']['text'];
+      if (response.body != null) {
+        print(data);
+        duration = data['rows'][0]['elements'][0]['duration']['text'];
+      } else {
+        duration = "0";
+      }
     }
     return {
       'distance': distance.toStringAsFixed(2),

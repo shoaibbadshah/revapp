@@ -68,26 +68,15 @@ class _BookingViewState extends State<BookingView> {
                           _userService.currentUser!.id,
                         ),
                         initialData: [],
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          height: 360,
-                          child: AmbulanceList(),
-                        ),
+                        child: AmbulanceList(),
                       )
                     : widget.bookingtype == DeliveryService
                         ? StreamProvider<List<DeliveryServicesModel>>.value(
                             value: firestoreApi.streamdeliveryservices(
-                                _userService.currentUser!.id),
-                            initialData: [],
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 340,
-                                  child: DeliveryServicesList(),
-                                ),
-                                verticalSpaceMedium
-                              ],
+                              _userService.currentUser!.id,
                             ),
+                            initialData: [],
+                            child: DeliveryServicesList(),
                           )
                         : widget.bookingtype == BoatRidetype
                             ? StreamProvider<List<BoatModel>>.value(
@@ -101,14 +90,8 @@ class _BookingViewState extends State<BookingView> {
                                     value: firestoreApi.streamdelivery(
                                         _userService.currentUser!.id),
                                     initialData: [],
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 300,
-                                          child: DeliveryList(),
-                                        ),
-                                        verticalSpaceMedium
-                                      ],
+                                    child: Container(
+                                      child: DeliveryList(),
                                     ),
                                   )
                                 : Card(

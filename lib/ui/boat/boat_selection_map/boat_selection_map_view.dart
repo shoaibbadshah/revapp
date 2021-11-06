@@ -1,11 +1,16 @@
+import 'package:avenride/app/app.locator.dart';
+import 'package:avenride/app/app.router.dart';
+import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/ui/boat/boat_selection_map/boat_selection_map_viewmodel.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
 import 'package:avenride/ui/shared/constants.dart';
+import 'package:avenride/ui/shared/styles.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 
@@ -32,7 +37,9 @@ class BoatSelectionMapView extends StatelessWidget {
             store.carride['dropLocation'], '100');
         double storedprice = double.parse(store.carride['price']);
         model.setInitialPrice(storedprice);
-        model.submitBtnText = 'AV Boat 75 (total: ${storedprice + 100})';
+        model.submitBtnText = store.rideType == BoatRidetype
+            ? 'AV Boat 75 (total: ${storedprice + 100})'
+            : 'AV Cargo Eko 75 (total: ${storedprice + 100})';
       },
       builder: (context, model, child) => Scaffold(
         bottomSheet: Container(
@@ -178,9 +185,14 @@ class BoatSelectionMapView extends StatelessWidget {
                             child: ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: boatTypes.length,
+                              itemCount: model.store.bookingType == BoatRidetype
+                                  ? boatTypes.length
+                                  : cargoboatTypes.length,
                               itemBuilder: (context, index) {
-                                NameIMG boat = boatTypes[index];
+                                NameIMG boat =
+                                    model.store.bookingType == BoatRidetype
+                                        ? boatTypes[index]
+                                        : cargoboatTypes[index];
                                 return Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: Card(
@@ -243,12 +255,12 @@ class BoatSelectionMapView extends StatelessWidget {
                                                         ),
                                                       ],
                                                     ),
-                                                    Text(
-                                                      'Increased Demand',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
+                                                    // Text(
+                                                    //   'Increased Demand',
+                                                    //   style: TextStyle(
+                                                    //     fontSize: 12,
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                               ],
@@ -429,6 +441,259 @@ class _BoatTypesSelectionState extends State<BoatTypesSelection> {
           ),
         );
       },
+    );
+  }
+}
+
+class SelectPassengers extends StatefulWidget {
+  SelectPassengers({
+    Key? key,
+    required this.en,
+    required this.isCargo,
+    required this.st,
+  }) : super(key: key);
+  final LatLng en, st;
+  final bool isCargo;
+  @override
+  _SelectPassengersState createState() => _SelectPassengersState();
+}
+
+class _SelectPassengersState extends State<SelectPassengers> {
+  final navigationService = locator<NavigationService>();
+  int index = 1;
+  MyStore store = VxState.store as MyStore;
+  double price = 0;
+  String setLaguageType = '', setLaguageSize = '';
+  @override
+  void initState() {
+    price = store.carride["price"];
+    super.initState();
+  }
+
+  String btnText = 'Confirm';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: appbg,
+        title: Container(
+          height: 50,
+          child: Image.asset(
+            Assets.firebase,
+            fit: BoxFit.scaleDown,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      bottomSheet: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        height: 100,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              width: screenWidth(context) / 1.4,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      btnText == 'Complete form' ? Colors.red : Colors.amber),
+                ),
+                onPressed: () {
+                  if (widget.isCargo) {
+                    if (setLaguageSize != '' || setLaguageType != '') {
+                      store.carride['laguageType'] = setLaguageType;
+                      store.carride['laguageSize'] = setLaguageSize;
+                      print(store.carride);
+                      navigationService.replaceWith(
+                        Routes.boatConfirmPickUpView,
+                        arguments: BoatConfirmPickUpViewArguments(
+                          end: widget.en,
+                          start: widget.st,
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        btnText = 'Complete form';
+                      });
+                    }
+                  } else {
+                    store.carride['price'] = price;
+                    print(store.carride);
+                    navigationService.replaceWith(
+                      Routes.boatConfirmPickUpView,
+                      arguments: BoatConfirmPickUpViewArguments(
+                        end: widget.en,
+                        start: widget.st,
+                      ),
+                    );
+                  }
+                },
+                child: Text(btnText),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: ListView(
+        children: [
+          verticalSpaceMedium,
+          widget.isCargo
+              ? Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Laguage type:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            height: 40,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(color: Colors.grey[200]),
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              onChanged: (value) {
+                                setState(() {
+                                  setLaguageType = value;
+                                });
+                              },
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  disabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  // labelText: 'Time',
+                                  contentPadding: EdgeInsets.all(5)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          widget.isCargo
+              ? Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Laguage size:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 40,
+                                alignment: Alignment.center,
+                                decoration:
+                                    BoxDecoration(color: Colors.grey[200]),
+                                child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      setLaguageSize = value;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                      disabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                      // labelText: 'Time',
+                                      contentPadding: EdgeInsets.all(5)),
+                                ),
+                              ),
+                              Text(
+                                'Kg',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          !widget.isCargo
+              ? Card(
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add Passengers',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (index > 1) {
+                                  setState(() {
+                                    index = index - 1;
+                                    price = price - 100;
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.cancel_outlined),
+                            ),
+                            Text('$index'),
+                            IconButton(
+                              onPressed: () {
+                                if (index < 5) {
+                                  setState(() {
+                                    index = index + 1;
+                                    price = price + 100;
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.add_rounded),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Container(
+                color: Colors.amberAccent,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Total - $price',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 }
