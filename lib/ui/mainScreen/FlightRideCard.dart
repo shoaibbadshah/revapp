@@ -28,7 +28,7 @@ class FlightRideCard extends StatelessWidget {
                   Container(
                     width: screenWidth(context) / 1.3,
                     child: Text(
-                      'Your Averide Airport Request is Just One Click Away',
+                      'Your Averide Airport Request is Just One Click Away 🛩️',
                       style:
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
                     ),
@@ -64,6 +64,7 @@ class FlightRideCard extends StatelessWidget {
                     },
                     child: Container(
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
                         border: Border.all(
                           width: 2,
                           color: Colors.black,
@@ -73,22 +74,27 @@ class FlightRideCard extends StatelessWidget {
                       child: Text(
                         'MMIA Lag Int Airpt',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
                   horizontalSpaceSmall,
                   InkWell(
                     onTap: () {
-                      model.navigationService.navigateToView(CarRideView(
-                        formType: Cartype,
-                        dropLat: Abj.latitude,
-                        dropLng: Abj.longitude,
-                        isDropLatLng: true,
-                      ));
+                      model.navigationService.navigateToView(
+                        CarRideView(
+                          formType: Cartype,
+                          dropLat: Abj.latitude,
+                          dropLng: Abj.longitude,
+                          isDropLatLng: true,
+                        ),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
                         border: Border.all(
                           width: 2,
                           color: Colors.black,
@@ -98,7 +104,9 @@ class FlightRideCard extends StatelessWidget {
                       child: Text(
                         'Abj Int Airpt',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -109,15 +117,18 @@ class FlightRideCard extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      model.navigationService.navigateToView(CarRideView(
-                        formType: Cartype,
-                        dropLat: PH.latitude,
-                        dropLng: PH.longitude,
-                        isDropLatLng: true,
-                      ));
+                      model.navigationService.navigateToView(
+                        CarRideView(
+                          formType: Cartype,
+                          dropLat: PH.latitude,
+                          dropLng: PH.longitude,
+                          isDropLatLng: true,
+                        ),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
                         border: Border.all(
                           width: 2,
                           color: Colors.black,

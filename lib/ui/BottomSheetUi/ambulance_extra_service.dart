@@ -36,7 +36,7 @@ class _AmbulanceExtraServiceState extends State<AmbulanceExtraService> {
     final _userService = locator<UserService>();
 
     MyStore store = VxState.store as MyStore;
-    double storedprice = double.parse(store.carride['price']);
+    double storedprice = double.parse(store.carride['price'].toString());
     price = st + storedprice + ox + pd;
     Future<bool> _onBackPressed() {
       return Future.delayed(Duration(milliseconds: 200), () {
@@ -377,7 +377,7 @@ class _AmbulanceEmergencyState extends State<AmbulanceEmergency> {
     final _userService = locator<UserService>();
 
     MyStore store = VxState.store as MyStore;
-    double storedprice = double.parse(store.carride['price']);
+    double storedprice = double.parse(store.carride['price'].toString());
     price = storedprice;
     Future<bool> _onBackPressed() {
       return Future.delayed(Duration(milliseconds: 200), () {

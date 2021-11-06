@@ -1,4 +1,5 @@
 import 'package:avenride/api/firestore_api.dart';
+import 'package:avenride/app/router_names.dart';
 import 'package:avenride/ui/startup/delivery_ride.dart';
 import 'package:avenride/ui/startup/delivery_services.dart';
 import 'package:flutter/material.dart';
@@ -19,29 +20,86 @@ import 'package:stacked/stacked.dart';
 // ignore: must_be_immutable
 class BookingView extends StatefulWidget {
   bool enableAppBar = false;
-  BookingView({Key? key, required this.enableAppBar}) : super(key: key);
+  final String bookingtype;
+  BookingView({Key? key, required this.enableAppBar, required this.bookingtype})
+      : super(key: key);
   @override
   _BookingViewState createState() => _BookingViewState();
 }
 
 class _BookingViewState extends State<BookingView> {
   ScrollController controller = new ScrollController();
+
+  final _userService = locator<UserService>();
+  final firestoreApi = locator<FirestoreApi>();
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<BookingViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
-          appBar: AppBar(
-            backgroundColor: appbg,
-            title: Container(
-              height: 50,
-              child: Image.asset(
-                Assets.firebase,
-                fit: BoxFit.scaleDown,
-              ),
+        appBar: AppBar(
+          backgroundColor: appbg,
+          title: Container(
+            height: 50,
+            child: Image.asset(
+              Assets.firebase,
+              fit: BoxFit.scaleDown,
             ),
-            centerTitle: true,
           ),
-          body: BookingSubScreen()),
+          centerTitle: true,
+        ),
+        body: widget.bookingtype == Cartype
+            ? StreamProvider<List<CarModel>>.value(
+                value: firestoreApi.streamcar(_userService.currentUser!.id),
+                initialData: [],
+                child: CarList(),
+              )
+            : widget.bookingtype == Taxi
+                ? StreamProvider<List<TaxiModel>>.value(
+                    value:
+                        firestoreApi.streamtaxi(_userService.currentUser!.id),
+                    initialData: [],
+                    builder: (context, child) {
+                      return TaxiList();
+                    },
+                  )
+                : widget.bookingtype == Ambulance
+                    ? StreamProvider<List<AmbulanceModel>>.value(
+                        value: firestoreApi.streamambulance(
+                          _userService.currentUser!.id,
+                        ),
+                        initialData: [],
+                        child: AmbulanceList(),
+                      )
+                    : widget.bookingtype == DeliveryService
+                        ? StreamProvider<List<DeliveryServicesModel>>.value(
+                            value: firestoreApi.streamdeliveryservices(
+                              _userService.currentUser!.id,
+                            ),
+                            initialData: [],
+                            child: DeliveryServicesList(),
+                          )
+                        : widget.bookingtype == BoatRidetype
+                            ? StreamProvider<List<BoatModel>>.value(
+                                value: firestoreApi
+                                    .streamboat(_userService.currentUser!.id),
+                                initialData: [],
+                                child: BoatList(),
+                              )
+                            : widget.bookingtype == WaterCargo
+                                ? StreamProvider<List<DeliveryModel>>.value(
+                                    value: firestoreApi.streamdelivery(
+                                        _userService.currentUser!.id),
+                                    initialData: [],
+                                    child: Container(
+                                      child: DeliveryList(),
+                                    ),
+                                  )
+                                : Card(
+                                    child: ListTile(
+                                      title: Text('item'),
+                                    ),
+                                  ),
+      ),
       viewModelBuilder: () => BookingViewModel(),
     );
   }

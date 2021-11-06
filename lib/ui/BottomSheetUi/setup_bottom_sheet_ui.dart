@@ -107,7 +107,7 @@ class _FloatingBoxBottomSheetState extends State<FloatingBoxBottomSheet> {
   @override
   Widget build(BuildContext context) {
     MyStore store = VxState.store as MyStore;
-    double storedprice = double.parse(store.carride['price']);
+    double storedprice = double.parse(store.carride['price'].toString());
     price = storedprice + sprice;
 
     return Container(

@@ -1,3 +1,4 @@
+import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/ui/car/confirmpickup/confirmpickup_viewmodel.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
@@ -9,9 +10,13 @@ import 'package:stacked/stacked.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ConfirmPickUpView extends StatelessWidget {
-  ConfirmPickUpView({Key? key, required this.start, required this.end})
-      : super(key: key);
-
+  ConfirmPickUpView({
+    Key? key,
+    required this.bookingtype,
+    required this.start,
+    required this.end,
+  }) : super(key: key);
+  final String bookingtype;
   final LatLng start, end;
 
   void _onTap(GlobalKey key) {
@@ -25,6 +30,7 @@ class ConfirmPickUpView extends StatelessWidget {
     final key1 = GlobalKey<State<Tooltip>>();
     return ViewModelBuilder<ConfirmPickUpViewModel>.reactive(
       onModelReady: (model) {
+        model.bookingType = GetBookinType().perform();
         MyStore store = VxState.store as MyStore;
         model.rideType = store.rideType;
         model.paymentMethod = store.paymentMethod;
@@ -89,16 +95,23 @@ class ConfirmPickUpView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    width: screenWidth(context) / 1.4,
+                    width: screenWidth(context) / 1.5,
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.green),
                       ),
                       onPressed: () {
-                        model.onConfirmOrder(context, start, end);
+                        if (model.buttonPressed) {
+                          model.onConfirmOrder(context, start, end);
+                        }
                       },
-                      child: Text('Confirm your Order'),
+                      child: model.buttonPressed
+                          ? Text('Confirm your Order')
+                          : Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: LoadingScrren(),
+                            ),
                     ),
                   ),
                   InkWell(
@@ -303,7 +316,9 @@ class ConfirmPickUpView extends StatelessWidget {
                                         children: [
                                           verticalSpaceMedium,
                                           Icon(
-                                            Icons.local_taxi,
+                                            model.bookingType == DeliveryService
+                                                ? Icons.pedal_bike_sharp
+                                                : Icons.local_taxi,
                                           ),
                                         ],
                                       ),

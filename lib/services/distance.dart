@@ -49,11 +49,8 @@ class Calculate {
       Uri.parse(
           'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${selectedPlac.geometry!.location.lat},${selectedPlac.geometry!.location.lng}&destinations=${dropoffplac.geometry!.location.lat}%2C${dropoffplac.geometry!.location.lng}&key=AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw'),
     );
-    print('############ $response');
-    print(jsonDecode(response.body));
+
     final data = jsonDecode(response.body);
-    print(data['rows'][0]['elements'][0]['distance']['text']);
-    print(data['rows'][0]['elements'][0]['duration']['text']);
     return {
       'distance': distance.toStringAsFixed(2),
       'duration': data['rows'][0]['elements'][0]['duration']['text'],
@@ -72,9 +69,10 @@ class Calculate {
     LatLng dropoffplac = LatLng(dropoffplac1, dropoffplac2);
     Geodesy geodesy = Geodesy();
     num distance = geodesy.distanceBetweenTwoGeoPoints(
-            LatLng(selectedPlac.latitude, selectedPlac.longitude),
-            LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
-        1000;
+                LatLng(selectedPlac.latitude, selectedPlac.longitude),
+                LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
+            1000 +
+        25;
     num rate = 0;
     final placeRate = formtype == Cartype
         ? (distance * 1000.05).toStringAsFixed(2)
@@ -93,15 +91,19 @@ class Calculate {
       Uri.parse(
           'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${selectedPlac.latitude},${selectedPlac.longitude}&destinations=${dropoffplac.latitude}%2C${dropoffplac.longitude}&key=AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw'),
     );
-    print('############ $response');
-    print(jsonDecode(response.body));
-    final data = jsonDecode(response.body);
-    print(data);
-    print(data['rows'][0]['elements'][0]['distance']['text']);
-    print(data['rows'][0]['elements'][0]['duration']['text']);
+    String duration = '0';
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (response.body != null) {
+        print(data);
+        duration = data['rows'][0]['elements'][0]['duration']['text'];
+      } else {
+        duration = "0";
+      }
+    }
     return {
       'distance': distance.toStringAsFixed(2),
-      'duration': data['rows'][0]['elements'][0]['duration']['text'],
+      'duration': duration,
       'placeRate': placeRate,
       'rate': rate,
     };
@@ -114,7 +116,7 @@ class Calculate {
           .then((Position position) async {
         _currentPosition = position;
       }).catchError((e) {
-        print(e);
+        throw Exception(e);
       });
     }
   }
@@ -130,18 +132,16 @@ class Calculate {
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
-        print(error);
+        throw Exception(error);
       }
       if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
         error = 'permission denied- please enable it from app settings';
-        print(error);
+        throw Exception(error);
       }
     }
-    print('yeah we reached');
     var addresses = await placemarkFromCoordinates(
         myLocation.latitude, myLocation.longitude);
     var first = addresses.first;
-    print(first);
     return first;
   }
 }

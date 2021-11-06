@@ -17,6 +17,7 @@ import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:http/http.dart' as http;
 
 class ConfirmPickUpViewModel extends BaseViewModel {
   final log = getLogger('CarSelectionMapViewModel');
@@ -26,8 +27,8 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   final _userService = locator<UserService>();
   MyStore store = VxState.store as MyStore;
   int selectedIndex = 0;
-  bool isbusy = false;
-  String paymentMethod = 'Cash';
+  bool isbusy = false, buttonPressed = true;
+  String paymentMethod = 'Cash', bookingType = '';
   double price = 0.0;
   String fp = '';
   Position? currentPosition;
@@ -59,7 +60,7 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   }
 
   void setTiemDate() async {
-    var sheetResponse = await _bottomSheetService.showCustomSheet(
+    await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.floating,
       enableDrag: false,
       barrierDismissible: true,
@@ -72,9 +73,6 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   void setSrcDest(String src, String dest, String distanceTime) {
     source = src;
     destination = dest;
-    log.v("VALUE IS $distanceTime");
-    final val = distanceTime.split(" ");
-    log.v("VALUE IS $val");
     time = double.parse(distanceTime);
     setInitialData();
   }
@@ -92,7 +90,6 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   void navigateToPayment() {
     navigationService.navigateToView(PaymentView(
       updatePreferences: () {
-        log.v('message ${store.paymentMethod} and ${store.rideType}');
         rideType = store.rideType;
         paymentMethod = store.paymentMethod;
         notifyListeners();
@@ -116,9 +113,8 @@ class ConfirmPickUpViewModel extends BaseViewModel {
             speed: position.speed,
             speedAccuracy: position.speedAccuracy);
       }).catchError((e) {
-        print(e);
+        throw Exception(e);
       });
-      log.v('CURRENT POS: $currentPosition');
       return currentPosition;
     }
   }
@@ -134,13 +130,14 @@ class ConfirmPickUpViewModel extends BaseViewModel {
       useCurrentLocation: pickup ? true : false,
       selectInitialPosition: true,
       onPlacePicked: (result) {
-        if (pickup) {
-          pickUpAddess = result.formattedAddress!;
-        }
-        if (!pickup) {
-          dropOffAddress = result.formattedAddress!;
-        }
-        notifyListeners();
+        // if (pickup) {
+        //   pickUpAddess = result.formattedAddress!;
+        // }
+        // if (!pickup) {
+        //   dropOffAddress = result.formattedAddress!;
+        // }
+        // notifyListeners();
+        navigationService.back();
       },
     ));
     pickup ? isbusy = false : isbusy1 = false;
@@ -148,22 +145,128 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   }
 
   void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
-    await _firestoreApi
-        .createCarRide(
-      carride: store.carride,
-      user: _userService.currentUser!,
-    )
-        .then((value) {
-      log.v(value);
-      if (value) {
-        navigationService.replaceWith(
-          Routes.searchDriverView,
-          arguments: SearchDriverViewArguments(start: st, end: en),
-        );
-        final snackBar = SnackBar(
-            content: Text('Booking is successful view in rides section!'));
-        return ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-    });
+    buttonPressed = false;
+    SetBookinType(bookingtype: "");
+    notifyListeners();
+    if (bookingType == Taxi) {
+      await _firestoreApi
+          .createTaxiRide(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        log.v(value);
+        if (value != '') {
+          final response = await http.get(Uri.parse(
+              'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'TaxiRide',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+              content:
+                  Text('Booking is successful view in taxi rides section!'));
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else if (bookingType == Cartype) {
+      await _firestoreApi
+          .createCarRide(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        if (value != '') {
+          final response = await http.get(Uri.parse(
+              'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'CarRide',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+              content:
+                  Text('Booking is successful view in car rides section!'));
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else if (bookingType == DeliveryService) {
+      await _firestoreApi
+          .createDeliveryServices(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        if (value != '') {
+          final response = await http.get(
+            Uri.parse(
+                'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'),
+          );
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'DeliveryServices',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+            content: Text(
+                'Booking is successful view in delivery booking rides section!'),
+          );
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else if (bookingType == Ambulance) {
+      await _firestoreApi
+          .createAmbulance(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        if (value != '') {
+          final response = await http.get(
+            Uri.parse(
+                'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'),
+          );
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'Ambulance',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+            content: Text(
+                'Booking is successful view in ambulance booking rides section!'),
+          );
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    }
   }
 }

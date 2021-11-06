@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
 import '../ui/address_selection/address_selection_view.dart';
 import '../ui/avenfood/avenfood_view.dart';
@@ -19,10 +20,10 @@ import '../ui/boat/boatsearchingdriver/boat_seacrhdriver_view.dart';
 import '../ui/booking/booking_view.dart';
 import '../ui/car/car_ride/car_ride_view.dart';
 import '../ui/car/confirmpickup/confirmpickup_view.dart';
+import '../ui/car/searchingdriver/seacrhdriver_view.dart';
 import '../ui/create_account/create_account_view.dart';
 import '../ui/login/login_view.dart';
 import '../ui/mainScreen/mainScreenView.dart';
-import '../ui/searchingdriver/seacrhdriver_view.dart';
 import '../ui/second/second_view.dart';
 import '../ui/startup/startup_view.dart';
 
@@ -163,6 +164,7 @@ class StackedRouter extends RouterBase {
       return CupertinoPageRoute<dynamic>(
         builder: (context) => ConfirmPickUpView(
           key: args.key,
+          bookingtype: args.bookingtype,
           start: args.start,
           end: args.end,
         ),
@@ -175,6 +177,7 @@ class StackedRouter extends RouterBase {
         builder: (context) => BookingView(
           key: args.key,
           enableAppBar: args.enableAppBar,
+          bookingtype: args.bookingtype,
         ),
         settings: data,
       );
@@ -186,6 +189,11 @@ class StackedRouter extends RouterBase {
           key: args.key,
           start: args.start,
           end: args.end,
+          rideId: args.rideId,
+          collectionType: args.collectionType,
+          startText: args.startText,
+          endText: args.endText,
+          time: args.time,
         ),
         settings: data,
       );
@@ -208,6 +216,11 @@ class StackedRouter extends RouterBase {
           key: args.key,
           start: args.start,
           end: args.end,
+          rideId: args.rideId,
+          collectionType: args.collectionType,
+          startText: args.startText,
+          endText: args.endText,
+          time: args.time,
         ),
         settings: data,
       );
@@ -268,17 +281,23 @@ class BoatRideViewArguments {
 /// ConfirmPickUpView arguments holder class
 class ConfirmPickUpViewArguments {
   final Key? key;
+  final String bookingtype;
   final LatLng start;
   final LatLng end;
   ConfirmPickUpViewArguments(
-      {this.key, required this.start, required this.end});
+      {this.key,
+      required this.bookingtype,
+      required this.start,
+      required this.end});
 }
 
 /// BookingView arguments holder class
 class BookingViewArguments {
   final Key? key;
   final bool enableAppBar;
-  BookingViewArguments({this.key, required this.enableAppBar});
+  final String bookingtype;
+  BookingViewArguments(
+      {this.key, required this.enableAppBar, required this.bookingtype});
 }
 
 /// SearchDriverView arguments holder class
@@ -286,7 +305,20 @@ class SearchDriverViewArguments {
   final Key? key;
   final LatLng start;
   final LatLng end;
-  SearchDriverViewArguments({this.key, required this.start, required this.end});
+  final String rideId;
+  final String collectionType;
+  final String startText;
+  final String endText;
+  final String time;
+  SearchDriverViewArguments(
+      {this.key,
+      required this.start,
+      required this.end,
+      required this.rideId,
+      required this.collectionType,
+      required this.startText,
+      required this.endText,
+      required this.time});
 }
 
 /// BoatConfirmPickUpView arguments holder class
@@ -303,6 +335,18 @@ class BoatSearchDriverViewArguments {
   final Key? key;
   final LatLng start;
   final LatLng end;
+  final String rideId;
+  final String collectionType;
+  final String startText;
+  final String endText;
+  final String time;
   BoatSearchDriverViewArguments(
-      {this.key, required this.start, required this.end});
+      {this.key,
+      required this.start,
+      required this.end,
+      required this.rideId,
+      required this.collectionType,
+      required this.startText,
+      required this.endText,
+      required this.time});
 }

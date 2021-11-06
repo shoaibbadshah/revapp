@@ -37,7 +37,11 @@ class CarBookingViewModel extends BaseViewModel {
       stop1PlaceId = '',
       stop2PlaceId = '';
   Position? currentPosition;
-  String placeRates = '', placeDistances = '', duration = '', rate = '';
+  String placeRates = '',
+      placeDistances = '',
+      duration = '',
+      rate = '',
+      bookingType = '';
   final log = getLogger('CarBookingViewModel');
   late LatLng loc1, loc2, stop1loc3, stop2loc4;
   List<PlacesAutoCompleteResult> _autoCompleteResults = [];
@@ -102,6 +106,41 @@ class CarBookingViewModel extends BaseViewModel {
     }
   }
 
+  void useCurrentLoc() async {
+    setBusy(true);
+    _placesService.initialize(
+      apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
+    );
+    await getCurrentLocation();
+    var googleGeocoding = GoogleGeocoding(
+      dotenv.env['GOOGLE_MAPS_API_KEY']!,
+    );
+    var risult = await googleGeocoding.geocoding.getReverse(
+      LatLon(
+        currentPosition!.latitude,
+        currentPosition!.longitude,
+      ),
+    );
+    if (risult != null) {
+      GeocodingResult re = risult.results![0];
+      if (currentFocusNode.hasFocus) {
+        currentPlaceId = re.placeId!;
+        currentText.text = re.formattedAddress!;
+      } else if (destinationFocusNode.hasFocus) {
+        destinationPlaceId = re.placeId!;
+        destinationText.text = re.formattedAddress!;
+      } else if (stop1FocusNode.hasFocus) {
+        stop1PlaceId = re.placeId!;
+        stop1Text.text = re.formattedAddress!;
+      } else if (stop2FocusNode.hasFocus) {
+        stop2PlaceId = re.placeId!;
+        stop2Text.text = re.formattedAddress!;
+      }
+      notifyListeners();
+    }
+    setBusy(false);
+  }
+
   void setCurrentLoc() async {
     setBusy(true);
     _placesService.initialize(
@@ -123,6 +162,7 @@ class CarBookingViewModel extends BaseViewModel {
       currentText.text = re.formattedAddress!;
       notifyListeners();
     }
+    setBusy(true);
     destinationText.addListener(() {
       if (destinationFocusNode.hasFocus) {
         _getAutoCompleteResults();
@@ -143,10 +183,23 @@ class CarBookingViewModel extends BaseViewModel {
         _getAutoCompleteResults();
       }
     });
-    currentFocusNode.addListener(() {});
-    destinationFocusNode.addListener(() {});
-    stop1FocusNode.addListener(() {});
-    stop2FocusNode.addListener(() {});
+    currentFocusNode.addListener(() {
+      autoCompleteResults.clear();
+      notifyListeners();
+    });
+    destinationFocusNode.addListener(() {
+      autoCompleteResults.clear();
+      notifyListeners();
+    });
+    stop1FocusNode.addListener(() {
+      autoCompleteResults.clear();
+      notifyListeners();
+    });
+    stop2FocusNode.addListener(() {
+      autoCompleteResults.clear();
+      notifyListeners();
+    });
+    destinationFocusNode.requestFocus();
     setBusy(false);
   }
 
@@ -165,7 +218,7 @@ class CarBookingViewModel extends BaseViewModel {
             speed: position.speed,
             speedAccuracy: position.speedAccuracy);
       }).catchError((e) {
-        print(e);
+        throw Exception(e);
       });
       return currentPosition;
     }
@@ -207,20 +260,24 @@ class CarBookingViewModel extends BaseViewModel {
     if (currentFocusNode.hasFocus) {
       currentPlaceId = placeId;
       currentText.text = address;
+      currentFocusNode.nextFocus();
     }
     if (stop1FocusNode.hasFocus) {
       stop1PlaceId = placeId;
       stop1Text.text = address;
+      stop1FocusNode.nextFocus();
     }
     if (stop2FocusNode.hasFocus) {
       stop2PlaceId = placeId;
       stop2Text.text = address;
+      stop2FocusNode.nextFocus();
     }
     stop1FocusNode.unfocus();
     stop2FocusNode.unfocus();
     destinationFocusNode.unfocus();
     currentFocusNode.unfocus();
     autoCompleteResults.clear();
+
     getCoordinates();
     notifyListeners();
   }
@@ -241,6 +298,7 @@ class CarBookingViewModel extends BaseViewModel {
       });
       await saveData();
       _navigationService.navigateToView(CarSelectionMapView(
+        bookingtype: bookingType,
         end: loc2,
         start: loc1,
       ));
@@ -262,6 +320,7 @@ class CarBookingViewModel extends BaseViewModel {
       });
       await saveData();
       _navigationService.navigateToView(CarSelectionMapView(
+        bookingtype: bookingType,
         end: loc2,
         start: loc1,
       ));
@@ -272,9 +331,9 @@ class CarBookingViewModel extends BaseViewModel {
       await _placesService.getPlaceDetails(destinationPlaceId).then((value) {
         loc2 = LatLng(value.lat!, value.lng!);
       });
-      log.v('loc2 is $loc2');
       await saveData();
       _navigationService.navigateToView(CarSelectionMapView(
+        bookingtype: bookingType,
         end: loc2,
         start: loc1,
       ));
@@ -291,6 +350,7 @@ class CarBookingViewModel extends BaseViewModel {
     stop1FocusNode.dispose();
     stop2Text.dispose();
     stop2FocusNode.dispose();
+    SetBookinType(bookingtype: '');
   }
 
   Future<void> saveData() async {
@@ -330,7 +390,7 @@ class CarBookingViewModel extends BaseViewModel {
               stop1loc3.longitude,
             ],
             'dropoffplace': [loc2.latitude, loc2.longitude],
-            'rideType': Cartype,
+            'rideType': bookingType,
             'pushToken': currentUser.pushToken,
           }
         : stop2Text.text != ''
@@ -362,7 +422,7 @@ class CarBookingViewModel extends BaseViewModel {
                   loc2.latitude,
                   loc2.longitude,
                 ],
-                'rideType': Cartype,
+                'rideType': bookingType,
                 'pushToken': currentUser.pushToken,
               }
             : {
@@ -384,7 +444,7 @@ class CarBookingViewModel extends BaseViewModel {
                   loc2.latitude,
                   loc2.longitude,
                 ],
-                'rideType': Cartype,
+                'rideType': bookingType,
                 'pushToken': currentUser.pushToken,
               };
     Increment(result);
@@ -422,7 +482,6 @@ class CarBookingViewModel extends BaseViewModel {
     final place = _placesService.getAutoComplete(text);
     await place.then((value) {
       PlacesAutoCompleteResult placesAutoCompleteResult = value[0];
-      log.v(placesAutoCompleteResult.placeId);
       destinationPlaceId = placesAutoCompleteResult.placeId!;
       destinationText.text = placesAutoCompleteResult.mainText!;
     });
@@ -433,6 +492,7 @@ class CarBookingViewModel extends BaseViewModel {
     });
     await saveData();
     _navigationService.navigateToView(CarSelectionMapView(
+      bookingtype: bookingType,
       end: loc2,
       start: loc1,
     ));

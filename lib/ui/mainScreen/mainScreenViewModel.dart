@@ -74,15 +74,6 @@ class MainScreenViewModel extends BaseViewModel {
     );
   }
 
-  navigateToBooking() {
-    _navigationService.navigateWithTransition(
-      BookingView(
-        enableAppBar: true,
-      ),
-      transition: 'rightToLeft',
-    );
-  }
-
   navigateToDelivery() async {
     _navigationService.navigateWithTransition(
       BoatRideView(

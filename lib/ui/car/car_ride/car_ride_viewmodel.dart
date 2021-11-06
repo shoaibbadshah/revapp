@@ -89,7 +89,7 @@ class CarRideViewModel extends BaseViewModel {
             speed: position.speed,
             speedAccuracy: position.speedAccuracy);
       }).catchError((e) {
-        print(e);
+        throw Exception(e);
       });
       log.v('CURRENT POS: $currentPosition');
       return currentPosition;
@@ -180,7 +180,6 @@ class CarRideViewModel extends BaseViewModel {
     var risult = await googleGeocoding.geocoding
         .getReverse(LatLon(data.latitude, data.longitude));
     GeocodingResult re = risult!.results![0];
-    print(re.formattedAddress);
     _dropoffplace =
         LatLng(re.geometry!.location!.lat!, re.geometry!.location!.lng!);
     dropOffAddress = re.formattedAddress!;
@@ -448,7 +447,7 @@ class CarRideViewModel extends BaseViewModel {
               user: _userService.currentUser!,
             )
                 .then((value) {
-              if (value) {
+              if (value != '') {
                 navigationService.back();
                 return showBottomFlash(context: context);
               }
@@ -491,7 +490,7 @@ class CarRideViewModel extends BaseViewModel {
               user: _userService.currentUser!,
             )
                 .then((value) {
-              if (value) {
+              if (value != '') {
                 navigationService.back();
                 return showBottomFlash(context: context);
               }
@@ -524,7 +523,7 @@ class CarRideViewModel extends BaseViewModel {
             user: _userService.currentUser!,
           )
               .then((value) {
-            if (value) {
+            if (value != '') {
               navigationService.back();
               return showBottomFlash(context: context);
             }
@@ -571,9 +570,8 @@ class CarRideViewModel extends BaseViewModel {
                 user: _userService.currentUser!,
               )
                   .then((value) {
-                if (value) {
+                if (value != '') {
                   navigationService.back();
-                  return showBottomFlash(context: context);
                 }
               });
             }

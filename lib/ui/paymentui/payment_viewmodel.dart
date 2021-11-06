@@ -2,7 +2,6 @@ import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/ui/addbank/add_bank_view.dart';
-import 'package:avenride/ui/paypal/paypalpayment.dart';
 import 'package:avenride/ui/transfertodriver/transferto_driver_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -21,7 +20,6 @@ class PaymentViewModel extends BaseViewModel {
   List paymentMethods = [
     "Cash",
     "Paypal",
-    "Transfer to Driver Account",
     "Add Your Bank Account",
   ];
 
@@ -57,9 +55,7 @@ class PaymentViewModel extends BaseViewModel {
     if (choosenPaymentMethod == "Add Your Bank Account") {
       navigateTo(0);
     }
-    if (choosenPaymentMethod == 'Transfer to Driver Account') {
-      navigateTo(0);
-    }
+
     if (choosenPaymentMethod == "Paypal") {
       navigateTo(2);
     }

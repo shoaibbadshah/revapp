@@ -10,7 +10,7 @@ import 'package:avenride/ui/boat/boatsearchingdriver/boat_seacrhdriver_view.dart
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/car/confirmpickup/confirmpickup_view.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
-import 'package:avenride/ui/searchingdriver/seacrhdriver_view.dart';
+import 'package:avenride/ui/car/searchingdriver/seacrhdriver_view.dart';
 import 'package:places_service/places_service.dart';
 import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/services/user_service.dart';

@@ -54,7 +54,6 @@ class _BookingMapState extends State<BookingMap> {
       locationData = location.onLocationChanged.listen((LocationData cLoc) {
         if (LatLng(currentLocation.latitude!, currentLocation.longitude!) !=
             LatLng(cLoc.latitude!, cLoc.longitude!)) {
-          print('LOCATION IS UPDATED');
           setState(() {
             currentLocation = cLoc;
           });
@@ -95,7 +94,6 @@ class _BookingMapState extends State<BookingMap> {
         ),
       );
     } else {
-      print('object');
       controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
     }
     if (mounted) {

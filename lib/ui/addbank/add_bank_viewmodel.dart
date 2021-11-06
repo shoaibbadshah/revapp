@@ -67,7 +67,9 @@ class AddBankViewModel extends BaseViewModel {
         bankCode: bankCode,
         accountNo: accountNoController.text,
       );
-      final snackBar = SnackBar(content: Text(data['message']));
+      final snackBar = SnackBar(
+          content: Text(
+              "Account number verified, please enter the verification code!"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       if (data['status']) {
         isNameVisible = true;

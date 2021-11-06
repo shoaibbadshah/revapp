@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:avenride/app/app.locator.dart';
+import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/ui/pointmap/MyMap.dart';
-import 'package:avenride/ui/startup/startup_viewmodel.dart';
+import 'package:avenride/ui/shared/ui_helpers.dart';
+import 'package:avenride/ui/startup/back_map_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:stacked/stacked.dart';
@@ -33,50 +36,61 @@ class _BackMapState extends State<BackMap> {
   void initState() {
     currentLocation = LatLng(calculate.currentPosition.latitude,
         calculate.currentPosition.longitude);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     initialLocation = CameraPosition(
       zoom: 10,
       bearing: CAMERA_BEARING,
       tilt: CAMERA_TILT,
       target: currentLocation,
     );
-    return ViewModelBuilder<StartUpViewModel>.reactive(
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<BackMapViewModel>.reactive(
       onModelReady: (model) {
+        final type = GetBookinType().perform();
+        print(type);
         location = new Location();
         locationData =
-            location.onLocationChanged.listen((LocationData cLoc) async {
-          if (currentLocation != LatLng(cLoc.latitude!, cLoc.longitude!)) {
-            setState(() {
-              currentLocation = LatLng(cLoc.latitude!, cLoc.longitude!);
-            });
+            location.onLocationChanged.listen((LocationData? cLoc) async {
+          if (cLoc != null) {
             await model.setMarkers(currentLocation);
-            model.updatePinOnMap(
-              location: currentLocation,
-              completer: _controller,
-            );
-            widget.onLocationChange();
+            final distance = model.calculateDistance(currentLocation.latitude,
+                currentLocation.longitude, cLoc.latitude, cLoc.longitude);
+            if (distance > 1.0) {
+              setState(() {
+                currentLocation = LatLng(cLoc.latitude!, cLoc.longitude!);
+              });
+              model.updatePinOnMap(
+                location: currentLocation,
+                completer: _controller,
+              );
+              widget.onLocationChange();
+            }
           }
         });
+        model.setMarkers(currentLocation);
       },
       onDispose: (model) {
         locationData.cancel();
       },
-      builder: (context, model, child) => GoogleMap(
-        myLocationEnabled: true,
-        compassEnabled: true,
-        tiltGesturesEnabled: false,
-        mapType: MapType.normal,
-        markers: model.markers,
-        initialCameraPosition: initialLocation,
-        onMapCreated: (controller) {
-          model.onMapCreated(controller, _controller);
-        },
-      ),
-      viewModelBuilder: () => StartUpViewModel(),
+      builder: (context, model, child) {
+        return model.maploading
+            ? LoadingScrren()
+            : GoogleMap(
+                myLocationEnabled: true,
+                compassEnabled: true,
+                tiltGesturesEnabled: false,
+                mapType: MapType.normal,
+                markers: model.markers,
+                initialCameraPosition: initialLocation,
+                onMapCreated: (controller) {
+                  model.onMapCreated(controller, _controller);
+                },
+              );
+      },
+      viewModelBuilder: () => BackMapViewModel(),
     );
   }
 }

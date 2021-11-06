@@ -93,8 +93,6 @@ class _TaxiListState extends State<TaxiList> {
   MyStore store = VxState.store as MyStore;
   final _navigationService = locator<NavigationService>();
   bool isBusy = false;
-  final _firestoreApi = locator<FirestoreApi>();
-
   startPayment({required String price, required String id}) async {
     Map headers = {
       "email": _userService.currentUser!.email.toString(),
@@ -135,14 +133,16 @@ class _TaxiListState extends State<TaxiList> {
         : ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 20),
             physics: AlwaysScrollableScrollPhysics(),
-            scrollDirection: Axis.horizontal,
             itemCount: taxis.length,
             itemBuilder: (context, index) {
               TaxiModel taxi = taxis[index];
               return Card(
                 elevation: 5,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 20,
+                  ),
                   child: Column(
                     children: [
                       Row(
@@ -324,18 +324,6 @@ class _TaxiListState extends State<TaxiList> {
                         height: 2.0,
                         width: screenWidth(context) / 1.6,
                         color: Colors.grey.shade300,
-                      ),
-                      verticalSpaceTiny,
-                      PaymentStatusLabel(
-                        price: taxi.price,
-                        busy: isBusy,
-                        onButtonTapped: () {
-                          setState(() {
-                            isBusy = true;
-                          });
-                          startPayment(price: taxi.price, id: taxi.id);
-                        },
-                        paymentStatus: taxi.paymentStatus,
                       ),
                       verticalSpaceTiny,
                     ],

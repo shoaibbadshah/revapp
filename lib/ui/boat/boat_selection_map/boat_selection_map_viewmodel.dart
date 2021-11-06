@@ -3,6 +3,7 @@ import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
+import 'package:avenride/ui/boat/boat_selection_map/boat_selection_map_view.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -81,9 +82,12 @@ class BoatSelectionMapViewModel extends BaseViewModel {
       'BoatType': selectedCar.name,
     });
     log.v(store.carride);
-    navigationService.replaceWith(
-      Routes.boatConfirmPickUpView,
-      arguments: BoatConfirmPickUpViewArguments(end: en, start: st),
+    navigationService.navigateToView(
+      SelectPassengers(
+        isCargo: store.bookingType == BoatRidetype ? false : true,
+        en: en,
+        st: st,
+      ),
     );
   }
 }

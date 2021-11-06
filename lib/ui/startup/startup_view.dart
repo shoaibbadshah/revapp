@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:stacked/stacked.dart';
+import 'package:multilevel_drawer/multilevel_drawer.dart';
 
 class StartUpView extends StatelessWidget {
   StartUpView({Key? key}) : super(key: key);
@@ -34,6 +37,8 @@ class StartUpView extends StatelessWidget {
         });
         FirebaseMessaging.onMessage
             .listen((RemoteMessage message) => model.messageHandler(message));
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) =>
+            model.messageOpenedApp(message, context));
       },
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: BottomNavigationBar(
@@ -43,15 +48,11 @@ class StartUpView extends StatelessWidget {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              label: 'Rides',
-              icon: Icon(model.index == 1
-                  ? Icons.local_taxi_sharp
-                  : Icons.local_taxi_outlined),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(model.index == 2
-                  ? Icons.person
-                  : Icons.person_add_alt_1_outlined),
+              icon: Icon(
+                model.index == 1
+                    ? Icons.person
+                    : Icons.person_add_alt_1_outlined,
+              ),
               label: 'My Profile',
             ),
           ],
@@ -62,11 +63,7 @@ class StartUpView extends StatelessWidget {
             model.updateBottomNav(value);
           },
         ),
-        body: model.index == 2
-            ? ProfileSub()
-            : model.index == 1
-                ? BookingSubScreen()
-                : screenfirst(model),
+        body: model.index == 1 ? ProfileSub() : screenfirst(model, context),
         key: _scaffoldKey,
         drawer: StartUpSideDraer(
           model: model,
@@ -99,7 +96,7 @@ class StartUpView extends StatelessWidget {
     );
   }
 
-  Widget screenfirst(StartUpViewModel model) {
+  Widget screenfirst(StartUpViewModel model, BuildContext context) {
     return SnappingSheet(
       snappingPositions: [
         SnappingPosition.factor(
@@ -145,7 +142,7 @@ class StartUpView extends StatelessWidget {
       sheetBelow: SnappingSheetContent(
         draggable: true,
         child: Container(
-          color: model.status ? Colors.amber : Colors.green,
+          color: Colors.amber,
           child: ListView(
             children: [
               Container(
@@ -158,7 +155,8 @@ class StartUpView extends StatelessWidget {
                     title: Text(
                       'Where to?',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -168,9 +166,6 @@ class StartUpView extends StatelessWidget {
               CarRideCard(
                 model: model,
               ),
-              // BoatRideCard(
-              //   model: model,
-              // ),
               FlightRideCard(
                 model: model,
               ),
@@ -193,31 +188,11 @@ class StartUpView extends StatelessWidget {
                   ),
                 )
               : Stack(
-                  alignment: Alignment.bottomCenter,
                   children: [
-                    BackMap(
-                      onLocationChange: () {},
-                    ),
-                    Positioned(
-                      top: 40,
-                      child: FlutterSwitch(
-                        width: 125.0,
-                        height: 45.0,
-                        valueFontSize: 20.0,
-                        value: model.status,
-                        padding: 8.0,
-                        showOnOff: true,
-                        onToggle: (val) {
-                          model.setStatus(val);
-                        },
-                        toggleBorder: Border.all(color: Colors.black),
-                        switchBorder: Border.all(color: Colors.black),
-                        activeColor: Colors.amber,
-                        activeText: 'Vehicel',
-                        activeTextColor: Colors.black,
-                        inactiveTextColor: Colors.black,
-                        inactiveText: 'Boat',
-                        inactiveColor: Colors.green,
+                    Container(
+                      height: screenHeight(context) / 1.4,
+                      child: BackMap(
+                        onLocationChange: () {},
                       ),
                     ),
                   ],
