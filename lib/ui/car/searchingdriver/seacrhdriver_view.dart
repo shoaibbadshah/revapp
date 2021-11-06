@@ -431,12 +431,6 @@ class SearchDriverView extends StatelessWidget {
                                               Duration(milliseconds: 100),
                                           child: Text(''),
                                         ),
-                                        // ElevatedButton(
-                                        //   onPressed: () {
-                                        //     model.changeStatus();
-                                        //   },
-                                        //   child: Text('data'),
-                                        // ),
                                       ],
                                     ),
                                   ),

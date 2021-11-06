@@ -3,6 +3,7 @@ import 'package:avenride/app/app.router.dart';
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/pointmap/RealTimeMap.dart';
 import 'package:avenride/ui/postride/feedback/feedback_view.dart';
+import 'package:avenride/ui/postride/finalpayment/finalpayment_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -148,7 +149,12 @@ class _CarListState extends State<CarList> {
               return InkWell(
                 onTap: () {
                   if (car.rideEnded) {
-                    _navigationService.navigateToView(FeedBackView());
+                    _navigationService.navigateToView(
+                      FinalPaymentView(
+                        totalAmount: car.price,
+                        paymenttype: car.paymentType,
+                      ),
+                    );
                   } else {
                     _navigationService.navigateTo(
                       Routes.searchDriverView,

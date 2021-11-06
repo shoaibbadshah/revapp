@@ -98,7 +98,7 @@ class DeliveryServicesModel {
   final String id;
   final GeoPoint selectedPlace;
   final GeoPoint dropoffplace;
-
+  final bool rideEnded;
   DeliveryServicesModel(
       {required this.destination,
       required this.distace,
@@ -110,6 +110,7 @@ class DeliveryServicesModel {
       required this.carType,
       required this.paymentStatus,
       required this.id,
+      required this.rideEnded,
       required this.paymentType,
       required this.startLocation,
       required this.scheduleTime,
@@ -120,6 +121,7 @@ class DeliveryServicesModel {
     Map<String, dynamic> data = jsonDecode(s);
     return DeliveryServicesModel(
       paymentType: data['PaymentType'],
+      rideEnded: data['rideEnded'] ?? false,
       carType: data['CarType'] ?? "Bike",
       destination: data['destination'],
       startLocation: data['startLocation'],
@@ -151,6 +153,7 @@ class BoatModel {
   final double pickupLong;
   final double dropoffLat;
   final String price;
+  final bool rideEnded;
   final double dropoffLong;
 
   BoatModel(
@@ -159,6 +162,7 @@ class BoatModel {
       required this.paymentStatus,
       required this.pickLocation,
       required this.scheduleTime,
+      required this.rideEnded,
       required this.pickupLat,
       required this.pickupLong,
       required this.dropoffLat,
@@ -184,6 +188,7 @@ class BoatModel {
       pickupLat: data['pickupLat'],
       pickupLong: data['pickupLong'],
       dropoffLat: data['dropoffLat'],
+      rideEnded: data['rideEnded'] ?? false,
       dropoffLong: data['dropoffLong'],
     );
   }
@@ -271,6 +276,7 @@ class DeliveryModel {
   final double pickupLong;
   final double dropoffLat;
   final double dropoffLong;
+  final bool rideEnded;
   DeliveryModel(
       {required this.paymentType,
       required this.dropLocation,
@@ -282,6 +288,7 @@ class DeliveryModel {
       required this.price,
       required this.pickupLong,
       required this.dropoffLat,
+      required this.rideEnded,
       required this.dropoffLong,
       required this.scheduleTime,
       required this.id,
@@ -299,6 +306,7 @@ class DeliveryModel {
       laguageSize: data['laguageSize'],
       pickLocation: data['pickLocation'],
       id: doc.id,
+      rideEnded: data['rideEnded'] ?? false,
       pickupLat: data['pickupLat'],
       pickupLong: data['pickupLong'],
       dropoffLat: data['dropoffLat'],
@@ -515,6 +523,7 @@ class TaxiModel {
   final GeoPoint selectedPlace;
   final GeoPoint dropoffplace;
 
+  final bool rideEnded;
   TaxiModel(
       {required this.destination,
       required this.paymentType,
@@ -525,6 +534,7 @@ class TaxiModel {
       required this.paymentStatus,
       required this.price,
       required this.startLocation,
+      required this.rideEnded,
       required this.scheduleTime,
       required this.scheduledDate});
 
@@ -540,6 +550,7 @@ class TaxiModel {
           GeoPoint(data['selectedPlace'][0], data['selectedPlace'][1]),
       startLocation: data['startLocation'],
       paymentStatus: data['paymentStatus'] ?? Pending,
+      rideEnded: data['rideEnded'] ?? false,
       scheduleTime: data['scheduleTime'],
       scheduledDate: data['scheduledDate'],
       distace: data['distace'] ?? '0',
@@ -567,7 +578,7 @@ class AmbulanceModel {
   final String paymentStatus;
   final GeoPoint selectedPlace;
   final GeoPoint dropoffplace;
-
+  final bool rideEnded;
   AmbulanceModel(
       {required this.destination,
       required this.startLocation,
@@ -583,6 +594,7 @@ class AmbulanceModel {
       required this.sa,
       required this.cas,
       required this.fse,
+      required this.rideEnded,
       required this.le,
       required this.paymentStatus,
       required this.scheduleTime,
@@ -600,6 +612,7 @@ class AmbulanceModel {
       selectedPlace:
           GeoPoint(data['selectedPlace'][0], data['selectedPlace'][1]),
       scheduleTime: data['scheduleTime'],
+      rideEnded: data['rideEnded'] ?? false,
       scheduledDate: data['scheduledDate'],
       distace: data['distace'],
       price: data['price'].toString(),

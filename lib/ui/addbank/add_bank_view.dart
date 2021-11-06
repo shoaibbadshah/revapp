@@ -87,9 +87,6 @@ class AddBankView extends StatelessWidget {
                         ),
                         validator: (value) =>
                             value!.isEmpty ? 'Enter Account number' : null,
-                        // onChanged: (val) {
-                        //   model.setAccountNo(val);
-                        // },
                         controller: model.accountNoController,
                       ),
                     ),
@@ -156,10 +153,14 @@ class AddBankView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (model.isNameVisible) {
-                          model.handleSubmit(context, true);
+                        if (model.confirmAccount == Colors.green) {
+                          if (model.isNameVisible) {
+                            model.handleSubmit(context, true);
+                          } else {
+                            model.handleSubmit(context, false);
+                          }
                         } else {
-                          model.handleSubmit(context, false);
+                          model.setConfirmState(false);
                         }
                       },
                       child: model.loading
