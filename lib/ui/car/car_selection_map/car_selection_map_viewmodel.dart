@@ -6,6 +6,7 @@ import 'package:avenride/app/router_names.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/BottomSheetUi/ambulance_extra_service.dart';
+import 'package:avenride/ui/car/car_selection_map/selectpassengers.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -78,7 +79,7 @@ class CarSelectionMapViewModel extends BaseViewModel {
     ));
   }
 
-  void onConfirmPressed(LatLng st, LatLng en) async {
+  onConfirmPressed(LatLng st, LatLng en) async {
     if (type == Ambulance) {
       await showAmbulanceoptions();
     }
@@ -102,6 +103,11 @@ class CarSelectionMapViewModel extends BaseViewModel {
         'price': price,
         'ridepreference': rideType,
       });
+    }
+    if (type == Ambulance) {
+      navigationService.navigateToView(
+        SelectAmbulancePassengers(en: en, st: st),
+      );
     }
     navigationService.replaceWith(
       Routes.confirmPickUpView,
