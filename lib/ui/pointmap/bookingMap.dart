@@ -52,13 +52,7 @@ class _BookingMapState extends State<BookingMap> {
       location = new Location();
       polylinePoints = PolylinePoints();
       locationData = location.onLocationChanged.listen((LocationData cLoc) {
-        if (LatLng(currentLocation.latitude!, currentLocation.longitude!) !=
-            LatLng(cLoc.latitude!, cLoc.longitude!)) {
-          setState(() {
-            currentLocation = cLoc;
-          });
-          updatePinOnMap();
-        }
+        updatePinOnMap();
       });
       setSourceAndDestinationIcons();
       setInitialLocation();
@@ -147,7 +141,10 @@ class _BookingMapState extends State<BookingMap> {
   }
 
   void setInitialLocation() async {
-    currentLocation = await location.getLocation();
+    currentLocation = LocationData.fromMap({
+      "latitude": widget.SOURCE_LOCATION.latitude,
+      "longitude": widget.SOURCE_LOCATION.longitude
+    });
     destinationLocation = LocationData.fromMap({
       "latitude": widget.DEST_LOCATION.latitude,
       "longitude": widget.DEST_LOCATION.longitude

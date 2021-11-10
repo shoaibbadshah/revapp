@@ -105,8 +105,21 @@ class CarSelectionMapViewModel extends BaseViewModel {
       });
     }
     if (type == Ambulance) {
-      navigationService.navigateToView(
-        SelectAmbulancePassengers(en: en, st: st),
+      return navigationService.navigateToView(
+        SelectAmbulancePassengers(
+          en: en,
+          st: st,
+          isDelivery: false,
+        ),
+      );
+    }
+    if (type == DeliveryService) {
+      return navigationService.navigateToView(
+        SelectAmbulancePassengers(
+          en: en,
+          st: st,
+          isDelivery: true,
+        ),
       );
     }
     navigationService.replaceWith(

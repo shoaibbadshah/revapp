@@ -359,8 +359,8 @@ class CarBookingViewModel extends BaseViewModel {
         .calculateDistan(
       dropoffplac1: loc2.latitude,
       dropoffplac2: loc2.longitude,
-      selectedPlac1: currentPosition!.latitude,
-      selectedPlac2: currentPosition!.longitude,
+      selectedPlac1: loc1.latitude,
+      selectedPlac2: loc1.longitude,
       formtype: Cartype,
     )
         .then((value) {
@@ -382,8 +382,8 @@ class CarBookingViewModel extends BaseViewModel {
             'paymentStatus': 'Confirmed',
             'drivers': null,
             'selectedPlace': [
-              currentPosition!.latitude,
-              currentPosition!.longitude,
+              loc1.latitude,
+              loc1.longitude,
             ],
             'stop1Place': [
               stop1loc3.latitude,
@@ -407,8 +407,8 @@ class CarBookingViewModel extends BaseViewModel {
                 'paymentStatus': 'Confirmed',
                 'drivers': null,
                 'selectedPlace': [
-                  currentPosition!.latitude,
-                  currentPosition!.longitude,
+                  loc1.latitude,
+                  loc1.longitude,
                 ],
                 'stop1Place': [
                   stop1loc3.latitude,
@@ -436,8 +436,8 @@ class CarBookingViewModel extends BaseViewModel {
                 'paymentStatus': 'Confirmed',
                 'drivers': null,
                 'selectedPlace': [
-                  currentPosition!.latitude,
-                  currentPosition!.longitude,
+                  loc1.latitude,
+                  loc1.longitude,
                 ],
                 'PaymentType': 'Cash',
                 'dropoffplace': [

@@ -14,8 +14,10 @@ class SelectAmbulancePassengers extends StatefulWidget {
     Key? key,
     required this.en,
     required this.st,
+    required this.isDelivery,
   }) : super(key: key);
   final LatLng en, st;
+  final bool isDelivery;
   @override
   _SelectAmbulancePassengersState createState() =>
       _SelectAmbulancePassengersState();
@@ -59,18 +61,38 @@ class _SelectAmbulancePassengersState extends State<SelectAmbulancePassengers> {
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      btnText == 'Complete form' ? Colors.red : Colors.amber),
+                    btnText == 'Complete form' ? Colors.red : Colors.amber,
+                  ),
                 ),
                 onPressed: () {
-                  store.carride['price'] = price;
-                  navigationService.replaceWith(
-                    Routes.confirmPickUpView,
-                    arguments: ConfirmPickUpViewArguments(
-                      end: widget.en,
-                      start: widget.st,
-                      bookingtype: GetBookinType().perform(),
-                    ),
-                  );
+                  if (widget.isDelivery) {
+                    if (setLaguageSize != '' || setLaguageType != '') {
+                      store.carride['laguageType'] = setLaguageType;
+                      store.carride['laguageSize'] = setLaguageSize;
+                      navigationService.replaceWith(
+                        Routes.confirmPickUpView,
+                        arguments: ConfirmPickUpViewArguments(
+                          end: widget.en,
+                          start: widget.st,
+                          bookingtype: GetBookinType().perform(),
+                        ),
+                      );
+                    } else {
+                      setState(() {
+                        btnText = 'Complete form';
+                      });
+                    }
+                  } else {
+                    store.carride['price'] = price;
+                    navigationService.replaceWith(
+                      Routes.confirmPickUpView,
+                      arguments: ConfirmPickUpViewArguments(
+                        end: widget.en,
+                        start: widget.st,
+                        bookingtype: GetBookinType().perform(),
+                      ),
+                    );
+                  }
                 },
                 child: Text(btnText),
               ),
@@ -81,13 +103,110 @@ class _SelectAmbulancePassengersState extends State<SelectAmbulancePassengers> {
       body: ListView(
         children: [
           verticalSpaceMedium,
-          Card(
+          widget.isDelivery
+              ? Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Laguage type:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            width: 100,
+                            height: 40,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(color: Colors.grey[200]),
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              onChanged: (value) {
+                                setState(() {
+                                  setLaguageType = value;
+                                });
+                              },
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  disabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  // labelText: 'Time',
+                                  contentPadding: EdgeInsets.all(5)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(),
+          widget.isDelivery
+              ? Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Laguage size:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: 100,
+                                height: 40,
+                                alignment: Alignment.center,
+                                decoration:
+                                    BoxDecoration(color: Colors.grey[200]),
+                                child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      setLaguageSize = value;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                      disabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                      // labelText: 'Time',
+                                      contentPadding: EdgeInsets.all(5)),
+                                ),
+                              ),
+                              Text(
+                                'Kg',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(),
+       !widget.isDelivery ?   Card(
             child: ListTile(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Add Passengers',
+                    'Add Patients',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -123,19 +242,22 @@ class _SelectAmbulancePassengersState extends State<SelectAmbulancePassengers> {
                 ],
               ),
             ),
-          ),
+          ) : SizedBox(),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Container(
-                color: Colors.amberAccent,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Total - $price',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  color: Colors.amberAccent,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Total - $price',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
         ],
       ),
