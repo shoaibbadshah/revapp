@@ -5,7 +5,9 @@ import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/user_service.dart';
+import 'package:avenride/ui/car/car_booking/DeliveryTypeSelection.dart';
 import 'package:avenride/ui/car/car_selection_map/car_selection_map_view.dart';
+import 'package:avenride/ui/car/car_selection_map/selectpassengers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -331,12 +333,21 @@ class CarBookingViewModel extends BaseViewModel {
       await _placesService.getPlaceDetails(destinationPlaceId).then((value) {
         loc2 = LatLng(value.lat!, value.lng!);
       });
+      final type = GetBookinType().perform();
+
       await saveData();
-      _navigationService.navigateToView(CarSelectionMapView(
-        bookingtype: bookingType,
-        end: loc2,
-        start: loc1,
-      ));
+      if (type == DeliveryService) {
+        return _navigationService.navigateToView(DeliveryTypeSelection(
+          en: loc2,
+          st: loc1,
+        ));
+      } else {
+        return _navigationService.navigateToView(CarSelectionMapView(
+          bookingtype: bookingType,
+          end: loc2,
+          start: loc1,
+        ));
+      }
     }
   }
 
