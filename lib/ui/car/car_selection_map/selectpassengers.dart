@@ -200,49 +200,51 @@ class _SelectAmbulancePassengersState extends State<SelectAmbulancePassengers> {
                   ),
                 )
               : SizedBox(),
-       !widget.isDelivery ?   Card(
-            child: ListTile(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Add Patients',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+          !widget.isDelivery
+              ? Card(
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add Patients',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                if (index > 1) {
+                                  setState(() {
+                                    index = index - 1;
+                                    price = price - 100;
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.cancel_outlined),
+                            ),
+                            Text('$index'),
+                            IconButton(
+                              onPressed: () {
+                                if (index < 5) {
+                                  setState(() {
+                                    index = index + 1;
+                                    price = price + 100;
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.add_rounded),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (index > 1) {
-                            setState(() {
-                              index = index - 1;
-                              price = price - 100;
-                            });
-                          }
-                        },
-                        icon: Icon(Icons.cancel_outlined),
-                      ),
-                      Text('$index'),
-                      IconButton(
-                        onPressed: () {
-                          if (index < 5) {
-                            setState(() {
-                              index = index + 1;
-                              price = price + 100;
-                            });
-                          }
-                        },
-                        icon: Icon(Icons.add_rounded),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ) : SizedBox(),
+                )
+              : SizedBox(),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(

@@ -26,7 +26,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
 
   Future<FirebaseAuthenticationResult> runAuthentication();
 
-  Future saveData() async {
+  Future saveData({String? referal}) async {
     log.i('valued:$formValueMap');
 
     try {
@@ -40,7 +40,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
     }
   }
 
-  Future<void> useGoogleAuthentication() async {
+  Future<void> useGoogleAuthentication({String? referal}) async {
     final result = await firebaseAuthenticationService.signInWithGoogle();
     await _handleAuthenticationResponse(result);
   }

@@ -23,7 +23,9 @@ class LoginView extends StatelessWidget with $LoginView {
         return Scaffold(
             body: AuthenticationLayout(
           busy: model.isBusy,
-          onMainButtonTapped: model.saveData,
+          onMainButtonTapped: () {
+            model.saveData();
+          },
           onCreateAccountTapped: model.navigateToCreateAccount,
           validationMessage: model.validationMessage,
           mainButtonTitle: 'SIGN IN',
@@ -56,7 +58,9 @@ class LoginView extends StatelessWidget with $LoginView {
             ],
           ),
           onForgotPassword: () {},
-          onSignInWithGoogle: model.useGoogleAuthentication,
+          onSignInWithGoogle: () {
+            model.useGoogleAuthentication();
+          },
           onSignInWithApple: model.useAppleAuthentication,
         ));
       },

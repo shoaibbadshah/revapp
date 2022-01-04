@@ -10,6 +10,7 @@ import 'create_account_viewmodel.dart';
   FormTextField(name: 'fullName'),
   FormTextField(name: 'email'),
   FormTextField(name: 'password'),
+  FormTextField(name: 'referalCode'),
 ])
 class CreateAccountView extends StatelessWidget with $CreateAccountView {
   CreateAccountView({Key? key}) : super(key: key);
@@ -21,7 +22,9 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
       builder: (context, model, child) => Scaffold(
           body: AuthenticationLayout(
         busy: model.isBusy,
-        onMainButtonTapped: model.saveData,
+        onMainButtonTapped: () {
+          model.saveData(referal: referalCodeController.text);
+        },
         onBackPressed: model.navigateBack,
         validationMessage: model.validationMessage,
         title: 'Create Account',
@@ -42,9 +45,15 @@ class CreateAccountView extends StatelessWidget with $CreateAccountView {
               obscureText: true,
               controller: passwordController,
             ),
+            TextField(
+              decoration: InputDecoration(labelText: 'Referal Code'),
+              controller: referalCodeController,
+            ),
           ],
         ),
-        onSignInWithGoogle: model.useGoogleAuthentication,
+        onSignInWithGoogle: () {
+          model.useGoogleAuthentication(referal: referalCodeController.text);
+        },
         showTermsText: true,
       )),
       viewModelBuilder: () => CreateAccountViewModel(),
