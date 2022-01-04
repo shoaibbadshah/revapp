@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
