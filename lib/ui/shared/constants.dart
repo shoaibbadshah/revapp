@@ -44,6 +44,9 @@ class Assets {
   static String carlogo = _imagesRoot + "carslogo.png";
   static String taxilogo = _imagesRoot + "taxi.png";
   static String deliverylogo = _imagesRoot + "delivery.png";
+  static String bike = _imagesRoot + "bike.jpg";
+  static String keke = _imagesRoot + "keke.png";
+  static String cardbg = _imagesRoot + "cardbg.png";
 
   static String boat1 = _imagesRoot + "ogaride.PNG";
   static String boat2 = _imagesRoot + "familyride.PNG";

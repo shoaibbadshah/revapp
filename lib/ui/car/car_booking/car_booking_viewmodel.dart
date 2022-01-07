@@ -207,21 +207,17 @@ class CarBookingViewModel extends BaseViewModel {
 
   getCurrentLocation() async {
     if (await Permission.location.request().isGranted) {
-      await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high)
-          .then((Position position) async {
-        currentPosition = Position(
-            longitude: position.longitude,
-            latitude: position.latitude,
-            timestamp: position.timestamp,
-            accuracy: position.accuracy,
-            altitude: position.altitude,
-            heading: position.heading,
-            speed: position.speed,
-            speedAccuracy: position.speedAccuracy);
-      }).catchError((e) {
-        throw Exception(e);
-      });
+      final data = Calculate().currentPosition;
+      currentPosition = Position(
+        longitude: data.longitude,
+        latitude: data.latitude,
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0,
+        timestamp: DateTime.now(),
+      );
       return currentPosition;
     }
   }

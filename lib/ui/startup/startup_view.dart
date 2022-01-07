@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:avenride/ui/booking/booking_view.dart';
 import 'package:avenride/ui/mainScreen/FlightRideCard.dart';
 import 'package:avenride/ui/mainScreen/mainScreenView.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
@@ -8,7 +5,6 @@ import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:avenride/ui/startup/back_map.dart';
 import 'package:avenride/ui/startup/side_drawer.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:avenride/ui/shared/styles.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
@@ -16,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import 'package:stacked/stacked.dart';
-import 'package:multilevel_drawer/multilevel_drawer.dart';
 
 class StartUpView extends StatelessWidget {
   StartUpView({Key? key}) : super(key: key);
@@ -145,23 +140,104 @@ class StartUpView extends StatelessWidget {
           color: Colors.amber,
           child: ListView(
             children: [
-              Container(
-                height: 60,
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Card(
-                  color: Colors.white,
-                  child: ListTile(
-                    onTap: model.navigateToCardRide,
-                    title: Text(
-                      'Where to?',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                  shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Container(
+                    height: 170,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.transparent.withOpacity(0.5),
+                      image: DecorationImage(
+                        image: AssetImage(Assets.cardbg),
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter,
+                        colorFilter: ColorFilter.mode(
+                          Colors.transparent.withOpacity(0.7),
+                          BlendMode.dstOut,
+                        ),
                       ),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            verticalSpaceTiny,
+                            Text(
+                              "Join AvenPrime",
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "at 50% off",
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "Avail your Now!",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {},
+                        //   child: Text('check out now ->'),
+                        // )
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                              ),
+                              child: Text('check out now ->'),
+                            ),
+                            verticalSpaceSmall,
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
+              // Container(
+              //   height: 60,
+              //   padding: EdgeInsets.symmetric(horizontal: 20),
+              //   child: Card(
+              //     color: Colors.white,
+              //     child: ListTile(
+              //       onTap: model.navigateToCardRide,
+              //       title: Text(
+              //         'Where to?',
+              //         style: TextStyle(
+              //           fontSize: 22,
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               verticalSpaceSmall,
               CarRideCard(
                 model: model,
