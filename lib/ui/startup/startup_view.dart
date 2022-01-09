@@ -171,7 +171,7 @@ class StartUpView extends StatelessWidget {
                           children: [
                             verticalSpaceTiny,
                             Text(
-                              "Join AvenPrime",
+                              "Join AvenSuper User",
                               style: TextStyle(
                                 fontSize: 32,
                                 color: Colors.white,

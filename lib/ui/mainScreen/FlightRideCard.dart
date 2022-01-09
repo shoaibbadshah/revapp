@@ -29,7 +29,7 @@ class FlightRideCard extends StatelessWidget {
                         Container(
                           width: screenWidth(context) / 1.3,
                           child: Text(
-                            'Your Averide Airport Request is Just One Click Away 🛩️',
+                            'Your airport request at one click🛩️',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 22),
                           ),
@@ -42,7 +42,7 @@ class FlightRideCard extends StatelessWidget {
                         Container(
                           width: screenWidth(context) / 1.3,
                           child: Text(
-                            'Request your onestop airport ride select airport below.',
+                            'Select airpot below',
                             style: TextStyle(
                                 fontWeight: FontWeight.w300, fontSize: 16),
                           ),

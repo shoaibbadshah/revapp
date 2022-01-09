@@ -173,7 +173,36 @@ class ConfirmPickUpViewModel extends BaseViewModel {
           );
           final snackBar = SnackBar(
               content:
-                  Text('Booking is successful view in taxi rides section!'));
+                  Text('Booking is successful view in Bike rides section!'));
+          return ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      });
+    } else if (bookingType == Keke) {
+      await _firestoreApi
+          .createTaxiRide(
+        carride: store.carride,
+        user: _userService.currentUser!,
+      )
+          .then((value) async {
+        log.v(value);
+        if (value != '') {
+          final response = await http.get(Uri.parse(
+              'https://us-central1-unique-nuance-310113.cloudfunctions.net/notifywhenbooking'));
+          navigationService.replaceWith(
+            Routes.searchDriverView,
+            arguments: SearchDriverViewArguments(
+              start: st,
+              end: en,
+              collectionType: 'Keke',
+              rideId: value,
+              endText: dropOffAddress,
+              startText: pickUpAddess,
+              time: distance,
+            ),
+          );
+          final snackBar = SnackBar(
+              content:
+                  Text('Booking is successful view in keke rides section!'));
           return ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       });

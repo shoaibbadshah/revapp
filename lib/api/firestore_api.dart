@@ -17,6 +17,8 @@ class FirestoreApi {
       FirebaseFirestore.instance.collection('BoatRide');
   final CollectionReference taxiRideCollection =
       FirebaseFirestore.instance.collection('TaxiRide');
+  final CollectionReference kekeRideCollection =
+      FirebaseFirestore.instance.collection('Keke');
   final CollectionReference ambulanceRideCollection =
       FirebaseFirestore.instance.collection('Ambulance');
   final CollectionReference deliveryRideCollection =
@@ -366,6 +368,22 @@ class FirestoreApi {
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create a Taxi',
+        devDetails: '$error',
+      );
+    }
+  }
+
+  Future<String> createKeke({required Map carride, required User user}) async {
+    log.i('Ride Details: $carride and user data: $user');
+
+    try {
+      final userDocument = kekeRideCollection.doc();
+      await userDocument.set(carride);
+      log.v('Keke created at ${userDocument.path}');
+      return userDocument.id;
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to create a keke',
         devDetails: '$error',
       );
     }

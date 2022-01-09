@@ -24,6 +24,7 @@ class CarBookingViewModel extends BaseViewModel {
   final _locationService = locator<LocationService>();
   final _placesService = locator<PlacesService>();
   final _userService = locator<UserService>();
+  final _calculate = locator<Calculate>();
   TextEditingController currentText = TextEditingController();
   TextEditingController destinationText = TextEditingController();
   TextEditingController stop1Text = TextEditingController();
@@ -38,7 +39,10 @@ class CarBookingViewModel extends BaseViewModel {
       destinationPlaceId = '',
       stop1PlaceId = '',
       stop2PlaceId = '';
-  Position? currentPosition;
+  LatLng currentPosition = LatLng(
+    51.457838,
+    -0.596342,
+  );
   String placeRates = '',
       placeDistances = '',
       duration = '',
@@ -90,14 +94,17 @@ class CarBookingViewModel extends BaseViewModel {
   }
 
   void setLocOnChange() async {
-    await getCurrentLocation();
+    if (await Permission.location.request().isGranted) {
+      final data = _calculate.currentPosition;
+      currentPosition = LatLng(data.latitude, data.longitude);
+    }
     var googleGeocoding = GoogleGeocoding(
       dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
+        currentPosition.latitude,
+        currentPosition.longitude,
       ),
     );
     if (risult != null) {
@@ -113,14 +120,17 @@ class CarBookingViewModel extends BaseViewModel {
     _placesService.initialize(
       apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
-    await getCurrentLocation();
+    if (await Permission.location.request().isGranted) {
+      final data = _calculate.currentPosition;
+      currentPosition = LatLng(data.latitude, data.longitude);
+    }
     var googleGeocoding = GoogleGeocoding(
       dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
+        currentPosition.latitude,
+        currentPosition.longitude,
       ),
     );
     if (risult != null) {
@@ -148,14 +158,17 @@ class CarBookingViewModel extends BaseViewModel {
     _placesService.initialize(
       apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
-    await getCurrentLocation();
+    if (await Permission.location.request().isGranted) {
+      final data = _calculate.currentPosition;
+      currentPosition = LatLng(data.latitude, data.longitude);
+    }
     var googleGeocoding = GoogleGeocoding(
       dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
+        currentPosition.latitude,
+        currentPosition.longitude,
       ),
     );
     if (risult != null) {
@@ -203,23 +216,6 @@ class CarBookingViewModel extends BaseViewModel {
     });
     destinationFocusNode.requestFocus();
     setBusy(false);
-  }
-
-  getCurrentLocation() async {
-    if (await Permission.location.request().isGranted) {
-      final data = Calculate().currentPosition;
-      currentPosition = Position(
-        longitude: data.longitude,
-        latitude: data.latitude,
-        accuracy: 0.0,
-        altitude: 0.0,
-        heading: 0.0,
-        speed: 0.0,
-        speedAccuracy: 0.0,
-        timestamp: DateTime.now(),
-      );
-      return currentPosition;
-    }
   }
 
   void selectFromMap() {
@@ -347,7 +343,7 @@ class CarBookingViewModel extends BaseViewModel {
     }
   }
 
-  void runDispose() {
+  void runDispose(BuildContext context) {
     autoCompleteResults.clear();
     currentText.dispose();
     destinationText.dispose();

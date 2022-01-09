@@ -33,10 +33,10 @@ class BackMapViewModel extends BaseViewModel {
     if (type != "") {
       sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(
-          size: Size(1, 1),
+          devicePixelRatio: 2.5,
         ),
         type == Taxi
-            ? Assets.taxilogo
+            ? Assets.bike
             : type == DeliveryService
                 ? Assets.deliverylogo
                 : type == Ambulance
@@ -45,7 +45,9 @@ class BackMapViewModel extends BaseViewModel {
                         ? Assets.boat1
                         : type == WaterCargo
                             ? Assets.cargo1
-                            : Assets.whitecar,
+                            : type == Keke
+                                ? Assets.keke
+                                : Assets.whitecar,
       );
     } else {
       sourceIcon = await BitmapDescriptor.fromAssetImage(

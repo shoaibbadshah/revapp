@@ -25,6 +25,7 @@ const String DeliveryService = 'Delivery Services';
 const String Ambulance = 'Ambulance';
 const String BoatRidetype = 'Boat Ride';
 const String WaterCargo = 'Water Cargo';
+const String Keke = 'Keke';
 const String Pending = 'Pending';
 const String Processing = 'Processing';
 const String Confirmed = 'Confirmed';

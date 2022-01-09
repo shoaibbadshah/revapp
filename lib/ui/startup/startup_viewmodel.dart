@@ -92,6 +92,16 @@ class StartUpViewModel extends BaseViewModel {
     );
   }
 
+  navigateTokeke() {
+    SetBookinType(bookingtype: Keke);
+    navigationService.navigateWithTransition(
+      CarBookingView(
+        bookingtype: Keke,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
   navigateToNewDelivery() {
     SetBookinType(bookingtype: DeliveryService);
     navigationService.navigateWithTransition(

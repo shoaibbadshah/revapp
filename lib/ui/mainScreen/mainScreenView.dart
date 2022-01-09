@@ -379,52 +379,60 @@ class CarRideCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     verticalSpaceSmall,
-                    Text(
-                      'Experience your first ride with Avenride',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                    Row(
+                      children: [
+                        Text(
+                          'Your Daily Rides',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 22),
+                        ),
+                      ],
                     ),
                     verticalSpaceTiny,
-                    Text(
-                      'Request a car, bus, taxi, ambulance, boat, pick-ups and delivery 24hrs errands services.',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
+                    Row(
+                      children: [
+                        Text(
+                          'select your rides',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300, fontSize: 16),
+                        ),
+                      ],
                     ),
                     verticalSpaceSmall,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenWidth(context) / 19),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Ride',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                        InkWell(
+                          onTap: model.navigateToCardRide,
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
                               ),
-                              InkWell(
-                                onTap: model.navigateToCardRide,
-                                child: Container(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth(context) / 19),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Ride',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Container(
                                   width: 60,
                                   height: 60,
                                   child: Image.asset(Assets.whitecar),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         InkWell(
-                          onTap: model.navigateToCardRide,
+                          onTap: model.navigateTokeke,
                           child: Container(
                             height: 80,
                             decoration: BoxDecoration(
@@ -439,36 +447,14 @@ class CarRideCard extends StatelessWidget {
                                 horizontal: screenWidth(context) / 14),
                             child: Row(
                               children: [
-                                Column(
-                                  children: [
-                                    verticalSpaceSmall,
-                                    Text(
-                                      'Keke',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Container(
-                                      width: 40,
-                                      height: 40,
-                                      child: Image.asset(Assets.bike),
-                                    ),
-                                  ],
+                                Text(
+                                  'Keke',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                horizontalSpaceTiny,
-                                Column(
-                                  children: [
-                                    verticalSpaceSmall,
-                                    Text(
-                                      'Keke',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Container(
-                                      width: 40,
-                                      height: 40,
-                                      child: Image.asset(Assets.keke),
-                                    ),
-                                  ],
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  child: Image.asset(Assets.keke),
                                 ),
                               ],
                             ),
@@ -480,66 +466,66 @@ class CarRideCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth(context) / 18,
-                          ),
-                          child: Column(
-                            children: [
-                              verticalSpaceTiny,
-                              Text(
-                                'Bus/Taxi Hire',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                        InkWell(
+                          onTap: model.navigateToTaxiRide,
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
                               ),
-                              InkWell(
-                                onTap: model.navigateToTaxiRide,
-                                child: Container(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth(context) / 12,
+                            ),
+                            child: Column(
+                              children: [
+                                verticalSpaceTiny,
+                                Text(
+                                  'Bike',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Container(
                                   width: 50,
                                   height: 50,
-                                  child: Image.asset(Assets.taxilogo),
+                                  child: Image.asset(Assets.bike),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth(context) / 19,
-                          ),
-                          child: Column(
-                            children: [
-                              verticalSpaceTiny,
-                              Text(
-                                'Send/Pickups',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                        InkWell(
+                          onTap: model.navigateToNewDelivery,
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
                               ),
-                              InkWell(
-                                onTap: model.navigateToNewDelivery,
-                                child: Container(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth(context) / 19,
+                            ),
+                            child: Column(
+                              children: [
+                                verticalSpaceTiny,
+                                Text(
+                                  'Send/Pickups',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Container(
                                   width: 50,
                                   height: 50,
                                   child: Image.asset(Assets.deliverylogo),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -548,33 +534,33 @@ class CarRideCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.black,
-                            ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 40),
-                          child: Column(
-                            children: [
-                              verticalSpaceTiny,
-                              Text(
-                                'Boat',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                        InkWell(
+                          onTap: () => model.navigateToBoatRide(context),
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
                               ),
-                              InkWell(
-                                onTap: () => model.navigateToBoatRide(context),
-                                child: Container(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                verticalSpaceTiny,
+                                Text(
+                                  'Boat',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Container(
                                   width: 50,
                                   height: 50,
                                   child: Image.asset(Assets.boat1),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         // Container(
@@ -605,33 +591,33 @@ class CarRideCard extends StatelessWidget {
                         //     ],
                         //   ),
                         // ),
-                        Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.black,
+                        InkWell(
+                          onTap: model.navigateToNewAmbulance,
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 40),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: model.navigateToNewAmbulance,
-                                child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              children: [
+                                Container(
                                   width: 50,
                                   height: 50,
                                   child: Image.asset(Assets.ambulance),
                                 ),
-                              ),
-                              Text(
-                                'Ambulance',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              verticalSpaceTiny,
-                            ],
+                                Text(
+                                  'Ambulance',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                verticalSpaceTiny,
+                              ],
+                            ),
                           ),
                         ),
                       ],
