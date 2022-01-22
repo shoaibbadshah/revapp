@@ -35,6 +35,9 @@ class StartUpView extends StatelessWidget {
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) =>
             model.messageOpenedApp(message, context));
       },
+      onDispose: (model) {
+        model.rundispose(context);
+      },
       builder: (context, model, child) => Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
@@ -147,13 +150,12 @@ class StartUpView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Container(
-                    height: 170,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.transparent.withOpacity(0.5),
                       image: DecorationImage(
                         image: AssetImage(Assets.cardbg),
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.fill,
                         alignment: Alignment.topCenter,
                         colorFilter: ColorFilter.mode(
                           Colors.transparent.withOpacity(0.7),
@@ -202,16 +204,22 @@ class StartUpView extends StatelessWidget {
                         // )
                         Column(
                           children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 10,
+                            verticalSpaceRegular,
+                            InkWell(
+                              onTap: () {
+                                model.navigateToOffers();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                ),
+                                child: Text('check out now ->'),
                               ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                              ),
-                              child: Text('check out now ->'),
                             ),
                             verticalSpaceSmall,
                           ],

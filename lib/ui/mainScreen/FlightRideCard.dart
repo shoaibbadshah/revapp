@@ -54,14 +54,7 @@ class FlightRideCard extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            model.navigationService.navigateToView(
-                              CarRideView(
-                                formType: Cartype,
-                                dropLat: MMIA.latitude,
-                                dropLng: MMIA.longitude,
-                                isDropLatLng: true,
-                              ),
-                            );
+                            model.navigateToCardRide();
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -85,14 +78,7 @@ class FlightRideCard extends StatelessWidget {
                         horizontalSpaceSmall,
                         InkWell(
                           onTap: () {
-                            model.navigationService.navigateToView(
-                              CarRideView(
-                                formType: Cartype,
-                                dropLat: Abj.latitude,
-                                dropLng: Abj.longitude,
-                                isDropLatLng: true,
-                              ),
-                            );
+                            model.navigateToCardRide();
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -120,14 +106,7 @@ class FlightRideCard extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            model.navigationService.navigateToView(
-                              CarRideView(
-                                formType: Cartype,
-                                dropLat: PH.latitude,
-                                dropLng: PH.longitude,
-                                isDropLatLng: true,
-                              ),
-                            );
+                            model.navigateToCardRide();
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -186,14 +165,7 @@ class FlightRideCard extends StatelessWidget {
                     verticalSpaceSmall,
                     InkWell(
                       onTap: () {
-                        model.navigationService.navigateToView(
-                          CarRideView(
-                            formType: Cartype,
-                            dropLat: MMIA.latitude,
-                            dropLng: MMIA.longitude,
-                            isDropLatLng: true,
-                          ),
-                        );
+                        model.navigateToCardRide();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -216,14 +188,7 @@ class FlightRideCard extends StatelessWidget {
                     verticalSpaceSmall,
                     InkWell(
                       onTap: () {
-                        model.navigationService.navigateToView(
-                          CarRideView(
-                            formType: Cartype,
-                            dropLat: Abj.latitude,
-                            dropLng: Abj.longitude,
-                            isDropLatLng: true,
-                          ),
-                        );
+                        model.navigateToCardRide();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -246,14 +211,7 @@ class FlightRideCard extends StatelessWidget {
                     verticalSpaceSmall,
                     InkWell(
                       onTap: () {
-                        model.navigationService.navigateToView(
-                          CarRideView(
-                            formType: Cartype,
-                            dropLat: PH.latitude,
-                            dropLng: PH.longitude,
-                            isDropLatLng: true,
-                          ),
-                        );
+                        model.navigateToCardRide();
                       },
                       child: Container(
                         decoration: BoxDecoration(

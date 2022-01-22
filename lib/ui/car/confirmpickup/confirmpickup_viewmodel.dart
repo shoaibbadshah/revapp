@@ -179,7 +179,7 @@ class ConfirmPickUpViewModel extends BaseViewModel {
       });
     } else if (bookingType == Keke) {
       await _firestoreApi
-          .createTaxiRide(
+          .createKeke(
         carride: store.carride,
         user: _userService.currentUser!,
       )

@@ -47,6 +47,7 @@ class Assets {
   static String bike = _imagesRoot + "bike.png";
   static String keke = _imagesRoot + "keke.png";
   static String cardbg = _imagesRoot + "cardbg.png";
+  static String userbg = _imagesRoot + "bgsd.jpg";
 
   static String boat1 = _imagesRoot + "ogaride.PNG";
   static String boat2 = _imagesRoot + "familyride.PNG";

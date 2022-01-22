@@ -68,8 +68,7 @@ class Calculate {
     num distance = geodesy.distanceBetweenTwoGeoPoints(
                 LatLng(selectedPlac.latitude, selectedPlac.longitude),
                 LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
-            1000 +
-        25;
+            1000 ;
     num rate = 0;
     final placeRate = formtype == Cartype
         ? (distance * 1000.05).toStringAsFixed(2)

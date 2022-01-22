@@ -11,6 +11,8 @@ class FirestoreApi {
 
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference ridersCollection =
+      FirebaseFirestore.instance.collection('riders');
   final CollectionReference carRideCollection =
       FirebaseFirestore.instance.collection('CarRide');
   final CollectionReference boatRideCollection =
@@ -419,6 +421,26 @@ class FirestoreApi {
       throw FirestoreApiException(
           message:
               'Your userId passed in is empty. Please pass in a valid user if from your Firebase user.');
+    }
+  }
+
+  Future getDriver({required String userId}) async {
+    if (userId.isNotEmpty) {
+      try {
+        final userDoc = await ridersCollection.doc(userId).get();
+        if (!userDoc.exists) {
+          log.v('We have no user with id $userId in our database');
+          return null;
+        }
+        Object? data = userDoc.data();
+        String s = json.encode(data!);
+        Map<String, dynamic> user = jsonDecode(s);
+        return user;
+      } catch (e) {
+        return e;
+      }
+    } else {
+      return null;
     }
   }
 

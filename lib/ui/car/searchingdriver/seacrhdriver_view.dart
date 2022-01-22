@@ -475,6 +475,28 @@ class SearchDriverView extends StatelessWidget {
                   ),
           ),
         ),
+        bottomNavigationBar: Container(
+          height: 60,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth(context) / 6,
+              vertical: 10,
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                model.navigateToScanner();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.camera),
+                  horizontalSpaceSmall,
+                  Text('Scan Driver Bar Code'),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       viewModelBuilder: () => SearchDriverViewModel(),
     );
@@ -487,6 +509,7 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: GestureDetector(
         onTap: () {
           Navigator.pop(context);
