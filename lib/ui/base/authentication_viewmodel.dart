@@ -78,6 +78,7 @@ abstract class AuthenticationViewModel extends FormViewModel {
             pushToken: token,
             notification: [],
             mobileNo: '',
+            favourites: [],
           ),
         );
       }

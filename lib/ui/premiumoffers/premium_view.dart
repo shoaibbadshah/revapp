@@ -75,7 +75,9 @@ class PremiumView extends StatelessWidget {
                                     key: key4,
                                     preferBelow: false,
                                     padding: EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 5),
+                                      vertical: 5,
+                                      horizontal: 5,
+                                    ),
                                     message:
                                         'Many Avenride users are looking for new ways to travel around the city, particularly when they start commuting back to base and Aven prime User gives you that discounted package. Subscribe to Aven Prime User and enjoy 50% on all hailable services.',
                                     child: IconButton(
@@ -117,8 +119,11 @@ class PremiumView extends StatelessWidget {
                                     model.index1.toString(),
                                   ),
                                   IconButton(
-                                    onPressed: () =>
-                                        model.setIndex1(model.index1 + 1),
+                                    onPressed: () {
+                                      if (model.index1 < 1) {
+                                        model.setIndex1(model.index1 + 1);
+                                      }
+                                    },
                                     icon: Icon(
                                       Icons.add_rounded,
                                     ),
@@ -305,8 +310,11 @@ class PremiumView extends StatelessWidget {
                                     model.index3.toString(),
                                   ),
                                   IconButton(
-                                    onPressed: () =>
-                                        model.setIndex3(model.index3 + 1),
+                                    onPressed: () {
+                                      if (model.index3 < 1) {
+                                        model.setIndex3(model.index3 + 1);
+                                      }
+                                    },
                                     icon: Icon(
                                       Icons.add_rounded,
                                     ),

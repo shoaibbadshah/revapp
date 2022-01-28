@@ -24,6 +24,7 @@ class User with _$User {
     String? pushToken,
     String? mobileNo,
     List? notification,
+    List? favourites,
   }) = _User;
 
   bool get hasAddress => defaultAddress?.isNotEmpty ?? false;
@@ -45,6 +46,7 @@ class Users {
   final bool isVehicle;
   final bool isBoat;
   final List notification;
+  final List favourites;
 
   Users({
     required this.id,
@@ -60,6 +62,7 @@ class Users {
     required this.bankdocs,
     required this.vehicle,
     required this.vehicledocs,
+    required this.favourites,
   });
 
   factory Users.fromFirestore(DocumentSnapshot doc) {
@@ -79,6 +82,7 @@ class Users {
       photourl: data['photourl'] == null ? '' : data['photourl'],
       vehicle: data['vehicle'],
       vehicledocs: data['vehicledocs'],
+      favourites: data['favourites'] ?? [],
     );
   }
 }
@@ -421,7 +425,7 @@ class CarModelRideDetail {
       dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
       paymentStatus: data['paymentStatus'] ?? Pending,
       price: data['price'].toString(),
-      rideEnded: data['RideEnded'] ?? false,
+      rideEnded: data['rideEnded'] ?? false,
       pushToken: data['pushToken'] ?? '',
       rideType: data['rideType'] ?? '',
       otp: data['otp'] ?? '',

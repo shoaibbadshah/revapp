@@ -384,6 +384,7 @@ class CarBookingViewModel extends BaseViewModel {
             'distace': placeDistances,
             'paymentStatus': 'Confirmed',
             'drivers': null,
+            'rideEnded': false,
             'selectedPlace': [
               loc1.latitude,
               loc1.longitude,
@@ -408,6 +409,7 @@ class CarBookingViewModel extends BaseViewModel {
                 'price': placeRates,
                 'distace': placeDistances,
                 'paymentStatus': 'Confirmed',
+                'rideEnded': false,
                 'drivers': null,
                 'selectedPlace': [
                   loc1.latitude,
@@ -438,6 +440,7 @@ class CarBookingViewModel extends BaseViewModel {
                 'distace': placeDistances,
                 'paymentStatus': 'Confirmed',
                 'drivers': null,
+                'rideEnded': false,
                 'selectedPlace': [
                   loc1.latitude,
                   loc1.longitude,
