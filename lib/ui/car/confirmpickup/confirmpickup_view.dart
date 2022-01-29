@@ -31,6 +31,7 @@ class ConfirmPickUpView extends StatelessWidget {
     return ViewModelBuilder<ConfirmPickUpViewModel>.reactive(
       onModelReady: (model) {
         model.bookingType = GetBookinType().perform();
+        model.log.wtf(model.bookingType);
         MyStore store = VxState.store as MyStore;
         model.rideType = store.rideType;
         model.paymentMethod = store.paymentMethod;
@@ -258,7 +259,8 @@ class ConfirmPickUpView extends StatelessWidget {
                                               IconButton(
                                                 onPressed: () {
                                                   model.navigateToMapPicker(
-                                                      true);
+                                                      model.pickUpAddess,
+                                                      false);
                                                 },
                                                 icon: Icon(Icons.edit),
                                               ),
@@ -289,7 +291,8 @@ class ConfirmPickUpView extends StatelessWidget {
                                               IconButton(
                                                 onPressed: () {
                                                   model.navigateToMapPicker(
-                                                      false);
+                                                      model.dropOffAddress,
+                                                      true);
                                                 },
                                                 icon: Icon(Icons.edit),
                                               ),

@@ -171,9 +171,20 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                 child: Container(
                   color: Colors.grey[200],
                   child: DrawerItem(
-                    title: 'Bus/taxi',
+                    title: 'Bike',
                     icon: Icons.list,
                     onTapped: () => widget.model.navigateToBookingBusTaxi(),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Keke',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingKeke(),
                   ),
                 ),
               ),

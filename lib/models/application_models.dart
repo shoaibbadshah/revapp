@@ -563,6 +563,55 @@ class TaxiModel {
   }
 }
 
+class KekeModel {
+  final String paymentType;
+  final String destination;
+  final String startLocation;
+  final String scheduleTime;
+  final String paymentStatus;
+  final String scheduledDate;
+  final String distace;
+  final String price;
+  final String id;
+  final GeoPoint selectedPlace;
+  final GeoPoint dropoffplace;
+
+  final bool rideEnded;
+  KekeModel(
+      {required this.destination,
+      required this.paymentType,
+      required this.id,
+      required this.distace,
+      required this.dropoffplace,
+      required this.selectedPlace,
+      required this.paymentStatus,
+      required this.price,
+      required this.startLocation,
+      required this.rideEnded,
+      required this.scheduleTime,
+      required this.scheduledDate});
+
+  factory KekeModel.fromFirestore(DocumentSnapshot doc) {
+    String s = json.encode(doc.data());
+    Map<String, dynamic> data = jsonDecode(s);
+    return KekeModel(
+      paymentType: data['PaymentType'],
+      destination: data['destination'],
+      id: doc.id,
+      dropoffplace: GeoPoint(data['dropoffplace'][0], data['dropoffplace'][1]),
+      selectedPlace:
+          GeoPoint(data['selectedPlace'][0], data['selectedPlace'][1]),
+      startLocation: data['startLocation'],
+      paymentStatus: data['paymentStatus'] ?? Pending,
+      rideEnded: data['rideEnded'] ?? false,
+      scheduleTime: data['scheduleTime'],
+      scheduledDate: data['scheduledDate'],
+      distace: data['distace'] ?? '0',
+      price: data['price'].toString(),
+    );
+  }
+}
+
 class AmbulanceModel {
   final String destination;
   final String startLocation;

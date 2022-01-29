@@ -3,14 +3,14 @@ import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/app/app.router.dart';
 import 'package:avenride/services/user_service.dart';
+import 'package:avenride/ui/car/singlemapedit/singlemapedit_view.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:avenride/app/router_names.dart';
@@ -119,28 +119,21 @@ class ConfirmPickUpViewModel extends BaseViewModel {
     }
   }
 
-  navigateToMapPicker(bool pickup) async {
-    pickup ? isbusy = true : isbusy1 = true;
+  navigateToMapPicker(String locaddress, bool isDestination) async {
     notifyListeners();
-    await getCurrentLocation();
-    navigationService.navigateToView(PlacePicker(
-      apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
-      initialPosition:
-          LatLng(currentPosition!.latitude, currentPosition!.longitude),
-      useCurrentLocation: pickup ? true : false,
-      selectInitialPosition: true,
-      onPlacePicked: (result) {
-        // if (pickup) {
-        //   pickUpAddess = result.formattedAddress!;
-        // }
-        // if (!pickup) {
-        //   dropOffAddress = result.formattedAddress!;
-        // }
-        // notifyListeners();
-        navigationService.back();
-      },
-    ));
-    pickup ? isbusy = false : isbusy1 = false;
+    var googleGeocoding = GoogleGeocoding(dotenv.env['GOOGLE_MAPS_API_KEY']!);
+    var risult = await googleGeocoding.geocoding.get(locaddress, []);
+    if (risult != null) {
+      navigationService.replaceWithTransition(
+        SingleMapEditView(
+          start: LatLng(risult.results![0].geometry!.location!.lat!,
+              risult.results![0].geometry!.location!.lng!),
+          isDest: isDestination,
+        ),
+      );
+    } else {
+      return;
+    }
     notifyListeners();
   }
 

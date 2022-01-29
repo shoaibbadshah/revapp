@@ -485,6 +485,17 @@ class FirestoreApi {
             }).toList());
   }
 
+  Stream<List<KekeModel>> streamkeke(String userId) {
+    return kekeRideCollection
+        .where('userId', isEqualTo: userId)
+        .orderBy('scheduledDate', descending: true)
+        .orderBy('scheduleTime', descending: true)
+        .snapshots()
+        .map((list) => list.docs.map((doc) {
+              return KekeModel.fromFirestore(doc);
+            }).toList());
+  }
+
   Stream<List<AmbulanceModel>> streamambulance(String userId) {
     return ambulanceRideCollection
         .where('userId', isEqualTo: userId)

@@ -268,7 +268,9 @@ class PremiumView extends StatelessWidget {
                                     key: key3,
                                     preferBelow: false,
                                     padding: EdgeInsets.symmetric(
-                                        vertical: 5, horizontal: 5),
+                                      vertical: 5,
+                                      horizontal: 5,
+                                    ),
                                     message:
                                         '25% reduction on Ambulance service and any other available services of thier choice at avenride control service ratio, rationale. optional water transportation.',
                                     child: IconButton(
