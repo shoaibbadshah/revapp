@@ -213,6 +213,16 @@ class StartUpViewModel extends BaseViewModel {
     );
   }
 
+  navigateToBookingKeke() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: Keke,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
   navigateToBookingAmbulance() {
     navigationService.navigateWithTransition(
       BookingView(

@@ -2,6 +2,7 @@ import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/router_names.dart';
 import 'package:avenride/ui/startup/delivery_ride.dart';
 import 'package:avenride/ui/startup/delivery_services.dart';
+import 'package:avenride/ui/startup/keke_ride.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:avenride/app/app.locator.dart';
@@ -94,11 +95,20 @@ class _BookingViewState extends State<BookingView> {
                                       child: DeliveryList(),
                                     ),
                                   )
-                                : Card(
-                                    child: ListTile(
-                                      title: Text('item'),
-                                    ),
-                                  ),
+                                : widget.bookingtype == Keke
+                                    ? StreamProvider<List<KekeModel>>.value(
+                                        value: firestoreApi.streamkeke(
+                                            _userService.currentUser!.id),
+                                        initialData: [],
+                                        child: Container(
+                                          child: KekeList(),
+                                        ),
+                                      )
+                                    : Card(
+                                        child: ListTile(
+                                          title: Text('item'),
+                                        ),
+                                      ),
       ),
       viewModelBuilder: () => BookingViewModel(),
     );
