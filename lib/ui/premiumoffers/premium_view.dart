@@ -294,8 +294,25 @@ class PremiumView extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  verticalSpaceSmall,
-                                  Row(
+                                  Tooltip(
+                                    key: key3,
+                                    preferBelow: false,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 5,
+                                      horizontal: 5,
+                                    ),
+                                    message:
+                                        '25% reduction on Ambulance service and any other available services of thier choice at avenride control service ratio, rationale. optional water transportation.',
+                                    child: IconButton(
+                                      onPressed: () => _onTap(key3),
+                                      icon: Icon(
+                                        Icons.info,
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       horizontalSpaceRegular,
                                       horizontalSpaceSmall,
