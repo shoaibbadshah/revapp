@@ -10,8 +10,10 @@ import 'package:avenride/ui/boat/boat_ride/boat_ride_view.dart';
 import 'package:avenride/ui/car/car_booking/car_booking_view.dart';
 import 'package:avenride/ui/car/car_ride/car_ride_view.dart';
 import 'package:avenride/ui/notification/notification_view.dart';
+import 'package:avenride/ui/premiumoffers/premium_view.dart';
 import 'package:avenride/ui/profile/personal_info.dart';
 import 'package:avenride/ui/profile/profile_view.dart';
+import 'package:avenride/ui/referalcode/referalcode_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -75,6 +77,33 @@ class StartUpViewModel extends BaseViewModel {
     ).show();
   }
 
+  showReferalPageAlert(BuildContext context) {
+    if (userService.currentUser != null) {
+      Alert(
+        context: context,
+        title: "Refer Avenride app to family and friends to enjoy free rides",
+        buttons: <DialogButton>[
+          DialogButton(
+            color: Colors.blue,
+            child: Text("Not now"),
+            onPressed: () {
+              navigationService.back();
+            },
+          ),
+          DialogButton(
+            child: Text("Continue"),
+            onPressed: () {
+              navigationService.replaceWithTransition(
+                ReferalCodeView(),
+                transition: 'rightToLeft',
+              );
+            },
+          ),
+        ],
+      ).show();
+    }
+  }
+
   navigateToProfile() {
     navigationService.navigateWithTransition(
       ProfileView(),
@@ -87,6 +116,16 @@ class StartUpViewModel extends BaseViewModel {
     navigationService.navigateWithTransition(
       CarBookingView(
         bookingtype: Cartype,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
+  navigateTokeke() {
+    SetBookinType(bookingtype: Keke);
+    navigationService.navigateWithTransition(
+      CarBookingView(
+        bookingtype: Keke,
       ),
       transition: 'rightToLeft',
     );
@@ -174,6 +213,16 @@ class StartUpViewModel extends BaseViewModel {
     );
   }
 
+  navigateToBookingKeke() {
+    navigationService.navigateWithTransition(
+      BookingView(
+        enableAppBar: true,
+        bookingtype: Keke,
+      ),
+      transition: 'rightToLeft',
+    );
+  }
+
   navigateToBookingAmbulance() {
     navigationService.navigateWithTransition(
       BookingView(
@@ -233,6 +282,13 @@ class StartUpViewModel extends BaseViewModel {
     );
   }
 
+  navigateToOffers() {
+    navigationService.navigateWithTransition(
+      PremiumView(),
+      transition: 'rightToLeft',
+    );
+  }
+
   setStatus(bool isB) {
     status = isB;
     notifyListeners();
@@ -240,6 +296,7 @@ class StartUpViewModel extends BaseViewModel {
 
   void checkData(BuildContext context) {
     if (userService.currentUser != null) {
+      showReferalPageAlert(context);
       if (userService.currentUser!.email!.isEmpty ||
           userService.currentUser!.name!.isEmpty ||
           userService.currentUser!.mobileNo!.isEmpty) {
@@ -351,4 +408,6 @@ class StartUpViewModel extends BaseViewModel {
     index = i;
     notifyListeners();
   }
+
+  void rundispose(BuildContext context) {}
 }

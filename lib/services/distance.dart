@@ -1,25 +1,22 @@
 import 'dart:convert';
 
+import 'package:avenride/services/distance_service.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geodesy/geodesy.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:avenride/app/router_names.dart';
+import 'package:google_geocoding/google_geocoding.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
 class Calculate {
-  Position _currentPosition = Position(
-      longitude: 51.457838,
-      latitude: -0.596342,
-      accuracy: 0.0,
-      altitude: 0.0,
-      heading: 0.0,
-      speed: 0.0,
-      speedAccuracy: 0.0,
-      timestamp: null);
-  Position get currentPosition => _currentPosition;
+  LatLng _currentPosition = LatLng(
+    51.457838,
+    -0.596342,
+  );
+  var googleGeocoding =
+      GoogleGeocoding("AIzaSyBGp2Pnbz9Htx-jMVQPXXES7t0iA4tQwTw");
+  LatLng get currentPosition => _currentPosition;
   Future calculateDis(
       {required PickResult selectedPlac,
       required PickResult dropoffplac,
@@ -71,8 +68,7 @@ class Calculate {
     num distance = geodesy.distanceBetweenTwoGeoPoints(
                 LatLng(selectedPlac.latitude, selectedPlac.longitude),
                 LatLng(dropoffplac.latitude, dropoffplac.longitude)) /
-            1000 +
-        25;
+            1000 ;
     num rate = 0;
     final placeRate = formtype == Cartype
         ? (distance * 1000.05).toStringAsFixed(2)
@@ -111,20 +107,13 @@ class Calculate {
 
   Future getCurrentLocation() async {
     if (await Permission.location.request().isGranted) {
-      await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high)
-          .then((Position position) async {
-        _currentPosition = position;
-      }).catchError((e) {
-        throw Exception(e);
-      });
+      final data = await getCurrentLatLng();
+      _currentPosition = LatLng(data['latitude'], data['longitude']);
     }
   }
 
   getUserLocation() async {
-    //call this async method from whereever you need
-
-    Position myLocation = _currentPosition;
+    LatLng myLocation = _currentPosition;
     String error;
     try {
       await getCurrentLocation();
@@ -139,9 +128,10 @@ class Calculate {
         throw Exception(error);
       }
     }
-    var addresses = await placemarkFromCoordinates(
-        myLocation.latitude, myLocation.longitude);
-    var first = addresses.first;
+
+    var risult = await googleGeocoding.geocoding
+        .getReverse(LatLon(myLocation.latitude, myLocation.longitude));
+    var first = risult!.results!.first;
     return first;
   }
 }

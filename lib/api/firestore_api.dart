@@ -11,18 +11,24 @@ class FirestoreApi {
 
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference ridersCollection =
+      FirebaseFirestore.instance.collection('riders');
   final CollectionReference carRideCollection =
       FirebaseFirestore.instance.collection('CarRide');
   final CollectionReference boatRideCollection =
       FirebaseFirestore.instance.collection('BoatRide');
   final CollectionReference taxiRideCollection =
       FirebaseFirestore.instance.collection('TaxiRide');
+  final CollectionReference kekeRideCollection =
+      FirebaseFirestore.instance.collection('Keke');
   final CollectionReference ambulanceRideCollection =
       FirebaseFirestore.instance.collection('Ambulance');
   final CollectionReference deliveryRideCollection =
       FirebaseFirestore.instance.collection('Delivery');
   final CollectionReference deliveryservicesRideCollection =
       FirebaseFirestore.instance.collection('DeliveryServices');
+  final CollectionReference customerPaymentCollection =
+      FirebaseFirestore.instance.collection('CustomerPayment');
   final CollectionReference updateLocationCollection =
       FirebaseFirestore.instance.collection('locations');
   Future<void> createUser({required User user}) async {
@@ -371,6 +377,35 @@ class FirestoreApi {
     }
   }
 
+  Future<String> createKeke({required Map carride, required User user}) async {
+    log.i('Ride Details: $carride and user data: $user');
+
+    try {
+      final userDocument = kekeRideCollection.doc();
+      await userDocument.set(carride);
+      log.v('Keke created at ${userDocument.path}');
+      return userDocument.id;
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to create a keke',
+        devDetails: '$error',
+      );
+    }
+  }
+
+  Future createCustomerPayment({required Map data}) async {
+    try {
+      final payDocument = customerPaymentCollection.doc();
+      await payDocument.set(data);
+      log.v('customer payment created at ${payDocument.path}');
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to create a customer payment',
+        devDetails: '$error',
+      );
+    }
+  }
+
   Future<String> createAmbulance(
       {required Map carride, required User user}) async {
     try {
@@ -401,6 +436,26 @@ class FirestoreApi {
       throw FirestoreApiException(
           message:
               'Your userId passed in is empty. Please pass in a valid user if from your Firebase user.');
+    }
+  }
+
+  Future getDriver({required String userId}) async {
+    if (userId.isNotEmpty) {
+      try {
+        final userDoc = await ridersCollection.doc(userId).get();
+        if (!userDoc.exists) {
+          log.v('We have no user with id $userId in our database');
+          return null;
+        }
+        Object? data = userDoc.data();
+        String s = json.encode(data!);
+        Map<String, dynamic> user = jsonDecode(s);
+        return user;
+      } catch (e) {
+        return e;
+      }
+    } else {
+      return null;
     }
   }
 
@@ -442,6 +497,17 @@ class FirestoreApi {
         .snapshots()
         .map((list) => list.docs.map((doc) {
               return TaxiModel.fromFirestore(doc);
+            }).toList());
+  }
+
+  Stream<List<KekeModel>> streamkeke(String userId) {
+    return kekeRideCollection
+        .where('userId', isEqualTo: userId)
+        .orderBy('scheduledDate', descending: true)
+        .orderBy('scheduleTime', descending: true)
+        .snapshots()
+        .map((list) => list.docs.map((doc) {
+              return KekeModel.fromFirestore(doc);
             }).toList());
   }
 

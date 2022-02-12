@@ -1,10 +1,13 @@
 import 'dart:ui';
+import 'package:avenride/app/app.router.dart';
 import 'package:avenride/models/application_models.dart';
+import 'package:avenride/ui/car/userreview/review_view.dart';
 import 'package:avenride/ui/pointmap/bookingMap.dart';
 import 'package:avenride/ui/car/searchingdriver/seacrhdriver_viewmodel.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
@@ -74,6 +77,7 @@ class SearchDriverView extends StatelessWidget {
                     builder: (context, child) {
                       CarModelRideDetail car =
                           Provider.of<CarModelRideDetail>(context);
+
                       return SnappingSheet(
                         snappingPositions: [
                           SnappingPosition.factor(
@@ -163,6 +167,20 @@ class SearchDriverView extends StatelessWidget {
                                     builder: (context, child) {
                                       DriverModel driver =
                                           Provider.of<DriverModel>(context);
+                                      if (car.rideEnded) {
+                                        SchedulerBinding.instance
+                                            ?.addPostFrameCallback(
+                                                (timeStamp) async {
+                                          if (car.rideEnded &&
+                                              model.isBusy == false) {
+                                            model.setBusy(true);
+                                            model.navigationService
+                                                .navigateToView(ReviewView(
+                                              driver: driver,
+                                            ));
+                                          }
+                                        });
+                                      }
                                       return ListView(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 20,
@@ -453,7 +471,8 @@ class SearchDriverView extends StatelessWidget {
                               left: 20,
                               child: InkWell(
                                 onTap: () {
-                                  model.navigationService.back();
+                                  model.navigationService
+                                      .navigateTo(Routes.startUpView);
                                 },
                                 child: Container(
                                   height: 40,
@@ -475,6 +494,28 @@ class SearchDriverView extends StatelessWidget {
                   ),
           ),
         ),
+        bottomNavigationBar: Container(
+          height: 60,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenWidth(context) / 6,
+              vertical: 10,
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                model.navigateToScanner();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.camera),
+                  horizontalSpaceSmall,
+                  Text('Scan Driver Bar Code'),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
       viewModelBuilder: () => SearchDriverViewModel(),
     );
@@ -487,6 +528,7 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: GestureDetector(
         onTap: () {
           Navigator.pop(context);

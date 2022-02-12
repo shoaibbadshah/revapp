@@ -44,6 +44,8 @@ class NotificationView extends StatelessWidget {
               vehicledocs: 'vehicledocs',
               notification: [],
               mobileNo: '',
+              favourites: [],
+              cards: [],
             )
           ],
           builder: (context, child) {

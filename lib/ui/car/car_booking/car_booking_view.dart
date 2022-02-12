@@ -320,7 +320,7 @@ class CarBookingView extends StatelessWidget {
       },
       onDispose: (model) {
         SetBookinType(bookingtype: '');
-        model.runDispose();
+        model.runDispose(context);
       },
       viewModelBuilder: () => CarBookingViewModel(),
     );

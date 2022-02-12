@@ -33,7 +33,9 @@ class _$UserTearOff {
       String? vehicledocs,
       String? pushToken,
       String? mobileNo,
-      List<dynamic>? notification}) {
+      List<dynamic>? notification,
+      List<dynamic>? favourites,
+      List<dynamic>? cards}) {
     return _User(
       id: id,
       email: email,
@@ -47,6 +49,8 @@ class _$UserTearOff {
       pushToken: pushToken,
       mobileNo: mobileNo,
       notification: notification,
+      favourites: favourites,
+      cards: cards,
     );
   }
 
@@ -72,6 +76,8 @@ mixin _$User {
   String? get pushToken => throw _privateConstructorUsedError;
   String? get mobileNo => throw _privateConstructorUsedError;
   List<dynamic>? get notification => throw _privateConstructorUsedError;
+  List<dynamic>? get favourites => throw _privateConstructorUsedError;
+  List<dynamic>? get cards => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -94,7 +100,9 @@ abstract class $UserCopyWith<$Res> {
       String? vehicledocs,
       String? pushToken,
       String? mobileNo,
-      List<dynamic>? notification});
+      List<dynamic>? notification,
+      List<dynamic>? favourites,
+      List<dynamic>? cards});
 }
 
 /// @nodoc
@@ -119,6 +127,8 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
     Object? pushToken = freezed,
     Object? mobileNo = freezed,
     Object? notification = freezed,
+    Object? favourites = freezed,
+    Object? cards = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -169,6 +179,14 @@ class _$UserCopyWithImpl<$Res> implements $UserCopyWith<$Res> {
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
               as List<dynamic>?,
+      favourites: favourites == freezed
+          ? _value.favourites
+          : favourites // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>?,
+      cards: cards == freezed
+          ? _value.cards
+          : cards // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>?,
     ));
   }
 }
@@ -190,7 +208,9 @@ abstract class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       String? vehicledocs,
       String? pushToken,
       String? mobileNo,
-      List<dynamic>? notification});
+      List<dynamic>? notification,
+      List<dynamic>? favourites,
+      List<dynamic>? cards});
 }
 
 /// @nodoc
@@ -216,6 +236,8 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
     Object? pushToken = freezed,
     Object? mobileNo = freezed,
     Object? notification = freezed,
+    Object? favourites = freezed,
+    Object? cards = freezed,
   }) {
     return _then(_User(
       id: id == freezed
@@ -266,6 +288,14 @@ class __$UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res>
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
               as List<dynamic>?,
+      favourites: favourites == freezed
+          ? _value.favourites
+          : favourites // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>?,
+      cards: cards == freezed
+          ? _value.cards
+          : cards // ignore: cast_nullable_to_non_nullable
+              as List<dynamic>?,
     ));
   }
 }
@@ -285,7 +315,9 @@ class _$_User extends _User {
       this.vehicledocs,
       this.pushToken,
       this.mobileNo,
-      this.notification})
+      this.notification,
+      this.favourites,
+      this.cards})
       : super._();
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
@@ -314,10 +346,14 @@ class _$_User extends _User {
   final String? mobileNo;
   @override
   final List<dynamic>? notification;
+  @override
+  final List<dynamic>? favourites;
+  @override
+  final List<dynamic>? cards;
 
   @override
   String toString() {
-    return 'User(id: $id, email: $email, defaultAddress: $defaultAddress, name: $name, photourl: $photourl, personaldocs: $personaldocs, bankdocs: $bankdocs, vehicle: $vehicle, vehicledocs: $vehicledocs, pushToken: $pushToken, mobileNo: $mobileNo, notification: $notification)';
+    return 'User(id: $id, email: $email, defaultAddress: $defaultAddress, name: $name, photourl: $photourl, personaldocs: $personaldocs, bankdocs: $bankdocs, vehicle: $vehicle, vehicledocs: $vehicledocs, pushToken: $pushToken, mobileNo: $mobileNo, notification: $notification, favourites: $favourites, cards: $cards)';
   }
 
   @override
@@ -356,7 +392,12 @@ class _$_User extends _User {
                     .equals(other.mobileNo, mobileNo)) &&
             (identical(other.notification, notification) ||
                 const DeepCollectionEquality()
-                    .equals(other.notification, notification)));
+                    .equals(other.notification, notification)) &&
+            (identical(other.favourites, favourites) ||
+                const DeepCollectionEquality()
+                    .equals(other.favourites, favourites)) &&
+            (identical(other.cards, cards) ||
+                const DeepCollectionEquality().equals(other.cards, cards)));
   }
 
   @override
@@ -373,7 +414,9 @@ class _$_User extends _User {
       const DeepCollectionEquality().hash(vehicledocs) ^
       const DeepCollectionEquality().hash(pushToken) ^
       const DeepCollectionEquality().hash(mobileNo) ^
-      const DeepCollectionEquality().hash(notification);
+      const DeepCollectionEquality().hash(notification) ^
+      const DeepCollectionEquality().hash(favourites) ^
+      const DeepCollectionEquality().hash(cards);
 
   @JsonKey(ignore: true)
   @override
@@ -399,7 +442,9 @@ abstract class _User extends User {
       String? vehicledocs,
       String? pushToken,
       String? mobileNo,
-      List<dynamic>? notification}) = _$_User;
+      List<dynamic>? notification,
+      List<dynamic>? favourites,
+      List<dynamic>? cards}) = _$_User;
   _User._() : super._();
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -428,6 +473,10 @@ abstract class _User extends User {
   String? get mobileNo => throw _privateConstructorUsedError;
   @override
   List<dynamic>? get notification => throw _privateConstructorUsedError;
+  @override
+  List<dynamic>? get favourites => throw _privateConstructorUsedError;
+  @override
+  List<dynamic>? get cards => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$UserCopyWith<_User> get copyWith => throw _privateConstructorUsedError;

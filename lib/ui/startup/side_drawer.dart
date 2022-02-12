@@ -1,8 +1,10 @@
 import 'package:avenride/models/application_models.dart';
 import 'package:avenride/ui/shared/styles.dart';
 import 'package:avenride/ui/shared/ui_helpers.dart';
+import 'package:avenride/ui/startup/favouritedrivers/favouritedrivers_view.dart';
 import 'package:avenride/ui/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
@@ -18,6 +20,23 @@ class StartUpSideDraer extends StatefulWidget {
 }
 
 class _StartUpSideDraerState extends State<StartUpSideDraer> {
+  Users userdetail = Users(
+    id: 'id',
+    email: 'email',
+    defaultAddress: 'defaultAddress',
+    name: 'name',
+    photourl: 'https://img.icons8.com/color/48/000000/gender-neutral-user.png',
+    personaldocs: 'personaldocs',
+    bankdocs: 'bankdocs',
+    vehicle: 'vehicle',
+    isBoat: false,
+    isVehicle: false,
+    vehicledocs: 'vehicledocs',
+    notification: [],
+    mobileNo: '',
+    favourites: [],
+    cards: [],
+  );
   bool bookingVisible = false;
   @override
   Widget build(BuildContext context) {
@@ -49,6 +68,8 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                           vehicledocs: 'vehicledocs',
                           notification: [],
                           mobileNo: '',
+                          favourites: [],
+                          cards: [],
                         ),
                       ],
                       builder: (context, child) {
@@ -57,6 +78,12 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                           return NotAvailable();
                         }
                         Users user = users.first;
+                        SchedulerBinding.instance
+                            ?.addPostFrameCallback((timeStamp) async {
+                          setState(() {
+                            userdetail = user;
+                          });
+                        });
                         return users.length == 0
                             ? NotAvailable()
                             : Container(
@@ -65,16 +92,14 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                                   children: [
                                     verticalSpaceLarge,
                                     CircleAvatar(
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 50,
-                                      ),
+                                      backgroundImage:
+                                          NetworkImage(user.photourl),
                                       radius: 50,
                                     ),
                                     verticalSpaceMedium,
                                     Center(
                                       child: Text(
-                                        user.name,
+                                        'Welcome, ${user.name}',
                                         style: TextStyle(fontSize: 18),
                                       ),
                                     ),
@@ -148,9 +173,20 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                 child: Container(
                   color: Colors.grey[200],
                   child: DrawerItem(
-                    title: 'Bus/taxi',
+                    title: 'Bike',
                     icon: Icons.list,
                     onTapped: () => widget.model.navigateToBookingBusTaxi(),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: bookingVisible,
+                child: Container(
+                  color: Colors.grey[200],
+                  child: DrawerItem(
+                    title: 'Keke',
+                    icon: Icons.list,
+                    onTapped: () => widget.model.navigateToBookingKeke(),
                   ),
                 ),
               ),
@@ -193,6 +229,28 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                   Share.share(
                     'https://play.google.com/store/apps/details?id=com.bitcc.revapp',
                   );
+                },
+              ),
+              DrawerItem(
+                title: 'Help & Support',
+                icon: Icons.help,
+                onTapped: () {
+                  final snackBar = SnackBar(
+                    content: Text('Coming Soon....'),
+                    duration: Duration(seconds: 3),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Navigator.of(context).pop();
+                },
+              ),
+              DrawerItem(
+                title: 'Favourite Driver',
+                icon: Icons.favorite,
+                onTapped: () {
+                  widget.model.navigationService
+                      .navigateToView(FavouriteDriversView(
+                    favourite: userdetail.favourites,
+                  ));
                 },
               ),
             ],

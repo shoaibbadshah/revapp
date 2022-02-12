@@ -143,7 +143,9 @@ class CarSelectionMapView extends StatelessWidget {
                 : Stack(
                     children: [
                       Container(
-                        height: model.type == Taxi || model.type == Ambulance
+                        height: model.type == Taxi ||
+                                model.type == Ambulance ||
+                                model.type == Keke
                             ? screenHeight(context) / 1.3
                             : screenHeight(context) / 2,
                         child: BookingMap(
@@ -187,10 +189,11 @@ class CarSelectionMapView extends StatelessWidget {
                         ),
                         builder: (context, state) {
                           return Container(
-                            height:
-                                model.type == Taxi || model.type == Ambulance
-                                    ? 50
-                                    : 500,
+                            height: model.type == Taxi ||
+                                    model.type == Ambulance ||
+                                    model.type == Keke
+                                ? 50
+                                : 500,
                             padding: EdgeInsets.symmetric(vertical: 20),
                             color: Colors.white,
                             child: model.type == DeliveryService
@@ -267,7 +270,7 @@ class CarSelectionMapView extends StatelessWidget {
                                       );
                                     },
                                   )
-                                : model.type == Taxi
+                                : model.type == Taxi || model.type == Keke
                                     ? SizedBox()
                                     : ListView.builder(
                                         physics: NeverScrollableScrollPhysics(),

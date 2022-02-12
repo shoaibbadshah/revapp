@@ -5,7 +5,9 @@ import 'package:avenride/main.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/user_service.dart';
+import 'package:avenride/ui/car/car_booking/DeliveryTypeSelection.dart';
 import 'package:avenride/ui/car/car_selection_map/car_selection_map_view.dart';
+import 'package:avenride/ui/car/car_selection_map/selectpassengers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -22,6 +24,7 @@ class CarBookingViewModel extends BaseViewModel {
   final _locationService = locator<LocationService>();
   final _placesService = locator<PlacesService>();
   final _userService = locator<UserService>();
+  final _calculate = locator<Calculate>();
   TextEditingController currentText = TextEditingController();
   TextEditingController destinationText = TextEditingController();
   TextEditingController stop1Text = TextEditingController();
@@ -36,7 +39,10 @@ class CarBookingViewModel extends BaseViewModel {
       destinationPlaceId = '',
       stop1PlaceId = '',
       stop2PlaceId = '';
-  Position? currentPosition;
+  LatLng currentPosition = LatLng(
+    51.457838,
+    -0.596342,
+  );
   String placeRates = '',
       placeDistances = '',
       duration = '',
@@ -88,14 +94,17 @@ class CarBookingViewModel extends BaseViewModel {
   }
 
   void setLocOnChange() async {
-    await getCurrentLocation();
+    if (await Permission.location.request().isGranted) {
+      final data = _calculate.currentPosition;
+      currentPosition = LatLng(data.latitude, data.longitude);
+    }
     var googleGeocoding = GoogleGeocoding(
       dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
+        currentPosition.latitude,
+        currentPosition.longitude,
       ),
     );
     if (risult != null) {
@@ -111,14 +120,17 @@ class CarBookingViewModel extends BaseViewModel {
     _placesService.initialize(
       apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
-    await getCurrentLocation();
+    if (await Permission.location.request().isGranted) {
+      final data = _calculate.currentPosition;
+      currentPosition = LatLng(data.latitude, data.longitude);
+    }
     var googleGeocoding = GoogleGeocoding(
       dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
+        currentPosition.latitude,
+        currentPosition.longitude,
       ),
     );
     if (risult != null) {
@@ -146,14 +158,17 @@ class CarBookingViewModel extends BaseViewModel {
     _placesService.initialize(
       apiKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
-    await getCurrentLocation();
+    if (await Permission.location.request().isGranted) {
+      final data = _calculate.currentPosition;
+      currentPosition = LatLng(data.latitude, data.longitude);
+    }
     var googleGeocoding = GoogleGeocoding(
       dotenv.env['GOOGLE_MAPS_API_KEY']!,
     );
     var risult = await googleGeocoding.geocoding.getReverse(
       LatLon(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
+        currentPosition.latitude,
+        currentPosition.longitude,
       ),
     );
     if (risult != null) {
@@ -201,27 +216,6 @@ class CarBookingViewModel extends BaseViewModel {
     });
     destinationFocusNode.requestFocus();
     setBusy(false);
-  }
-
-  getCurrentLocation() async {
-    if (await Permission.location.request().isGranted) {
-      await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high)
-          .then((Position position) async {
-        currentPosition = Position(
-            longitude: position.longitude,
-            latitude: position.latitude,
-            timestamp: position.timestamp,
-            accuracy: position.accuracy,
-            altitude: position.altitude,
-            heading: position.heading,
-            speed: position.speed,
-            speedAccuracy: position.speedAccuracy);
-      }).catchError((e) {
-        throw Exception(e);
-      });
-      return currentPosition;
-    }
   }
 
   void selectFromMap() {
@@ -331,16 +325,25 @@ class CarBookingViewModel extends BaseViewModel {
       await _placesService.getPlaceDetails(destinationPlaceId).then((value) {
         loc2 = LatLng(value.lat!, value.lng!);
       });
+      final type = GetBookinType().perform();
+
       await saveData();
-      _navigationService.navigateToView(CarSelectionMapView(
-        bookingtype: bookingType,
-        end: loc2,
-        start: loc1,
-      ));
+      if (type == DeliveryService) {
+        return _navigationService.navigateToView(DeliveryTypeSelection(
+          en: loc2,
+          st: loc1,
+        ));
+      } else {
+        return _navigationService.navigateToView(CarSelectionMapView(
+          bookingtype: bookingType,
+          end: loc2,
+          start: loc1,
+        ));
+      }
     }
   }
 
-  void runDispose() {
+  void runDispose(BuildContext context) {
     autoCompleteResults.clear();
     currentText.dispose();
     destinationText.dispose();
@@ -359,8 +362,8 @@ class CarBookingViewModel extends BaseViewModel {
         .calculateDistan(
       dropoffplac1: loc2.latitude,
       dropoffplac2: loc2.longitude,
-      selectedPlac1: currentPosition!.latitude,
-      selectedPlac2: currentPosition!.longitude,
+      selectedPlac1: loc1.latitude,
+      selectedPlac2: loc1.longitude,
       formtype: Cartype,
     )
         .then((value) {
@@ -381,9 +384,10 @@ class CarBookingViewModel extends BaseViewModel {
             'distace': placeDistances,
             'paymentStatus': 'Confirmed',
             'drivers': null,
+            'rideEnded': false,
             'selectedPlace': [
-              currentPosition!.latitude,
-              currentPosition!.longitude,
+              loc1.latitude,
+              loc1.longitude,
             ],
             'stop1Place': [
               stop1loc3.latitude,
@@ -405,10 +409,11 @@ class CarBookingViewModel extends BaseViewModel {
                 'price': placeRates,
                 'distace': placeDistances,
                 'paymentStatus': 'Confirmed',
+                'rideEnded': false,
                 'drivers': null,
                 'selectedPlace': [
-                  currentPosition!.latitude,
-                  currentPosition!.longitude,
+                  loc1.latitude,
+                  loc1.longitude,
                 ],
                 'stop1Place': [
                   stop1loc3.latitude,
@@ -435,9 +440,10 @@ class CarBookingViewModel extends BaseViewModel {
                 'distace': placeDistances,
                 'paymentStatus': 'Confirmed',
                 'drivers': null,
+                'rideEnded': false,
                 'selectedPlace': [
-                  currentPosition!.latitude,
-                  currentPosition!.longitude,
+                  loc1.latitude,
+                  loc1.longitude,
                 ],
                 'PaymentType': 'Cash',
                 'dropoffplace': [

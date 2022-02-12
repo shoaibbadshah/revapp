@@ -15,140 +15,225 @@ class FlightRideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Card(
-        elevation: 5,
-        child: ListTile(
-          title: Column(
-            children: [
-              verticalSpaceSmall,
-              Row(
-                children: [
-                  Container(
-                    width: screenWidth(context) / 1.3,
-                    child: Text(
-                      'Your Averide Airport Request is Just One Click Away 🛩️',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
-                    ),
-                  ),
-                ],
-              ),
-              verticalSpaceSmall,
-              Row(
-                children: [
-                  Container(
-                    width: screenWidth(context) / 1.3,
-                    child: Text(
-                      'Request your onestop airport ride select airport below.',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-              verticalSpaceSmall,
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      model.navigationService.navigateToView(
-                        CarRideView(
-                          formType: Cartype,
-                          dropLat: MMIA.latitude,
-                          dropLng: MMIA.longitude,
-                          isDropLatLng: true,
+    return screenWidth(context) >= 300
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Card(
+              elevation: 5,
+              child: ListTile(
+                title: Column(
+                  children: [
+                    verticalSpaceSmall,
+                    Row(
+                      children: [
+                        Container(
+                          width: screenWidth(context) / 1.3,
+                          child: Text(
+                            'Your airport request at one click🛩️',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 22),
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.black,
+                      ],
+                    ),
+                    verticalSpaceSmall,
+                    Row(
+                      children: [
+                        Container(
+                          width: screenWidth(context) / 1.3,
+                          child: Text(
+                            'Select airpot below',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300, fontSize: 16),
+                          ),
                         ),
-                      ),
-                      padding: EdgeInsets.all(5),
+                      ],
+                    ),
+                    verticalSpaceSmall,
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            model.navigateToCardRide();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7)),
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              'MMIA Lag Int Airpt',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        horizontalSpaceSmall,
+                        InkWell(
+                          onTap: () {
+                            model.navigateToCardRide();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7)),
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              'Abj Int Airpt',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    verticalSpaceSmall,
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            model.navigateToCardRide();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(7)),
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.black,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              'PH Int Airpt',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    verticalSpaceSmall,
+                  ],
+                ),
+              ),
+            ),
+          )
+        : Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Card(
+              elevation: 5,
+              child: ListTile(
+                title: Column(
+                  children: [
+                    verticalSpaceSmall,
+                    Row(
+                      children: [
+                        Container(
+                          width: screenWidth(context) / 1.3,
+                          child: Text(
+                            'Your Averide Airport Request is Just One Click Away 🛩️',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 22),
+                          ),
+                        ),
+                      ],
+                    ),
+                    verticalSpaceSmall,
+                    Container(
+                      width: screenWidth(context) / 1.3,
                       child: Text(
-                        'MMIA Lag Int Airpt',
+                        'Request your onestop airport ride select airport below.',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w300, fontSize: 16),
+                      ),
+                    ),
+                    verticalSpaceSmall,
+                    InkWell(
+                      onTap: () {
+                        model.navigateToCardRide();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.black,
+                          ),
+                        ),
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          'MMIA Lag Int Airpt',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  horizontalSpaceSmall,
-                  InkWell(
-                    onTap: () {
-                      model.navigationService.navigateToView(
-                        CarRideView(
-                          formType: Cartype,
-                          dropLat: Abj.latitude,
-                          dropLng: Abj.longitude,
-                          isDropLatLng: true,
+                    verticalSpaceSmall,
+                    InkWell(
+                      onTap: () {
+                        model.navigateToCardRide();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.black,
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.black,
-                        ),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      child: Text(
-                        'Abj Int Airpt',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          'Abj Int Airpt',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    verticalSpaceSmall,
+                    InkWell(
+                      onTap: () {
+                        model.navigateToCardRide();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.black,
+                          ),
+                        ),
+                        padding: EdgeInsets.all(5),
+                        child: Text(
+                          'PH Int Airpt',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    verticalSpaceSmall,
+                  ],
+                ),
               ),
-              verticalSpaceSmall,
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      model.navigationService.navigateToView(
-                        CarRideView(
-                          formType: Cartype,
-                          dropLat: PH.latitude,
-                          dropLng: PH.longitude,
-                          isDropLatLng: true,
-                        ),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.black,
-                        ),
-                      ),
-                      padding: EdgeInsets.all(5),
-                      child: Text(
-                        'PH Int Airpt',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              verticalSpaceSmall,
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

@@ -139,6 +139,8 @@ class _ProfileSubState extends State<ProfileSub> {
           isVehicle: false,
           vehicledocs: 'vehicledocs',
           mobileNo: '',
+          favourites: [],
+          cards: [],
         )
       ],
       builder: (context, child) {

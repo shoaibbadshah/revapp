@@ -15,8 +15,8 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '../api/firestore_api.dart';
 import '../api/paystack_api.dart';
+import '../services/chargec_card.dart';
 import '../services/distance.dart';
-import '../services/distance_service.dart';
 import '../services/location_service.dart';
 import '../services/push_notification_service.dart';
 import '../services/user_service.dart';
@@ -37,7 +37,7 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => PlacesService());
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => LocationService());
-  locator.registerLazySingleton(() => Distance());
   locator.registerLazySingleton(() => Calculate());
   locator.registerLazySingleton(() => PushNotificationService());
+  locator.registerLazySingleton(() => ChargeCard());
 }

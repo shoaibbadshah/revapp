@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.4+15
+version: 1.0.4+17
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -33,8 +33,8 @@ dependencies:
   firebase_core: ^1.1.1
   firebase_auth: ^3.1.3
   flutter_native_splash: ^1.1.8+4
-  cloud_firestore: ^2.1.0
-  firebase_messaging: ^10.0.1
+  cloud_firestore: ^3.1.5
+  firebase_messaging: ^11.2.4
   firebase_storage: ^10.0.5
   
   #Stacked
@@ -47,7 +47,7 @@ dependencies:
   google_maps_flutter:
   # UI packages
   search_page: ^2.0.0+1
-  auth_buttons: ^1.0.0
+  auth_buttons: ^2.0.3
   animations: ^2.0.0
   flutter_switch: ^0.3.1
   super_tooltip: ^1.0.1
@@ -62,18 +62,16 @@ dependencies:
   avatar_glow: ^2.0.1
   #Location
   places_service: ^0.1.0
-  geolocator:
-  geocoding: ^2.0.0
   geodesy: 0.4.0-nullsafety.0
   date_format: ^2.0.2
   flutter_polyline_points: ^1.0.0
   google_geocoding: ^0.2.0
   location: ^4.3.0
-
+  qr_code_scanner: ^0.6.1
   #web
   url_strategy: ^0.2.0
   url_launcher: ^6.0.12
-  webview_flutter: ^2.0.8
+  webview_flutter: ^3.0.0
   universal_io: ^2.0.4
   http_auth: ^1.0.1
   # data models
@@ -86,7 +84,9 @@ dependencies:
   image_picker: ^0.8.0
   share: ^2.0.4
   multilevel_drawer: ^2.0.0
-  
+  flutter_rating_bar: ^4.0.0
+  flutter_paystack: ^1.0.5+1
+  flutter_credit_card: ^3.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
