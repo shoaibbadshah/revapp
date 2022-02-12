@@ -1,4 +1,5 @@
 import 'package:avenride/api/paystack_api.dart';
+import 'package:avenride/services/chargec_card.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/location_service.dart';
 import 'package:avenride/services/push_notification_service.dart';
@@ -51,6 +52,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: LocationService),
     LazySingleton(classType: Calculate),
     LazySingleton(classType: PushNotificationService),
+    LazySingleton(classType: ChargeCard),
   ],
   logger: StackedLogger(),
 )

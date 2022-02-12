@@ -260,7 +260,6 @@ class SingleMapEditViewModel extends BaseViewModel {
     stop1FocusNode.dispose();
     stop2Text.dispose();
     stop2FocusNode.dispose();
-    SetBookinType(bookingtype: '');
   }
 
   Future<void> saveData() async {

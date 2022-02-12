@@ -35,6 +35,7 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
     notification: [],
     mobileNo: '',
     favourites: [],
+    cards: [],
   );
   bool bookingVisible = false;
   @override
@@ -68,6 +69,7 @@ class _StartUpSideDraerState extends State<StartUpSideDraer> {
                           notification: [],
                           mobileNo: '',
                           favourites: [],
+                          cards: [],
                         ),
                       ],
                       builder: (context, child) {

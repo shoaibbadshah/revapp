@@ -25,6 +25,7 @@ class User with _$User {
     String? mobileNo,
     List? notification,
     List? favourites,
+    List? cards,
   }) = _User;
 
   bool get hasAddress => defaultAddress?.isNotEmpty ?? false;
@@ -47,6 +48,7 @@ class Users {
   final bool isBoat;
   final List notification;
   final List favourites;
+  final List cards;
 
   Users({
     required this.id,
@@ -63,6 +65,7 @@ class Users {
     required this.vehicle,
     required this.vehicledocs,
     required this.favourites,
+    required this.cards,
   });
 
   factory Users.fromFirestore(DocumentSnapshot doc) {
@@ -83,6 +86,7 @@ class Users {
       vehicle: data['vehicle'],
       vehicledocs: data['vehicledocs'],
       favourites: data['favourites'] ?? [],
+      cards: data['cards'] ?? [],
     );
   }
 }

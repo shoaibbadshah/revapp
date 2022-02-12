@@ -235,7 +235,6 @@ class SingleMapEditView extends StatelessWidget {
         );
       },
       onDispose: (model) {
-        SetBookinType(bookingtype: '');
         model.runDispose(context);
       },
       viewModelBuilder: () => SingleMapEditViewModel(),
