@@ -1,3 +1,4 @@
+import 'package:avenride/services/chargec_card.dart';
 import 'package:avenride/services/distance.dart';
 import 'package:avenride/services/push_notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +21,8 @@ void main() async {
   final _pushservice = locator<PushNotificationService>();
   _pushservice.initializePushNotificationService();
   final _calculate = locator<Calculate>();
+  final cardApi = locator<ChargeCard>();
+  cardApi.initialize();
   await _calculate.getCurrentLocation();
   runApp(
     VxState(

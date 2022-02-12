@@ -2,12 +2,14 @@ import 'package:avenride/api/firestore_api.dart';
 import 'package:avenride/app/app.locator.dart';
 import 'package:avenride/app/app.logger.dart';
 import 'package:avenride/app/app.router.dart';
+import 'package:avenride/services/chargec_card.dart';
 import 'package:avenride/services/user_service.dart';
 import 'package:avenride/ui/car/singlemapedit/singlemapedit_view.dart';
 import 'package:avenride/ui/paymentui/payment_view.dart';
 import 'package:avenride/ui/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_geocoding/google_geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,8 +25,8 @@ class ConfirmPickUpViewModel extends BaseViewModel {
   final log = getLogger('CarSelectionMapViewModel');
   final _bottomSheetService = locator<BottomSheetService>();
   final navigationService = locator<NavigationService>();
-  final _firestoreApi = locator<FirestoreApi>();
-  final _userService = locator<UserService>();
+  final firestoreApi = locator<FirestoreApi>();
+  final userService = locator<UserService>();
   MyStore store = VxState.store as MyStore;
   int selectedIndex = 0;
   bool isbusy = false, buttonPressed = true;
@@ -137,15 +139,59 @@ class ConfirmPickUpViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onConfirmOrder(BuildContext context, LatLng st, LatLng en) async {
+  void onConfirmOrder(
+      BuildContext context, LatLng st, LatLng en, List cards) async {
     buttonPressed = false;
     SetBookinType(bookingtype: "");
     notifyListeners();
+    print(store.carride['price'].runtimeType);
+    if (store.paymentMethod == 'Credit/Debit Card') {
+      await startTransaction(
+          cards, context, store.carride['price'].toInt(), st, en);
+    }
+  }
+
+  startTransaction(List cards, BuildContext context, int amount, LatLng st,
+      LatLng en) async {
+    if (cards.length == 0) {
+      return navigationService.navigateToView(PaymentView(
+        updatePreferences: () {},
+      ));
+    }
+    final cardApi = locator<ChargeCard>();
+    await cardApi.startAfreshCharge(
+      PaymentCard(
+          cvc: cards[0]['cvc'],
+          expiryMonth: cards[0]['expiryMonth'],
+          expiryYear: cards[0]['expiryYear'],
+          number: cards[0]['number']),
+      amount,
+      context,
+      onFinish: (resp) {
+        if (resp) {
+          startbooking(context, st, en);
+        } else {
+          buttonPressed = false;
+          notifyListeners();
+          ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+            content: new Text('Payment Failed, try again!'),
+            duration: Duration(seconds: 3),
+            action: new SnackBarAction(
+                label: 'CLOSE',
+                onPressed: () =>
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar()),
+          ));
+        }
+      },
+    );
+  }
+
+  startbooking(BuildContext context, LatLng st, LatLng en) async {
     if (bookingType == Taxi) {
-      await _firestoreApi
+      await firestoreApi
           .createTaxiRide(
         carride: store.carride,
-        user: _userService.currentUser!,
+        user: userService.currentUser!,
       )
           .then((value) async {
         log.v(value);
@@ -171,10 +217,10 @@ class ConfirmPickUpViewModel extends BaseViewModel {
         }
       });
     } else if (bookingType == Keke) {
-      await _firestoreApi
+      await firestoreApi
           .createKeke(
         carride: store.carride,
-        user: _userService.currentUser!,
+        user: userService.currentUser!,
       )
           .then((value) async {
         log.v(value);
@@ -200,10 +246,10 @@ class ConfirmPickUpViewModel extends BaseViewModel {
         }
       });
     } else if (bookingType == Cartype) {
-      await _firestoreApi
+      await firestoreApi
           .createCarRide(
         carride: store.carride,
-        user: _userService.currentUser!,
+        user: userService.currentUser!,
       )
           .then((value) async {
         if (value != '') {
@@ -228,10 +274,10 @@ class ConfirmPickUpViewModel extends BaseViewModel {
         }
       });
     } else if (bookingType == DeliveryService) {
-      await _firestoreApi
+      await firestoreApi
           .createDeliveryServices(
         carride: store.carride,
-        user: _userService.currentUser!,
+        user: userService.currentUser!,
       )
           .then((value) async {
         if (value != '') {
@@ -259,10 +305,10 @@ class ConfirmPickUpViewModel extends BaseViewModel {
         }
       });
     } else if (bookingType == Ambulance) {
-      await _firestoreApi
+      await firestoreApi
           .createAmbulance(
         carride: store.carride,
-        user: _userService.currentUser!,
+        user: userService.currentUser!,
       )
           .then((value) async {
         if (value != '') {

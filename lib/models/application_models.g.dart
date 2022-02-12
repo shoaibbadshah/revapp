@@ -20,6 +20,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       mobileNo: json['mobileNo'] as String?,
       notification: json['notification'] as List<dynamic>?,
       favourites: json['favourites'] as List<dynamic>?,
+      cards: json['cards'] as List<dynamic>?,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -36,4 +37,5 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'mobileNo': instance.mobileNo,
       'notification': instance.notification,
       'favourites': instance.favourites,
+      'cards': instance.cards,
     };

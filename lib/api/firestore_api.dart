@@ -27,6 +27,8 @@ class FirestoreApi {
       FirebaseFirestore.instance.collection('Delivery');
   final CollectionReference deliveryservicesRideCollection =
       FirebaseFirestore.instance.collection('DeliveryServices');
+  final CollectionReference customerPaymentCollection =
+      FirebaseFirestore.instance.collection('CustomerPayment');
   final CollectionReference updateLocationCollection =
       FirebaseFirestore.instance.collection('locations');
   Future<void> createUser({required User user}) async {
@@ -386,6 +388,19 @@ class FirestoreApi {
     } catch (error) {
       throw FirestoreApiException(
         message: 'Failed to create a keke',
+        devDetails: '$error',
+      );
+    }
+  }
+
+  Future createCustomerPayment({required Map data}) async {
+    try {
+      final payDocument = customerPaymentCollection.doc();
+      await payDocument.set(data);
+      log.v('customer payment created at ${payDocument.path}');
+    } catch (error) {
+      throw FirestoreApiException(
+        message: 'Failed to create a customer payment',
         devDetails: '$error',
       );
     }
